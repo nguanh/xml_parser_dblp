@@ -8,12 +8,14 @@ http://export.arxiv.org/oai2
 
 TODO
 how to process records?
+resumption token in case of emergency stop
 
 '''
-def harvestOAI(link,startDate=None, endDate=None):
+def harvestOAI(link,startDate=None, endDate=None, processingFunction = None):
 
     '''
     harvest Records from given repository
+    :param processingFunction: function to process the header and metadata
     :param link: Link to OAI-MPH repository
     :param startDate: search for records from given Date
     :param endDate:  search for records until given Date
@@ -37,8 +39,16 @@ def harvestOAI(link,startDate=None, endDate=None):
         print("Invalid Parameters")
     else:
         for record in records:
-            print(record)
+            # header is xml
+            header = record.header
+            # metadata is a dict
+            metadata = record.metadata
 
+            if processingFunction is not None:
+                processingFunction(header, metadata)
+
+def test(header,metadata):
+    print(metadata)
 link1 = 'http://citeseerx.ist.psu.edu/oai2'
 link2 = 'http://export.arxiv.org/oai2'
 link3 = 'http://elis.da.ulcc.ac.uk/cgi/oai2'
@@ -47,4 +57,4 @@ startDate = '2016-01-10'
 endDate = '2017-01-06'
 link = link1
 
-harvestOAI(link,endDate=endDate)
+harvestOAI(link, endDate=endDate, processingFunction=test)
