@@ -19,6 +19,7 @@ proceedings ignore
 
 '''
 for event, element in etree.iterparse(source, tag=tagList, load_dtd=True):
+
     count += 1
     config = configparser.ConfigParser()
     element_date = element.get("mdate")

@@ -19,7 +19,7 @@ add_employee = ("INSERT INTO employees "
 add_salary = ("INSERT INTO salaries "
               "(emp_no, salary, from_date, to_date) "
               "VALUES (%(emp_no)s, %(salary)s, %(from_date)s, %(to_date)s)")
-
+print(add_employee)
 #actual data to be inserted
 data_employee = ('Geert', 'Vanderkelen', tomorrow, 'M', date(1977, 6, 14))
 
@@ -36,7 +36,7 @@ data_salary = {
   'to_date': date(9999, 1, 1),
 }
 cursor.execute(add_salary, data_salary)
-
+print('inserted')
 # Make sure data is committed to the database
 #commit is useful for finishing a transactional action
 cnx.commit()

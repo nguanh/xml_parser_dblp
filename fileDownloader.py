@@ -46,7 +46,7 @@ return values
 Check content type
 '''
 url = url2
-storagePath = 'test.gz'
+storagePath = 'dblp.dtd'
 
 download_file(url, storagePath)
 

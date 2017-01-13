@@ -13,9 +13,12 @@ def create_database(cursor,name):
         exit(1)
 
 
-def connect():
+def connect(database = None):
+    if(database is None):
+        return mysql.connector.connect(user='root', password='master',
+                                        host='127.0.0.1')
     return mysql.connector.connect(user='root', password='master',
-                                  host='127.0.0.1')
+                                   host='127.0.0.1', database=database)
 
 def createDB(connector,cursor,name):
     # try to change to DB  DB_NAME
