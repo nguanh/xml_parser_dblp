@@ -3,6 +3,7 @@ from lxml.etree import XMLSyntaxError
 import sys
 from queries import ADD_DBLP_ARTICLE
 from mariadb_common import connect
+from dblp_config import Dblp_Parsing_Exception
 from datetime import date, datetime, timedelta
 
 source = sys.argv[1]
@@ -23,23 +24,30 @@ proceedings ignore
 
 '''
 
-#TODO
 def parse_mdate(obj):
     """
-    :param obj:
-    :return:
+    :param obj: string in format YYYY-MM-DD
+    :return: datetime
     """
-    return date(1977, 6, 14)
+    try:
+        return datetime.strptime(obj, "%Y-%m-%d")
+    except ValueError:
+        raise Dblp_Parsing_Exception('mdate','Invalid mdate')
 
 
-#TODO
 def parse_year(obj):
     """
-
-    :param obj:
-    :return:
+    :param obj: number containing publication year
+    :return: date object, with month and day set to 1, as they are not further specified
     """
-    return date(1977, 6, 14)
+    try:
+        year = int(obj)
+        return date(year,1,1)
+    except TypeError:
+        raise Dblp_Parsing_Exception('year','Invalid year')
+    except ValueError:
+        raise Dblp_Parsing_Exception('year', 'Year is out of range')
+
 
 
 def dict_to_tuple(obj):

@@ -25,3 +25,16 @@ def createFolder(path,name):
 
 def createFile(path,name):
     main_path = os.path.join(path, name)
+
+
+class Dblp_Parsing_Exception(Exception):
+    """Exception raised for errors in the input.
+
+    Attributes:
+        expression -- input expression in which the error occurred
+        message -- explanation of the error
+    """
+
+    def __init__(self, expression, message):
+        self.expression = expression
+        self.message = message
