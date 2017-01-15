@@ -23,7 +23,10 @@ www
 proceedings ignore
 
 '''
+'''
 
+crossref verweist auf eine proceeding, zu dem das paper gehört
+'''
 def parse_mdate(obj):
     """
     :param obj: string in format YYYY-MM-DD
@@ -55,8 +58,8 @@ def dict_to_tuple(obj):
     :param obj:
     :return:
     """
-    all_attributes ={'key','mdate','author','title','ee','url','journal','number','volume','pages','year'}
-    optional_attributes= ['ee','url','journal','number','volume','pages']
+    all_attributes ={'key','mdate','author','title','ee','url','journal','number','volume','pages','year',"cite", "crossref","booktitle"}
+    optional_attributes= ['ee','url','journal','number','volume','pages',"cite", "crossref","booktitle"]
 
     #check for outlier keys
     key_list = set(obj.keys())
@@ -76,7 +79,9 @@ def dict_to_tuple(obj):
         obj['title'] = "Test"
 
 
-    result = (obj['key'],obj['mdate'], obj['author'], obj['title'], obj['pages'],obj['year'],obj['volume'], obj['journal'],obj['number'], obj['ee'], obj['url'])
+    result = (obj['key'],obj['mdate'], obj['author'], obj['title'], obj['pages'],
+              obj['year'],obj['volume'], obj['journal'],obj['number'], obj['ee'],
+              obj['url'], obj['cite'],obj['crossref'], obj['booktitle'])
     return result
 
 
