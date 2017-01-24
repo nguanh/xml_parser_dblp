@@ -23,7 +23,8 @@ def progress_bar(blocks_transferred, block_size, total_size):
     # only print progress if percentage value has changed
     if currentPercentage-previousPercentage > 0:
         print("{}% downloaded".format(currentPercentage))
-
+#TODO proper path check
+# get file name from download
 
 def download_file(file_url, storage_path):
     """
