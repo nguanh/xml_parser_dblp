@@ -31,10 +31,11 @@ def download_file(file_url, storage_path):
     :param storage_path:
     :return:
     """
-
-    if os.path.isdir(storagePath)== False:
+    dir_name = os.path.dirname(storage_path)
+    if os.path.isdir(dir_name) is False:
         print("Invalid path")
         return None
+
     try:
         local_filename, headers = urllib.request.urlretrieve(file_url, storage_path, reporthook=progress_bar)
     except ValueError:
