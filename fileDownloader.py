@@ -1,4 +1,5 @@
 import urllib.request
+import os
 
 
 url1 = 'http://dblp.uni-trier.de/xml/dblp.xml.gz'
@@ -30,6 +31,10 @@ def download_file(file_url, storage_path):
     :param storage_path:
     :return:
     """
+
+    if os.path.isdir(storagePath)== False:
+        print("Invalid path")
+        return None
     try:
         local_filename, headers = urllib.request.urlretrieve(file_url, storage_path, reporthook=progress_bar)
     except ValueError:
