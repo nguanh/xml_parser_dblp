@@ -15,7 +15,7 @@ except Exception as err:
 else:
     database.create_db(DB_NAME)
     database.createTable("article", DBLP_ARTICLE)
-    database.closeConnection()
+    database.close_connection()
 
 
 

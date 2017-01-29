@@ -8,7 +8,7 @@ class MariaDb:
 
     def __init__(self, credentials):
         if "database" in credentials:
-            self.current_database = credentials.database
+            self.current_database = credentials["database"]
         else:
             self.current_database = None
 
@@ -19,8 +19,6 @@ class MariaDb:
 
         if self.connector is not None:
             self.cursor = self.connector.cursor()
-
-
 
     def create_database(self, name):
         try:
@@ -57,7 +55,17 @@ class MariaDb:
         else:
             print("OK")
 
-    def closeConnection(self):
+    def execute(self, query, tup):
+        try:
+            self.cursor.execute(query, tup)
+            self.connector.commit()
+        except mysql.connector.Error as err:
+            print("MariaDB query error: {} File not added".format(err))
+            print(tup)
+            return False;
+        return True
+
+    def close_connection(self):
         if self.cursor is not None:
             self.cursor.close()
         if self.connector is not None:
