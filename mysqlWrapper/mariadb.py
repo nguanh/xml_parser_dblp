@@ -3,8 +3,8 @@ from mysql.connector import errorcode
 
 
 class MariaDb:
-
-    #TODO close cursor,connector (use destructor?)
+    #TODO test
+    #TODO als with statement
 
     def __init__(self, credentials):
         if "database" in credentials:
@@ -19,6 +19,8 @@ class MariaDb:
 
         if self.connector is not None:
             self.cursor = self.connector.cursor()
+
+
 
     def create_database(self, name):
         try:
@@ -60,3 +62,4 @@ class MariaDb:
             self.cursor.close()
         if self.connector is not None:
             self.connector.close()
+        print("Connection closed")

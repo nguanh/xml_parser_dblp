@@ -7,6 +7,7 @@ credentials = {
     'password': 'master',
     'host': '127.0.0.1',
 }
+
 try:
     database = MariaDb(credentials)
 except Exception as err:
@@ -14,6 +15,9 @@ except Exception as err:
 else:
     database.create_db(DB_NAME)
     database.createTable("article", DBLP_ARTICLE)
+    database.closeConnection()
+
+
 
 
 
