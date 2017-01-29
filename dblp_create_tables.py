@@ -1,18 +1,20 @@
 from queries import DBLP_ARTICLE
-from mariadb_common import create_database, connect, createDB,createTable
-import mysql.connector
+from mysqlWrapper.mariadb import MariaDb
 
 DB_NAME = 'dblp'
+credentials = {
+    'user': 'root',
+    'password': 'master',
+    'host': '127.0.0.1',
+}
+try:
+    database = MariaDb(credentials)
+except Exception as err:
+    print(err)
+else:
+    database.create_db(DB_NAME)
+    database.createTable("article", DBLP_ARTICLE)
 
 
-cnx = connect()
-
-#cursor is used to pass SQL queries
-cursor = cnx.cursor()
-
-createDB(cnx,cursor,DB_NAME)
-createTable("article",cursor,DBLP_ARTICLE)
 
 
-cursor.close()
-cnx.close
