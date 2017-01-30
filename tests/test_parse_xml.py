@@ -122,4 +122,7 @@ class TestParse_xml(TestCase):
         result = parse_xml("files/valid-full.xml", self.valid_dtd, test_db)
         self.assertEqual(result, (True, 1))
 
-    #TODO add other types
+    def test_inproceedings_article(self):
+        test_db = Mariadb_test()
+        result = parse_xml("files/valid-tags.xml", self.valid_dtd, test_db)
+        self.assertEqual(result, (True, 2))
