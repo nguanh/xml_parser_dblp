@@ -33,7 +33,7 @@ def dict_to_tuple(obj):
     :return:
     """
     all_attributes ={'key','mdate','author','title','ee','url','journal','number','volume','pages','year',"cite", "crossref","booktitle"}
-    optional_attributes= ['ee','url','journal','number','volume','pages',"cite", "crossref","booktitle"]
+    optional_attributes= ['ee','url','journal','number','volume','pages',"cite", "crossref","booktitle","year"]
 
     #check for outlier keys
     key_list = set(obj.keys())

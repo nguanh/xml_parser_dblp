@@ -2,10 +2,10 @@ from dblp.xml_parser import parse_xml
 from mysqlWrapper.mariadb import  MariaDb
 
 
-
-
-xml_path = "dblp.xml"
+#xml_path = "dblp.xml"
+xml_path = 'tests/files/valid-min.xml'
 dtd_path ="dblp.dtd"
+
 credentials = {
     'user': 'root',
     'password': 'master',

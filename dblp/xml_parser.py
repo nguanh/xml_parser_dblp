@@ -12,24 +12,32 @@ COMPLETE_TAG_LIST = (
 "data")
 
 #TODO create tables?
+#TODO include more types like inproceedings
 def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None):
     # validate parameters
     if isinstance(tagList, (str, tuple)) is False:
         print("Error: Invalid tagList")
         return False
-    try:
-        datetime.datetime.strptime(startDate, '%d-%m-%Y')
-    except:
-        if isinstance(startDate, datetime.datetime) is False:
-            print("Error: Invalid start date")
-            return False
-
-    try:
-        datetime.datetime.strptime(endDate, '%d-%m-%Y')
-    except:
-        if isinstance(endDate, datetime.datetime) is False:
-            print("Error: Invalid end date")
-            return False
+    if startDate is not None:
+        try:
+            datetime.datetime.strptime(startDate, '%Y-%m-%d')
+            start = parse_mdate(startDate)
+        except:
+            if isinstance(startDate, datetime.datetime) is False:
+                print("Error: Invalid start date")
+                return False
+            else:
+                start = startDate
+    if endDate is not None:
+        try:
+            datetime.datetime.strptime(endDate, '%Y-%m-%d')
+            end = parse_mdate(endDate)
+        except:
+            if isinstance(endDate, datetime.datetime) is False:
+                print("Error: Invalid end date")
+                return False
+            else:
+                end = endDate
 
     if os.path.isfile(xmlPath) is False:
         print("Error: invalid xml path")
@@ -45,17 +53,27 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
     count = 0
     etree.DTD(file=dtdPath)
 
+    time_range = startDate is not None and endDate is not None
+
+
+
     # iterate through XML
     for event, element in etree.iterparse(xmlPath, tag=tagList, load_dtd=True):
 
         count += 1
+        #print(element.tag)
         dataset = {
             'key': element.get('key'),
             'mdate': parse_mdate(element.get('mdate')),
             'title': ''
         }
+
+        #check date range
+        if time_range:
+            if (start < dataset["mdate"] < end) is False:
+                continue
+
         author_csv_list = ''
-        #TODO include start and enddate
         # iterate through elements of block
         for child in element:
             if child.tag == 'author':
