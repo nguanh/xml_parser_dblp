@@ -5,7 +5,7 @@ from lxml import etree
 
 from dblp.queries import ADD_DBLP_ARTICLE
 from mysqlWrapper.mariadb import MariaDb
-from .helper import parse_mdate, parse_year, dict_to_tuple
+from .helper import parse_mdate, parse_year, dict_to_tuple, is_empty_text
 
 COMPLETE_TAG_LIST = (
 "article", "inproceedings", "proceedings", "book", "incollection", "phdthesis", "mastersthesis", "www", "person",
@@ -82,7 +82,9 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
                 author_csv_list += child.text + ";"
             elif child.tag == 'year':
                 dataset[child.tag] = parse_year(child.text)
-            elif child.tag == 'title' and child.text is None:
+            elif child.tag == 'title' and is_empty_text(child.text):
+
+                print(element.get('key'))
                 for x in child:
                     dataset[child.tag] += x.text.strip() + " " + x.tail.strip()
             else:

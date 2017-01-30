@@ -2,8 +2,9 @@ from dblp.xml_parser import parse_xml
 from mysqlWrapper.mariadb import  MariaDb
 
 
-xml_path = "dblp.xml"
-dtd_path ="dblp.dtd"
+xml_path = "/home/nguyen/raw_file/dblp.xml"
+#xml_path = "tests/files/valid-title2.xml"
+dtd_path ="/home/nguyen/raw_file/dblp.dtd"
 
 credentials = {
     'user': 'root',
@@ -17,7 +18,7 @@ try:
 except Exception as err:
     print(err)
 else:
-    x=parse_xml(xml_path,dtd_path,database,"inproceedings")
+    x=parse_xml(xml_path,dtd_path,database,("article","inproceedings"))
 
 
     # articles count 40841 ?

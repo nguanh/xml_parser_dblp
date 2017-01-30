@@ -1,6 +1,15 @@
 from datetime import date, datetime, timedelta
 from .exception import Dblp_Parsing_Exception
 
+def is_empty_text(text):
+    if text is None:
+        return True
+    if text == "\n":
+        return True
+    if len(text) == 0:
+        return True
+    return False
+
 def parse_mdate(obj):
     """
     :param obj: string in format YYYY-MM-DD

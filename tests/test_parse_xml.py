@@ -98,6 +98,20 @@ class TestParse_xml(TestCase):
                                          'http://dx.doi.org/10.1007/BF03036466',
                                          'db/journals/acta/acta33.html#Saxena96', None, None, None)
                                         )
+    @mock.patch.object(Mariadb_test, 'execute')
+    def test_tag_in_title_regression(self, mock_execute):
+        test_db = Mariadb_test()
+        result = parse_xml("files/valid-title2.xml", self.valid_dtd, test_db)
+        self.assertEqual(result, (True, 1))
+        mock_execute.assert_called_with(ADD_DBLP_ARTICLE,
+                                        ('journals/kbs/FinnieS03', datetime.datetime(2004, 5, 4, 0, 0),
+                                         'Gavin R. Finnie;Zhaohao Sun;', 'R 5 model for case-based reasoning.', '59-65',
+                                         datetime.datetime(2003, 1, 1, 0, 0), '16', 'Knowl.-Based Syst.', '1',
+                                         'http://dx.doi.org/10.1016/S0950-7051(02)00053-9',
+                                         'db/journals/kbs/kbs16.html#FinnieS03', None, None,
+                                         None)
+                                        )
+
 
     @mock.patch.object(Mariadb_test, 'execute')
     def test_multiple_authors(self, mock_execute):
