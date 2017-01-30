@@ -17,7 +17,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
     # validate parameters
     if isinstance(tagList, (str, tuple)) is False:
         print("Error: Invalid tagList")
-        return False
+        return False,0
     if startDate is not None:
         try:
             datetime.datetime.strptime(startDate, '%Y-%m-%d')
@@ -25,7 +25,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
         except:
             if isinstance(startDate, datetime.datetime) is False:
                 print("Error: Invalid start date")
-                return False
+                return False,0
             else:
                 start = startDate
     if endDate is not None:
@@ -35,22 +35,23 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
         except:
             if isinstance(endDate, datetime.datetime) is False:
                 print("Error: Invalid end date")
-                return False
+                return False, 0
             else:
                 end = endDate
 
     if os.path.isfile(xmlPath) is False:
         print("Error: invalid xml path")
-        return False
+        return False, 0
     if os.path.isfile(dtdPath) is False:
         print("Error: invalid dtd path")
-        return False
+        return False, 0
     if isinstance(sql_connector, MariaDb) is False:
         print("Error: Invalid sql_connector instance")
-        return False
+        return False, 0
 
     # init values
-    count = 0
+    success_count = 0
+    overall_count = 0
     etree.DTD(file=dtdPath)
 
     time_range = startDate is not None and endDate is not None
@@ -60,17 +61,17 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
     # iterate through XML
     for event, element in etree.iterparse(xmlPath, tag=tagList, load_dtd=True):
 
-        count += 1
-        #print(element.tag)
+        overall_count += 1
+        # print(element.tag)
         dataset = {
             'key': element.get('key'),
             'mdate': parse_mdate(element.get('mdate')),
             'title': ''
         }
 
-        #check date range
+        # check date range
         if time_range:
-            if (start < dataset["mdate"] < end) is False:
+            if (start <= dataset["mdate"] <= end) is False:
                 continue
 
         author_csv_list = ''
@@ -90,11 +91,12 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
         dataset['author'] = author_csv_list
         tup = dict_to_tuple(dataset)
 
-        print(count, ":", element.get('key'), end=' ')
+        print(success_count, ":", element.get('key'), end=' ')
         if sql_connector.execute(ADD_DBLP_ARTICLE, tup):
+            success_count += 1
             print(' added')
         element.clear()
 
-    print("Final Count :", count)
+    print("Final Count :", success_count)
     sql_connector.close_connection()
-    return True
+    return True,success_count
