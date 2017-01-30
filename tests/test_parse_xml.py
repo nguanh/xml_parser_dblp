@@ -86,11 +86,31 @@ class TestParse_xml(TestCase):
         self.assertListEqual(["a/b/c", "d/e/f"], test_db.getList())
         pass
 
-    def test_tag_in_title(self):
-        pass
+    @mock.patch.object(Mariadb_test, 'execute')
+    def test_tag_in_title(self, mock_execute):
+        test_db = Mariadb_test()
+        result =parse_xml("files/valid-title.xml", self.valid_dtd, test_db)
+        self.assertEqual(result, (True, 1))
+        mock_execute.assert_called_with(ADD_DBLP_ARTICLE,
+                                        ('a/b/c', datetime.datetime(2012, 2, 12, 0, 0), 'Aut hor;', 'title of titles',
+                                         '607-619',
+                                         datetime.datetime(1996, 1, 1, 0, 0), '33', 'Acta Inf.', '7',
+                                         'http://dx.doi.org/10.1007/BF03036466',
+                                         'db/journals/acta/acta33.html#Saxena96', None, None, None)
+                                        )
 
-    def test_multiple_authors(self):
-        pass
+    @mock.patch.object(Mariadb_test, 'execute')
+    def test_multiple_authors(self, mock_execute):
+        test_db = Mariadb_test()
+        result =parse_xml("files/valid-authors.xml", self.valid_dtd, test_db)
+        self.assertEqual(result, (True, 1))
+        mock_execute.assert_called_with(ADD_DBLP_ARTICLE,
+                                        ('a/b/c', datetime.datetime(2012, 2, 12, 0, 0), 'Aut hor;AutA horA;AutB horB;AutC horC;',
+                                         'title of titles','607-619',
+                                         datetime.datetime(1996, 1, 1, 0, 0), '33', 'Acta Inf.', '7',
+                                         'http://dx.doi.org/10.1007/BF03036466',
+                                         'db/journals/acta/acta33.html#Saxena96', None, None, None)
+                                        )
 
     def test_article_valid_min(self):
         test_db = Mariadb_test()
