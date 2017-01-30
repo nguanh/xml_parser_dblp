@@ -4,7 +4,7 @@ import datetime
 
 
 class TestParse_xml(TestCase):
-    valid_dtd = "files/test.xml"
+    valid_dtd = "files/test.dtd"
     valid_xml = "files/test.dtd"
     valid_sql = None
     valid_tag_list = "article"
@@ -32,3 +32,7 @@ class TestParse_xml(TestCase):
     def test_dtd_fail(self):
         self.assertEqual(False, parse_xml(self.valid_xml, "files/bla.bla", self.valid_sql,
                                           self.valid_tag_list,self.valid_start_date_2,self.valid_end_date_2))
+
+    def test_sql_fail(self):
+        self.assertEqual(False, parse_xml(self.valid_xml, self.valid_dtd, None,
+                                          self.valid_tag_list,self.valid_start_date_2, self.valid_end_date_2))

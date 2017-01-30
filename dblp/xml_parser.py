@@ -1,15 +1,17 @@
-from lxml import etree
-from mysqlWrapper.mariadb import MariaDb
-import os
-from queries import ADD_DBLP_ARTICLE
-from .helper import parse_mdate, parse_year, dict_to_tuple
 import datetime
+import os
+
+from lxml import etree
+
+from dblp.queries import ADD_DBLP_ARTICLE
+from mysqlWrapper.mariadb import MariaDb
+from .helper import parse_mdate, parse_year, dict_to_tuple
 
 COMPLETE_TAG_LIST = (
 "article", "inproceedings", "proceedings", "book", "incollection", "phdthesis", "mastersthesis", "www", "person",
 "data")
 
-
+#TODO create tables?
 def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None):
     # validate parameters
     if isinstance(tagList, (str, tuple)) is False:

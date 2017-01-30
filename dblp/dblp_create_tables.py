@@ -1,4 +1,4 @@
-from queries import DBLP_ARTICLE
+from dblp.queries import DBLP_ARTICLE
 from mysqlWrapper.mariadb import MariaDb
 
 DB_NAME = 'dblp'
