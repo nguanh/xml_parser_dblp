@@ -8,8 +8,8 @@ def parse_mdate(obj):
     """
     try:
         return datetime.strptime(obj, "%Y-%m-%d")
-    except ValueError:
-        raise Dblp_Parsing_Exception('mdate','Invalid mdate')
+    except:
+        raise Dblp_Parsing_Exception('Invalid mdate')
 
 
 def parse_year(obj):
@@ -19,7 +19,7 @@ def parse_year(obj):
     """
     try:
         year = int(obj)
-        return date(year,1,1)
+        return datetime(year,1,1)
     except TypeError:
         raise Dblp_Parsing_Exception('year','Invalid year')
     except ValueError:

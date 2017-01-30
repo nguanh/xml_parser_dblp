@@ -17,16 +17,16 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
         return False
     try:
         datetime.datetime.strptime(startDate, '%d-%m-%Y')
-    except ValueError:
-        if isinstance(startDate, datetime) is False:
+    except:
+        if isinstance(startDate, datetime.datetime) is False:
             print("Error: Invalid start date")
             return False
 
     try:
         datetime.datetime.strptime(endDate, '%d-%m-%Y')
-    except ValueError:
-        if isinstance(endDate, datetime) is False:
-            print("Error: Invalid start date")
+    except:
+        if isinstance(endDate, datetime.datetime) is False:
+            print("Error: Invalid end date")
             return False
 
     if os.path.isfile(xmlPath) is False:
