@@ -1,5 +1,6 @@
 from datetime import date, datetime, timedelta
 from .exception import Dblp_Parsing_Exception
+from lxml import etree
 
 def is_empty_text(text):
     if text is None:
@@ -34,6 +35,22 @@ def parse_year(obj):
     except ValueError:
         raise Dblp_Parsing_Exception('year', 'Year is out of range')
 
+def parse_title(root):
+
+    text = ""
+    if isinstance(root.text,str):
+        return root.text
+    for child in root:
+        if isinstance(child.text, str):
+            text += child.text
+        else:
+            text += parse_title(child)
+
+        if isinstance(child.tail, str):
+            text += child.tail
+        elif child.tail is not None:
+            text += parse_title(child.tail)
+    return text
 
 def dict_to_tuple(obj):
     """
@@ -48,7 +65,8 @@ def dict_to_tuple(obj):
     key_list = set(obj.keys())
     diff = key_list-all_attributes
     if len(diff)> 0:
-        print(obj['key'],":",diff)
+       # print(obj['key'],":",diff)
+       pass
 
 
 

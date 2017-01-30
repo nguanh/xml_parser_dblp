@@ -28,7 +28,7 @@ class TestParse_xml(TestCase):
     valid_dtd = "files/test.dtd"
     valid_xml = "files/valid.xml"
     valid_sql = None
-    valid_tag_list = "article"
+    valid_tag_list = ("article","inproceedings")
     valid_start_date_1 = "1992-1-31"
     valid_start_date_2 = datetime.datetime(1991,1,31)
     valid_end_date_1 = "1992-2-15"
@@ -70,7 +70,6 @@ class TestParse_xml(TestCase):
                                          'http://dx.doi.org/10.1007/BF03036466', 'db/journals/acta/acta33.html#Saxena96', None, None, None)
                                         )
         self.assertEqual(result, (True, 1))
-        pass
 
     def test_time_range_0(self):
         test_db = Mariadb_test()
@@ -105,18 +104,32 @@ class TestParse_xml(TestCase):
         self.assertEqual(result, (True, 1))
         mock_execute.assert_called_with(ADD_DBLP_ARTICLE,
                                         ('journals/kbs/FinnieS03', datetime.datetime(2004, 5, 4, 0, 0),
-                                         'Gavin R. Finnie;Zhaohao Sun;', 'R 5 model for case-based reasoning.', '59-65',
+                                         'Gavin R. Finnie;Zhaohao Sun;', 'R5 model for case-based reasoning.', '59-65',
                                          datetime.datetime(2003, 1, 1, 0, 0), '16', 'Knowl.-Based Syst.', '1',
                                          'http://dx.doi.org/10.1016/S0950-7051(02)00053-9',
                                          'db/journals/kbs/kbs16.html#FinnieS03', None, None,
                                          None)
                                         )
+    @mock.patch.object(Mariadb_test, 'execute')
+    def test_tag_in_title_regression2(self, mock_execute):
+        test_db = Mariadb_test()
+        result = parse_xml("files/valid-title3.xml", self.valid_dtd, test_db)
+        self.assertEqual(result, (True, 1))
+
+        mock_execute.assert_called_with(ADD_DBLP_ARTICLE,
+                                        ('journals/acs/GrandjeanL03', datetime.datetime(2006, 5, 29, 0, 0), 'A. R. Grandjeán;M. P. López;',
+                                         'H2q(T, G, delta) and q-perfect Crossed Modules.', '171-184', datetime.datetime(2003, 1, 1, 0, 0), '11',
+                                         'Applied Categorical Structures', '2', 'http://dx.doi.org/10.1023/A:1023507229607',
+                                         'db/journals/acs/acs11.html#GrandjeanL03', None, None, None)
+                                        )
+
+
 
 
     @mock.patch.object(Mariadb_test, 'execute')
     def test_multiple_authors(self, mock_execute):
         test_db = Mariadb_test()
-        result =parse_xml("files/valid-authors.xml", self.valid_dtd, test_db)
+        result =parse_xml("files/valid-authors.xml", self.valid_dtd, test_db,("article","inproceedings"))
         self.assertEqual(result, (True, 1))
         mock_execute.assert_called_with(ADD_DBLP_ARTICLE,
                                         ('a/b/c', datetime.datetime(2012, 2, 12, 0, 0), 'Aut hor;AutA horA;AutB horB;AutC horC;',

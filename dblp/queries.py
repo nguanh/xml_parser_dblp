@@ -8,9 +8,9 @@ DBLP_ARTICLE= (
     "  `title` TEXT NOT NULL,"
     "  `pages` varchar(20),"
     "  `pub_year` date,"
-    "  `volume` int(4),"
+    "  `volume` varchar(20),"
     "  `journal` varchar(100),"
-    "  `journal_number` varchar(10),"
+    "  `journal_number` varchar(20),"
     "  `ee` varchar(200),"
     "  `url` varchar(200),"
     "  `cite` varchar(200),"
@@ -18,7 +18,7 @@ DBLP_ARTICLE= (
     "  `booktitle` varchar(200),"
     "  PRIMARY KEY (`articleId`)"
     ") ENGINE=TokuDB")
-    #") ENGINE=InnoDB")
+    #") ENGINE=InnoDB CHARSET=utf8 COLLATE utf8_unicode_ci")
 
 ADD_DBLP_ARTICLE = ("INSERT INTO article"
                     " (dblp_key,mdate, author,title,pages,pub_year,volume,journal,journal_number,ee,url,cite,crossref,booktitle) "
