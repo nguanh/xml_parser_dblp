@@ -62,7 +62,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
     for event, element in etree.iterparse(xmlPath, tag=tagList, load_dtd=True):
 
         overall_count += 1
-        # print(element.tag)
         dataset = {
             'key': element.get('key'),
             'mdate': parse_mdate(element.get('mdate')),
@@ -84,7 +83,8 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
             elif child.tag == 'year':
                 dataset[child.tag] = parse_year(child.text)
             elif child.tag == 'title':
-                dataset[child.tag] = parse_title(child).replace('\n','')
+                title = parse_title(child).replace('\n', '')
+                dataset[child.tag] = title
             else:
                 dataset[child.tag] = str(child.text).strip()
 
@@ -96,6 +96,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
             success_count += 1
             print(' added')
         element.clear()
+
 
     print("Final Count :", success_count)
     sql_connector.close_connection()

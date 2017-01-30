@@ -39,7 +39,7 @@ def parse_title(root):
 
     text = ""
     if isinstance(root.text,str):
-        return root.text
+        text = root.text
     for child in root:
         if isinstance(child.text, str):
             text += child.text
