@@ -12,9 +12,9 @@ class Mariadb_test(MariaDb):
         self.list = []
         pass
 
-    def execute(self,a,b):
+    def execute(self,a):
         # append key to list
-        self.list.append(b[0])
+        self.list.append(a[0])
         return True
 
     def getList(self):
@@ -63,7 +63,7 @@ class TestParse_xml(TestCase):
         test_db = Mariadb_test()
         result =parse_xml(self.valid_xml, self.valid_dtd, test_db,
                                           self.valid_tag_list,self.valid_start_date_2, self.valid_end_date_2)
-        mock_execute.assert_called_with(ADD_DBLP_ARTICLE,
+        mock_execute.assert_called_with(
                                         ('journals/acta/Saxena96', datetime.datetime(2011, 1, 11, 0, 0), 'Sanjeev Saxena;',
                                          'Parallel Integer Sorting and Simulation Amongst CRCW Models.', '607-619',
                                          datetime.datetime(1996, 1, 1, 0, 0), '33', 'Acta Inf.', '7',
@@ -90,7 +90,7 @@ class TestParse_xml(TestCase):
         test_db = Mariadb_test()
         result =parse_xml("files/valid-title.xml", self.valid_dtd, test_db)
         self.assertEqual(result, (True, 1))
-        mock_execute.assert_called_with(ADD_DBLP_ARTICLE,
+        mock_execute.assert_called_with(
                                         ('a/b/c', datetime.datetime(2012, 2, 12, 0, 0), 'Aut hor;', 'title of titles',
                                          '607-619',
                                          datetime.datetime(1996, 1, 1, 0, 0), '33', 'Acta Inf.', '7',
@@ -102,7 +102,7 @@ class TestParse_xml(TestCase):
         test_db = Mariadb_test()
         result = parse_xml("files/valid-title2.xml", self.valid_dtd, test_db)
         self.assertEqual(result, (True, 1))
-        mock_execute.assert_called_with(ADD_DBLP_ARTICLE,
+        mock_execute.assert_called_with(
                                         ('journals/kbs/FinnieS03', datetime.datetime(2004, 5, 4, 0, 0),
                                          'Gavin R. Finnie;Zhaohao Sun;', 'R5 model for case-based reasoning.', '59-65',
                                          datetime.datetime(2003, 1, 1, 0, 0), '16', 'Knowl.-Based Syst.', '1',
@@ -116,7 +116,7 @@ class TestParse_xml(TestCase):
         result = parse_xml("files/valid-title3.xml", self.valid_dtd, test_db)
         self.assertEqual(result, (True, 1))
 
-        mock_execute.assert_called_with(ADD_DBLP_ARTICLE,
+        mock_execute.assert_called_with(
                                         ('journals/acs/GrandjeanL03', datetime.datetime(2006, 5, 29, 0, 0), 'A. R. Grandjeán;M. P. López;',
                                          'H2q(T, G, delta) and q-perfect Crossed Modules.', '171-184', datetime.datetime(2003, 1, 1, 0, 0), '11',
                                          'Applied Categorical Structures', '2', 'http://dx.doi.org/10.1023/A:1023507229607',
@@ -131,7 +131,7 @@ class TestParse_xml(TestCase):
         test_db = Mariadb_test()
         result =parse_xml("files/valid-authors.xml", self.valid_dtd, test_db,("article","inproceedings"))
         self.assertEqual(result, (True, 1))
-        mock_execute.assert_called_with(ADD_DBLP_ARTICLE,
+        mock_execute.assert_called_with(
                                         ('a/b/c', datetime.datetime(2012, 2, 12, 0, 0), 'Aut hor;AutA horA;AutB horB;AutC horC;',
                                          'title of titles','607-619',
                                          datetime.datetime(1996, 1, 1, 0, 0), '33', 'Acta Inf.', '7',

@@ -2,11 +2,11 @@ from dblp.xml_parser import parse_xml
 from mysqlWrapper.mariadb import  MariaDb
 
 
-xml_path = "/home/nguyen/raw_file/dblp.xml"
-#xml_path = "dblp.xml"
+#xml_path = "/home/nguyen/raw_file/dblp.xml"
+xml_path = "dblp.xml"
 #xml_path = 'tests/files/valid-title4.xml'
-dtd_path ="/home/nguyen/raw_file/dblp.dtd"
-#dtd_path = "dblp.dtd"
+#dtd_path ="/home/nguyen/raw_file/dblp.dtd"
+dtd_path = "dblp.dtd"
 
 credentials = {
     'user': 'root',

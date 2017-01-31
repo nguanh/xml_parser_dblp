@@ -55,7 +55,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
     etree.DTD(file=dtdPath)
 
     time_range = startDate is not None and endDate is not None
-
+    sql_connector.set_query(ADD_DBLP_ARTICLE)
 
 
     # iterate through XML
@@ -92,7 +92,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
         tup = dict_to_tuple(dataset)
 
         print(success_count, ":", element.get('key'), end=' ')
-        if sql_connector.execute(ADD_DBLP_ARTICLE, tup):
+        if sql_connector.execute(tup):
             success_count += 1
             print(' added')
         element.clear()

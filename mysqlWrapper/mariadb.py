@@ -7,6 +7,7 @@ class MariaDb:
     #TODO als with statement
 
     def __init__(self, credentials):
+        self.query  = None
         if "database" in credentials:
             self.current_database = credentials["database"]
         else:
@@ -55,14 +56,20 @@ class MariaDb:
         else:
             print("OK")
 
-    def execute(self, query, tup):
+    def set_query(self, query):
+        self.query = query
+
+    def execute(self,tup):
+        if self.query is None:
+            print("Error: query not set")
+            return False
         try:
-            self.cursor.execute(query, tup)
+            self.cursor.execute(self.query, tup)
             self.connector.commit()
         except mysql.connector.Error as err:
             print("MariaDB query error: {} File not added".format(err))
             print(tup)
-            return False;
+            return False
         return True
 
     def close_connection(self):
