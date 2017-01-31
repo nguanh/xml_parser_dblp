@@ -5,7 +5,7 @@ from lxml import etree
 
 from dblp.queries import ADD_DBLP_ARTICLE
 from mysqlWrapper.mariadb import MariaDb
-from .helper import parse_mdate, parse_year, dict_to_tuple, is_empty_text, parse_title
+from .helper import parse_mdate, parse_year, dict_to_tuple, parse_title
 
 COMPLETE_TAG_LIST = (
 "article", "inproceedings", "proceedings", "book", "incollection", "phdthesis", "mastersthesis", "www", "person",
