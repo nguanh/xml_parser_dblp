@@ -68,6 +68,7 @@ def harvestOAI(link, sql_connector, query=ADD_OAI_DEFAULT,
                 # print(metadata['identifier'], "added")
             else:
                 for key, value in metadata.items():
-                        print(key, ":", value)
+                    pass
+                        #print(key, ":", value)
 
     return True, success_count
