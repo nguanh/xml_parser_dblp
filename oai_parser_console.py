@@ -9,6 +9,8 @@ credentials = {
     'collation': 'utf8mb4_general_ci'
 }
 link ='http://citeseerx.ist.psu.edu/oai2'
+link = 'http://export.arxiv.org/oai2'
+link3 = 'http://elis.da.ulcc.ac.uk/cgi/oai2'
 
 try:
     database = MariaDb(credentials)

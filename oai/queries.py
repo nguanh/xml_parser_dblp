@@ -21,7 +21,7 @@ OAI_DATASET= (
     #") ENGINE=TokuDB CHARSET=utf8mb4")
     ") ENGINE=InnoDB CHARSET=utf8mb4")
 
-ADD_OAI_DATASET = ("INSERT INTO oaimph"
+ADD_OAI_DEFAULT = ("INSERT INTO oaimph"
                     " (identifier,author, title,description,contributor,coverage,dates,"
                     "formats,languages,publisher,relation,rights,sources,subjects,type) "
                     "VALUES ( %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s )")

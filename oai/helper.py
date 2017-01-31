@@ -4,7 +4,7 @@ ATTRIBUTE_ORDER = ["identifier", "creator","title", "description",
                    "publisher","relation", "rights","source", "subject","type"]
 
 
-def parse_metadata(metadata):
+def parse_metadata_default(metadata):
     tup = ()
     for attribute in ATTRIBUTE_ORDER:
         if attribute not in metadata:

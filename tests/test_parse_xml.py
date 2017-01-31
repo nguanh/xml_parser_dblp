@@ -1,27 +1,8 @@
+import datetime
 from unittest import TestCase, mock
 
 from dblp.xml_parser import  parse_xml
-from dblp.queries import  ADD_DBLP_ARTICLE
-from mysqlWrapper.mariadb import MariaDb
-import datetime
-
-
-class Mariadb_test(MariaDb):
-
-    def __init__(self):
-        self.list = []
-        pass
-
-    def execute(self,a):
-        # append key to list
-        self.list.append(a[0])
-        return True
-
-    def getList(self):
-        return self.list
-
-    def close_connection(self):
-        pass
+from tests.tools.Mariadb_stub import Mariadb_test
 
 
 class TestParse_xml(TestCase):
@@ -58,7 +39,7 @@ class TestParse_xml(TestCase):
         self.assertEqual((False, 0), parse_xml(self.valid_xml, self.valid_dtd, None,
                                           self.valid_tag_list,self.valid_start_date_2, self.valid_end_date_2))
 
-    @mock.patch.object(Mariadb_test,'execute')
+    @mock.patch.object(Mariadb_test, 'execute')
     def test_article_valid(self,mock_execute):
         test_db = Mariadb_test()
         result =parse_xml(self.valid_xml, self.valid_dtd, test_db,
