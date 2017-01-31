@@ -15,7 +15,7 @@ OAI_DATASET= (
     "  `relation` varchar(200),"
     "  `rights` TEXT,"
     "  `sources` varchar(200),"
-    "  `subjects` varchar(200),"
+    "  `subjects` TEXT,"
     "  `type` varchar(200),"
     "  PRIMARY KEY (`articleId`)"
     #") ENGINE=TokuDB CHARSET=utf8mb4")

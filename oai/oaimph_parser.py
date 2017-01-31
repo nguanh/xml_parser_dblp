@@ -3,6 +3,7 @@ from sickle import oaiexceptions
 from requests import exceptions
 from mysqlWrapper.mariadb import MariaDb
 from .helper import parse_metadata
+from .queries import ADD_OAI_DATASET
 '''
 OAI LINKS
 http://citeseerx.ist.psu.edu/oai2
@@ -30,8 +31,11 @@ def harvestOAI(link, sql_connector,startDate=None, endDate=None):
 
     # init connection to OAI provider
     sickle = Sickle(link)
+    sql_connector.set_query(ADD_OAI_DATASET)
+    success_count = 0
+    overall_count = 0
 
-    # for every of the OAI verbs (ListRecords, GetRecord, Idenitfy, ListSets, ListMetadataFormats, ListIdentifiers)
+    # for every of the OAI verbs (ListRecords, GetRecord, Identify, ListSets, ListMetadataFormats, ListIdentifiers)
     # there is a separate sickle method
     try:
         records = sickle.ListRecords(**{'metadataPrefix': 'oai_dc', 'from': startDate, 'until': endDate})
@@ -50,7 +54,14 @@ def harvestOAI(link, sql_connector,startDate=None, endDate=None):
 
     for record in records:
             # header is xml
-            #header = record.header
+            # header = record.header
             # metadata is a dict
+            overall_count += 1
             metadata = record.metadata
             met_tuple = parse_metadata(metadata)
+            if sql_connector.execute(met_tuple):
+                success_count += 1
+                #print(metadata['identifier'], "added")
+            else:
+                for key,value in metadata.items():
+                        print(key ,":",value)
