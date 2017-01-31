@@ -104,6 +104,23 @@ class TestParse_xml(TestCase):
                                          'db/journals/acs/acs11.html#GrandjeanL03', None, None, None)
                                         )
 
+    @mock.patch.object(Mariadb_test, 'execute')
+    def test_tag_in_title_regression4(self, mock_execute):
+        test_db = Mariadb_test()
+        result = parse_xml("files/valid-title4.xml", self.valid_dtd, test_db)
+        self.assertEqual(result, (True, 1))
+
+        mock_execute.assert_called_with(
+                ('journals/tkde/PangZM13', datetime.datetime(2015, 9, 9, 0, 0),
+                 'HweeHwa Pang;Jilian Zhang;Kyriakos Mouratidis;',
+                 'Enhancing Access Privacy of Range Retrievals over B+)-Trees.', '1533-1547',
+                 datetime.datetime(2013, 1, 1, 0, 0), '25', 'IEEE Trans. Knowl. Data Eng.',
+                 '7', 'http://doi.ieeecomputersociety.org/10.1109/TKDE.2012.77',
+                 'db/journals/tkde/tkde25.html#PangZM13', None, None, None)
+        )
+
+
+
 
 
 
