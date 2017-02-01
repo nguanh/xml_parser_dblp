@@ -24,17 +24,6 @@ def setup_periodic_tasks(sender, **kwargs):
 # app.conf.update(
 #     result_expires=3600,
 # )
-#app.config_from_object('celeryconfig')
-
-app.conf.beat_schedule = {
-    'add-every-30-seconds': {
-        'task': 'test',
-        'schedule': 30.0,
-        'args': ("huhuh")
-    },
-}
-
-app.conf.timezone = 'UTC'
 '''
 if __name__ == '__main__':
     app.start()
