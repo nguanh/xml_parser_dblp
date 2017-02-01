@@ -10,6 +10,7 @@ app = Celery('proj',
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     # Calls test('hello') every 10 seconds.
+    '''
     sender.add_periodic_task(10.0, test.s('hello'), name='add every 10')
 
     # Calls test('world') every 30 seconds
@@ -19,12 +20,14 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         crontab(hour=7, minute=30, day_of_week=1),
         test.s('Happy Mondays!'),
-    )
 
+    )
+    '''
 # Optional configuration, see the application user guide.
 # app.conf.update(
 #     result_expires=3600,
 # )
+#app.config_from_object('celeryconfig')
 app.conf.beat_schedule = {
     'add-every-30-seconds': {
         'task': 'tasks.add',
@@ -33,7 +36,6 @@ app.conf.beat_schedule = {
     },
 }
 app.conf.timezone = 'UTC'
-
 if __name__ == '__main__':
     app.start()
 
@@ -43,4 +45,4 @@ def test(arg):
     return arg
 # TODO
 # import celery config file
-# app.config_from_object('celeryconfig')
+
