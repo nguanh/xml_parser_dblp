@@ -17,7 +17,7 @@ LOG_CONFIG = {
         'tasks.tasks.parse_dblp': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'log/addtask.log'
+            'filename': 'logs/dblp.log'
         },
     },
     'loggers': {
