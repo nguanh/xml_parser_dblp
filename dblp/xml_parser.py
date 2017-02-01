@@ -6,26 +6,26 @@ from lxml import etree
 from dblp.queries import ADD_DBLP_ARTICLE
 from mysqlWrapper.mariadb import MariaDb
 from .helper import parse_mdate, parse_year, dict_to_tuple, parse_title
+from .exception import Dblp_Parsing_Exception
 
 COMPLETE_TAG_LIST = (
 "article", "inproceedings", "proceedings", "book", "incollection", "phdthesis", "mastersthesis", "www", "person",
 "data")
 
 #TODO create tables?
+#TODO write logs
 #TODO include more types like inproceedings
 def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None):
     # validate parameters
     if isinstance(tagList, (str, tuple)) is False:
-        print("Error: Invalid tagList")
-        return False,0
+        raise Dblp_Parsing_Exception("Invalid tagList")
     if startDate is not None:
         try:
             datetime.datetime.strptime(startDate, '%Y-%m-%d')
             start = parse_mdate(startDate)
         except:
             if isinstance(startDate, datetime.datetime) is False:
-                print("Error: Invalid start date")
-                return False,0
+                raise Dblp_Parsing_Exception("Invalid start Date")
             else:
                 start = startDate
     if endDate is not None:
@@ -34,20 +34,16 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
             end = parse_mdate(endDate)
         except:
             if isinstance(endDate, datetime.datetime) is False:
-                print("Error: Invalid end date")
-                return False, 0
+                raise Dblp_Parsing_Exception("Invalid end Date")
             else:
                 end = endDate
 
     if os.path.isfile(xmlPath) is False:
-        print("Error: invalid xml path")
-        return False, 0
+        raise Dblp_Parsing_Exception("Invalid XML path")
     if os.path.isfile(dtdPath) is False:
-        print("Error: invalid dtd path")
-        return False, 0
+        raise Dblp_Parsing_Exception("Invalid DTD path")
     if isinstance(sql_connector, MariaDb) is False:
-        print("Error: Invalid sql_connector instance")
-        return False, 0
+        raise Dblp_Parsing_Exception("Invalid sql_connector instance")
 
     # init values
     success_count = 0
@@ -95,11 +91,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
             success_count += 1
             print(success_count, ":", element.get('key'),'added')
         element.clear()
-        #TEST
-        if overall_count > 100:
-            sql_connector.close_connection()
-            return True, success_count
-
 
 
     print("Final Count :", success_count)

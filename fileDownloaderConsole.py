@@ -1,5 +1,5 @@
 import sys
-from fileDownloader import download_file
+from fileDownloader.fileDownloader import download_file
 
 url = sys.argv[1]
 storagePath = sys.argv[2]

@@ -3,6 +3,7 @@ from unittest import TestCase, mock
 
 from dblp.xml_parser import  parse_xml
 from tests.tools.Mariadb_stub import Mariadb_test
+from dblp.exception import Dblp_Parsing_Exception
 
 
 class TestParse_xml(TestCase):
@@ -16,28 +17,30 @@ class TestParse_xml(TestCase):
     valid_end_date_2 = datetime.datetime(2012,2,15)
 
     def test_taglist_fail(self):
-        self.assertEqual((False, 0), parse_xml(self.valid_xml,self.valid_dtd,self.valid_sql, 123))
+        self.assertRaises(Dblp_Parsing_Exception,parse_xml,self.valid_xml,self.valid_dtd,self.valid_sql, 123)
 
     def test_startdate_fail(self):
-        self.assertEqual((False, 0), parse_xml(self.valid_xml, self.valid_dtd, self.valid_sql, self.valid_tag_list,123))
+        self.assertRaises(Dblp_Parsing_Exception, parse_xml, self.valid_xml, self.valid_dtd, self.valid_sql,self.valid_tag_list,123)
 
     def test_enddate_fail_1(self):
-        self.assertEqual((False, 0), parse_xml(self.valid_xml, self.valid_dtd, self.valid_sql, self.valid_tag_list,self.valid_start_date_1,123))
+        self.assertRaises(Dblp_Parsing_Exception, parse_xml,self.valid_xml, self.valid_dtd, self.valid_sql,
+                                                self.valid_tag_list,self.valid_start_date_1,123)
 
     def test_enddate_fail_2(self):
-        self.assertEqual((False, 0), parse_xml(self.valid_xml, self.valid_dtd, self.valid_sql, self.valid_tag_list,self.valid_start_date_2,"haha"))
+        self.assertRaises(Dblp_Parsing_Exception, parse_xml,self.valid_xml, self.valid_dtd, self.valid_sql,
+                                                            self.valid_tag_list,self.valid_start_date_2,"haha")
 
     def test_xml_fail(self):
-        self.assertEqual((False, 0), parse_xml("files/bla.bla", self.valid_dtd, self.valid_sql,
-                                          self.valid_tag_list,self.valid_start_date_2,self.valid_end_date_1))
+        self.assertRaises(Dblp_Parsing_Exception, parse_xml,"files/bla.bla", self.valid_dtd, self.valid_sql,
+                                          self.valid_tag_list,self.valid_start_date_2,self.valid_end_date_1)
 
     def test_dtd_fail(self):
-        self.assertEqual((False, 0), parse_xml(self.valid_xml, "files/bla.bla", self.valid_sql,
-                                          self.valid_tag_list,self.valid_start_date_2,self.valid_end_date_2))
+        self.assertRaises(Dblp_Parsing_Exception, parse_xml,self.valid_xml, "files/bla.bla", self.valid_sql,
+                                          self.valid_tag_list,self.valid_start_date_2,self.valid_end_date_2)
 
     def test_sql_fail(self):
-        self.assertEqual((False, 0), parse_xml(self.valid_xml, self.valid_dtd, None,
-                                          self.valid_tag_list,self.valid_start_date_2, self.valid_end_date_2))
+        self.assertRaises(Dblp_Parsing_Exception, parse_xml,self.valid_xml, self.valid_dtd, None,
+                                          self.valid_tag_list,self.valid_start_date_2, self.valid_end_date_2)
 
     @mock.patch.object(Mariadb_test, 'execute')
     def test_article_valid(self,mock_execute):
