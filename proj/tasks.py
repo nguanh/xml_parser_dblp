@@ -33,7 +33,7 @@ def test(arg):
 
 @app.task
 def parse_dblp():
-    xml_path = 'tests/files/valid-title4.xml'
+    xml_path = "/home/nguyen/raw_file/dblp.xml"
     dtd_path ="/home/nguyen/raw_file/dblp.dtd"
     credentials = {
         'user': 'root',

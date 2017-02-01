@@ -17,9 +17,9 @@ imports =('proj.tasks',)
 
 #Schedule of tasks to be executed
 beat_schedule={
-    'add-every-30-seconds': {
+    'add-every-60-seconds': {
         'task': 'proj.tasks.parse_dblp',
-        'schedule': 30.0,
+        'schedule': 60.0,
         #'args': (16, 16)
     },
 

@@ -96,6 +96,11 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
             success_count += 1
             print(' added')
         element.clear()
+        #TEST
+        if overall_count > 100:
+            sql_connector.close_connection()
+            return True, success_count
+
 
 
     print("Final Count :", success_count)
