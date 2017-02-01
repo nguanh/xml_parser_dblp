@@ -32,6 +32,7 @@ if __name__ == '__main__':
 @app.task
 def test(arg):
     print(arg)
+    return arg
 # TODO
 # import celery config file
 # app.config_from_object('celeryconfig')
