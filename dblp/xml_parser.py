@@ -8,12 +8,14 @@ from mysqlWrapper.mariadb import MariaDb
 from .helper import parse_mdate, parse_year, dict_to_tuple, parse_title
 from .exception import Dblp_Parsing_Exception
 import logging
+from celery.utils.log import get_task_logger
+
 COMPLETE_TAG_LIST = (
 "article", "inproceedings", "proceedings", "book", "incollection", "phdthesis", "mastersthesis", "www", "person",
 "data")
 
 #TODO include more types like inproceedings
-def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None):
+def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None, celery=False):
     """
 
     :param xmlPath: path to dblp.xml file
@@ -57,13 +59,20 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
     success_count = 0
     overall_count = 0
     etree.DTD(file=dtdPath)
+
+
+    #set logger
+    if celery:
+        logger = get_task_logger(__name__)
+    else:
+        logger = logging.getLogger(__name__)
     '''
     logging.basicConfig(filename='logs/dblp.log',
                         level=logging.INFO,
                         datefmt='%y.%m.%d %H:%M:%S',)
     logging.info('Started')
     '''
-    logging.info('xml_parse')
+    logger.info('xml_parse')
     time_range = startDate is not None and endDate is not None
     sql_connector.set_query(ADD_DBLP_ARTICLE)
 
@@ -104,10 +113,10 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
         try:
             sql_connector.execute(tup)
         except Exception as e:
-            logging.error("MariaDB error: %s", e)
+            logger.error("MariaDB error: %s", e)
         else:
             success_count += 1
-            logging.info("%s: %s added",success_count,element.get('key'))
+            logger.info("%s: %s added",success_count,element.get('key'))
             #print(success_count, ":", element.get('key'),'added')
         element.clear()
         if overall_count > 100:

@@ -23,6 +23,5 @@ beat_schedule={
 
 }
 
-#TODO ordentlichen start zeitpunkt wählen
 #TODO results integrieren FAIL/PENDING usw
 #start with tasks worker -A tasks -l info --beat

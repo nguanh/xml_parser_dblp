@@ -4,11 +4,12 @@ from dblp.xml_parser import parse_xml
 from mysqlWrapper.mariadb import  MariaDb
 from dblp.queries import DBLP_ARTICLE
 from dblp.exception import Dblp_Parsing_Exception
-import logging
-#from celery.utils.log import get_task_logger
+#import logging
+from celery.utils.log import get_task_logger
 
-#logging = get_task_logger(__name__)
+logger = get_task_logger(__name__)
 
+#TODO set logger setting
 @app.task
 def parse_dblp():
     xml_path = "/home/nguyen/raw_file/dblp.xml"
@@ -23,20 +24,16 @@ def parse_dblp():
     DB_NAME="harvester"
     DBLP_TABLE_NAME = "dblp_article"
 
-    logging.basicConfig(filename='logs/dblp.log',
-                        level=logging.INFO,
-                        datefmt='%y.%m.%d %H:%M:%S', )
-    logging.info('Started')
-
     try:
         database = MariaDb(credentials)
         #create db and table, if not existing
         database.create_db(DB_NAME)
         database.createTable(DBLP_TABLE_NAME, DBLP_ARTICLE)
-        x = parse_xml(xml_path, dtd_path, database, ("article", "inproceedings"))
+        x = parse_xml(xml_path, dtd_path, database, ("article", "inproceedings"), celery=True)
         print (x)
     except Dblp_Parsing_Exception as err:
-        logging.critical(err)
+        logger.critical(err)
+        #TODO set state fail
     except Exception as err:
         print(err)
 
