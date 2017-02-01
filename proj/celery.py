@@ -6,7 +6,7 @@ from celery.schedules import crontab
 app = Celery('proj')
 #import config from config file
 app.config_from_object('celeryconfig')
-'''
+
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     # Calls test('hello') every 10 seconds.
@@ -20,15 +20,13 @@ def setup_periodic_tasks(sender, **kwargs):
         test.s('Happy Mondays!'),
 
     )
-# Optional configuration, see the application user guide.
-# app.conf.update(
-#     result_expires=3600,
-# )
-'''
 if __name__ == '__main__':
     app.start()
 
 
-# TODO
-# import celery config file
-
+@app.task
+def test(arg):
+    print("FANKAR")
+    with open('workfile.txt', 'a') as f:
+        f.write(arg)
+    return "GRAMMAR"
