@@ -4,7 +4,7 @@ from celery import Celery
 app = Celery('proj',
              broker='amqp://',
              backend='amqp://',
-             include=['celeryTasks.tasks'])
+             include=['proj.tasks'])
 
 # Optional configuration, see the application user guide.
 app.conf.update(
