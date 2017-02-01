@@ -12,6 +12,8 @@ credentials = {
 link ='http://citeseerx.ist.psu.edu/oai2'
 link2 = 'http://export.arxiv.org/oai2'
 link3 = 'http://elis.da.ulcc.ac.uk/cgi/oai2'
+with open("workfile.txt",'a') as f:
+    f.write("hihu")
 
 try:
     database = MariaDb(credentials)
