@@ -63,6 +63,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
                         datefmt='%y.%m.%d %H:%M:%S',)
     logging.info('Started')
     '''
+    logging.info('xml_parse')
     time_range = startDate is not None and endDate is not None
     sql_connector.set_query(ADD_DBLP_ARTICLE)
 
@@ -109,6 +110,8 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
             logging.info("%s: %s added",success_count,element.get('key'))
             #print(success_count, ":", element.get('key'),'added')
         element.clear()
+        if overall_count > 100:
+            return 101
 
 
     print("Final Count :", success_count)
