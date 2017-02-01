@@ -1,16 +1,19 @@
 from __future__ import absolute_import, unicode_literals
 from celery import Celery
 from celery.schedules import crontab
-
+'''
 app = Celery('proj',
              broker='amqp://',
              backend='amqp://',
-             include=['proj.tasks'])
-
+             include=['proj.tasks']
+'''
+app = Celery('proj')
+app.config_from_object('celeryconfig')
+'''
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     # Calls test('hello') every 10 seconds.
-    sender.add_periodic_task(10.0, test.delay('hello'), name='add every 10')
+    sender.add_periodic_task(10.0, test.s('hello'), name='add every 10')
     # Calls test('world') every 30 seconds
     sender.add_periodic_task(30.0, test.s('world'), expires=10)
 
@@ -25,7 +28,7 @@ def setup_periodic_tasks(sender, **kwargs):
 #     result_expires=3600,
 # )
 #app.config_from_object('celeryconfig')
-'''
+
 app.conf.beat_schedule = {
     'add-every-30-seconds': {
         'task': 'test',
@@ -41,9 +44,10 @@ if __name__ == '__main__':
 
 @app.task
 def test(arg):
-    print(arg)
+    print("FANKAR")
     with open('workfile.txt', 'a') as f:
         f.write(arg)
+    return "GRAMMAR"
 # TODO
 # import celery config file
 
