@@ -30,7 +30,7 @@ def setup_periodic_tasks(sender, **kwargs):
 #app.config_from_object('celeryconfig')
 app.conf.beat_schedule = {
     'add-every-30-seconds': {
-        'task': 'tasks.add',
+        'task': 'tasks.addd',
         'schedule': 30.0,
         'args': (16, 16)
     },
