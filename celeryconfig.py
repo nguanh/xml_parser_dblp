@@ -1,6 +1,4 @@
 # config file for Celery Daemon
-from celery.schedules import crontab
-from proj import tasks
 
 # default RabbitMQ broker
 broker_url = 'amqp://'
@@ -13,16 +11,19 @@ broker_url = 'amqp://'
 result_backend = 'db+mysql+mysqlconnector://root:master@localhost/dblp'
 
 # List of modules to import when the Celery worker starts.
-imports =('proj.tasks',)
+imports =('tasks.tasks',)
 
 #Schedule of tasks to be executed
 beat_schedule={
     'add-every-60-seconds': {
-        'task': 'proj.tasks.parse_dblp',
+        'task': 'tasks.tasks.parse_dblp',
         'schedule': 60.0,
         #'args': (16, 16)
     },
 
 }
 
-#start with celery worker -A proj -l info --beat
+#TODO ordentlichen start zeitpunkt wählen
+#TODO results integrieren FAIL/PENDING usw
+#refactoring tasks--> celerytask
+#start with tasks worker -A tasks -l info --beat
