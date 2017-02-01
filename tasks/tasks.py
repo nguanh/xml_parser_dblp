@@ -14,7 +14,6 @@ LOG_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'standard': '%(asctime)s %(levelname)s [%(name)s: %(lineno)s] -- %(message)s',
         'datefmt': '%Y-%m-%d %H:%M:%S'
     },
     'handlers': {
