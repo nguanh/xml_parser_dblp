@@ -1,5 +1,6 @@
 # config file for Celery Daemon
 from celery.schedules import crontab
+from proj import tasks
 
 # default RabbitMQ broker
 broker_url = 'amqp://'
