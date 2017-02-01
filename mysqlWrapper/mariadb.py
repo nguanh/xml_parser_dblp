@@ -2,6 +2,7 @@ import mysql.connector
 from mysql.connector import errorcode
 
 
+
 class MariaDb:
     #TODO test
     #TODO als with statement
@@ -61,16 +62,12 @@ class MariaDb:
 
     def execute(self,tup):
         if self.query is None:
-            print("Error: query not set")
-            return False
+            raise Exception("query not set")
         try:
             self.cursor.execute(self.query, tup)
             self.connector.commit()
         except mysql.connector.Error as err:
-            print("MariaDB query error: {} File not added".format(err))
-            print(tup)
-            return False
-        return True
+            raise Exception("MariaDB query error: {} File not added".format(err))
 
     def close_connection(self):
         if self.cursor is not None:

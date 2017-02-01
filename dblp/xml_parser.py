@@ -7,13 +7,12 @@ from dblp.queries import ADD_DBLP_ARTICLE
 from mysqlWrapper.mariadb import MariaDb
 from .helper import parse_mdate, parse_year, dict_to_tuple, parse_title
 from .exception import Dblp_Parsing_Exception
-
+import logging
 COMPLETE_TAG_LIST = (
 "article", "inproceedings", "proceedings", "book", "incollection", "phdthesis", "mastersthesis", "www", "person",
 "data")
 
 #TODO create tables?
-#TODO write logs
 #TODO include more types like inproceedings
 def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None):
     """
@@ -60,6 +59,11 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
     overall_count = 0
     etree.DTD(file=dtdPath)
 
+    logging.basicConfig(filename='logs/dblp.log',
+                        level=logging.INFO,
+                        datefmt='%y.%m.%d %H:%M:%S',)
+    logging.info('Started')
+
     time_range = startDate is not None and endDate is not None
     sql_connector.set_query(ADD_DBLP_ARTICLE)
 
@@ -97,9 +101,14 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
         dataset['author'] = author_csv_list
         tup = dict_to_tuple(dataset)
 
-        if sql_connector.execute(tup):
+        try:
+            sql_connector.execute(tup)
+        except Exception as e:
+            logging.error("MariaDB error: %s", e)
+        else:
             success_count += 1
-            print(success_count, ":", element.get('key'),'added')
+            logging.info("%s: %s added",success_count,element.get('key'))
+            #print(success_count, ":", element.get('key'),'added')
         element.clear()
 
 
