@@ -1,4 +1,5 @@
 # config file for Celery Daemon
+from celery.schedules import crontab
 
 # default RabbitMQ broker
 broker_url = 'amqp://'
@@ -20,9 +21,5 @@ beat_schedule={
         'schedule': 30.0,
         'args': (16, 16)
     },
-    'add-every-10-seconds': {
-        'task': 'tasks.test',
-        'schedule': 10.0,
-        'args': ("Hello",)
-    },
+
 }
