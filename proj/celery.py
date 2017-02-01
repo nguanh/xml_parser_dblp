@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 from celery import Celery
 from celery.schedules import crontab
-from .tasks import *
+from .tasks import test,add
 
 # start celery and give a name
 app = Celery('proj')
