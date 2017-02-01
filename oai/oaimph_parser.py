@@ -17,7 +17,7 @@ resumption token in case of emergency stop
 
 
 def harvestOAI(link, sql_connector, query=ADD_OAI_DEFAULT,
-               processing_function=parse_metadata_default, startDate=None, endDate=None):
+               processing_function=parse_metadata_default, startDate=None, endDate=None, format="oai_dc"):
     """
 
     :param link: link to resource
@@ -42,7 +42,7 @@ def harvestOAI(link, sql_connector, query=ADD_OAI_DEFAULT,
     # for every of the OAI verbs (ListRecords, GetRecord, Identify, ListSets, ListMetadataFormats, ListIdentifiers)
     # there is a separate sickle method
     try:
-        records = sickle.ListRecords(**{'metadataPrefix': 'oai_dc', 'from': startDate, 'until': endDate})
+        records = sickle.ListRecords(**{'metadataPrefix': format, 'from': startDate, 'until': endDate})
     except oaiexceptions.NoRecordsMatch:
         print("No Records found for the the given criteria")
         return False, 0

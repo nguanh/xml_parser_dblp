@@ -18,7 +18,7 @@ try:
 except Exception as err:
     print(err)
 else:
-    x = harvestOAI(link2, database, processing_function=parse_arxiv)
+    x = harvestOAI(link2, database, processing_function=parse_arxiv, format="arXiv")
 
 
 '''
