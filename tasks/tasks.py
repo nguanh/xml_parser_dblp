@@ -13,9 +13,6 @@ logger = get_task_logger(__name__)
 LOG_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
-    'formatters': {
-        'datefmt': '%Y-%m-%d %H:%M:%S'
-    },
     'handlers': {
         'tasks.tasks.parse_dblp': {
             'level': 'INFO',
