@@ -6,8 +6,35 @@ from dblp.queries import DBLP_ARTICLE
 from dblp.exception import Dblp_Parsing_Exception
 #import logging
 from celery.utils.log import get_task_logger
+import logging.config
 
 logger = get_task_logger(__name__)
+
+LOG_CONFIG = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': '%(asctime)s %(levelname)s [%(name)s: %(lineno)s] -- %(message)s',
+        'datefmt': '%Y-%m-%d %H:%M:%S'
+    },
+    'handlers': {
+        'tasks.tasks.parse_dblp': {
+            'level': 'INFO',
+            'filters:': None,
+            'class': 'logging.FileHandler',
+            'filename': 'log/addtask.log'
+        },
+    },
+    'loggers': {
+        'tasks.tasks.parse_dblp': {
+            'handlers': ['tasks.tasks.parse_dblp'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    }
+}
+
+logging.config.dictConfig(LOG_CONFIG)
 
 #TODO set logger setting
 @app.task
