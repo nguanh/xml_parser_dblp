@@ -60,19 +60,12 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
     overall_count = 0
     etree.DTD(file=dtdPath)
 
-
     #set logger
     if celery:
         logger = get_task_logger(__name__)
     else:
         logger = logging.getLogger(__name__)
-    '''
-    logging.basicConfig(filename='logs/dblp.log',
-                        level=logging.INFO,
-                        datefmt='%y.%m.%d %H:%M:%S',)
-    logging.info('Started')
-    '''
-    logger.info('xml_parse')
+
     time_range = startDate is not None and endDate is not None
     sql_connector.set_query(ADD_DBLP_ARTICLE)
 
@@ -117,10 +110,11 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
         else:
             success_count += 1
             logger.info("%s: %s added",success_count,element.get('key'))
-            #print(success_count, ":", element.get('key'),'added')
         element.clear()
+        '''
         if overall_count > 100:
             return 101
+        '''
 
 
     print("Final Count :", success_count)

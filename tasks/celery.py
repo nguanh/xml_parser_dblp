@@ -1,13 +1,9 @@
 from __future__ import absolute_import, unicode_literals
 from celery import Celery
-import logging
-from celery.schedules import crontab
 
 # start tasks and give a name
 app = Celery('tasks')
 
-
-#logging
 
 
 #import config from config file
