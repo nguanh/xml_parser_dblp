@@ -16,7 +16,6 @@ result_backend = 'db+mysql+mysqlconnector://root:master@localhost/dblp'
 imports =('proj.tasks',)
 
 #Schedule of tasks to be executed
-'''
 beat_schedule={
     'add-every-30-seconds': {
         'task': 'tasks.add',
@@ -25,4 +24,5 @@ beat_schedule={
     },
 
 }
-'''
+
+#start with celery worker -A proj -l info --beat

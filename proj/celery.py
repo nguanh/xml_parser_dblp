@@ -1,12 +1,14 @@
 from __future__ import absolute_import, unicode_literals
 from celery import Celery
 from celery.schedules import crontab
+from .tasks import *
 
 # start celery and give a name
 app = Celery('proj')
 #import config from config file
 app.config_from_object('celeryconfig')
 
+'''
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     # Calls test('hello') every 10 seconds.
@@ -20,9 +22,11 @@ def setup_periodic_tasks(sender, **kwargs):
         test.s('Happy Mondays!'),
 
     )
+'''
 if __name__ == '__main__':
     app.start()
 
+#TODO periodic tasks in config verlegen
 
 @app.task
 def test(arg):
