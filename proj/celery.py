@@ -1,13 +1,10 @@
 from __future__ import absolute_import, unicode_literals
 from celery import Celery
 from celery.schedules import crontab
-'''
-app = Celery('proj',
-             broker='amqp://',
-             backend='amqp://',
-             include=['proj.tasks']
-'''
+
+# start celery and give a name
 app = Celery('proj')
+#import config from config file
 app.config_from_object('celeryconfig')
 '''
 @app.on_after_configure.connect
@@ -42,12 +39,7 @@ app.conf.timezone = 'UTC'
 if __name__ == '__main__':
     app.start()
 
-@app.task
-def test(arg):
-    print("FANKAR")
-    with open('workfile.txt', 'a') as f:
-        f.write(arg)
-    return "GRAMMAR"
+
 # TODO
 # import celery config file
 

@@ -4,7 +4,8 @@
 broker_url = 'amqp://'
 
 # default RabbitMQ backend
-result_backend = 'amqp://'
+#result_backend = 'amqp://'
+result_backend = 'db+mysql://root:master@localhost/dblp'
 
 # List of modules to import when the Celery worker starts.
 imports =('proj.tasks',)

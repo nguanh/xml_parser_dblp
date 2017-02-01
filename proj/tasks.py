@@ -19,3 +19,11 @@ def xsum(numbers):
 @app.task
 def hello_world(x):
     print(x)
+
+
+@app.task
+def test(arg):
+    print("FANKAR")
+    with open('workfile.txt', 'a') as f:
+        f.write(arg)
+    return "GRAMMAR"
