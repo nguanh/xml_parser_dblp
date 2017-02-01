@@ -5,6 +5,9 @@ from mysqlWrapper.mariadb import  MariaDb
 from dblp.queries import DBLP_ARTICLE
 from dblp.exception import Dblp_Parsing_Exception
 import logging
+#from celery.utils.log import get_task_logger
+
+#logging = get_task_logger(__name__)
 
 @app.task
 def parse_dblp():
@@ -19,6 +22,11 @@ def parse_dblp():
     }
     DB_NAME="harvester"
     DBLP_TABLE_NAME = "dblp_article"
+
+    logging.basicConfig(filename='logs/dblp.log',
+                        level=logging.INFO,
+                        datefmt='%y.%m.%d %H:%M:%S', )
+    logging.info('Started')
 
     try:
         database = MariaDb(credentials)

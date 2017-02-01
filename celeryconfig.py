@@ -17,7 +17,7 @@ imports =('tasks.tasks',)
 beat_schedule={
     'add-every-60-seconds': {
         'task': 'tasks.tasks.parse_dblp',
-        'schedule': crontab(minute=40, hour=17),
+        'schedule': crontab(minute=10, hour=2),
         #'args': (16, 16)
     },
 
