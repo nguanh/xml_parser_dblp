@@ -53,19 +53,19 @@ class TestParse_xml(TestCase):
                                          datetime.datetime(1996, 1, 1, 0, 0), '33', 'Acta Inf.', '7',
                                          'http://dx.doi.org/10.1007/BF03036466', 'db/journals/acta/acta33.html#Saxena96', None, None, None)
                                         )
-        self.assertEqual(result, (True, 1))
+        self.assertEqual(result, 1)
 
     def test_time_range_0(self):
         test_db = Mariadb_test()
         result =parse_xml("files/valid-timerange-n.xml", self.valid_dtd, test_db,
                                           self.valid_tag_list,"2013-02-01", "2013-02-28")
-        self.assertEqual(result,(True,0))
+        self.assertEqual(result,0)
 
     def test_time_range_n(self):
         test_db = Mariadb_test()
         result =parse_xml("files/valid-timerange-n.xml", self.valid_dtd, test_db,
                                           self.valid_tag_list,"2012-02-01", "2012-02-28")
-        self.assertEqual(result,(True,2))
+        self.assertEqual(result,2)
         self.assertListEqual(["a/b/c", "d/e/f"], test_db.getList())
         pass
 
@@ -73,7 +73,7 @@ class TestParse_xml(TestCase):
     def test_tag_in_title(self, mock_execute):
         test_db = Mariadb_test()
         result =parse_xml("files/valid-title.xml", self.valid_dtd, test_db)
-        self.assertEqual(result, (True, 1))
+        self.assertEqual(result, 1)
         mock_execute.assert_called_with(
                                         ('a/b/c', datetime.datetime(2012, 2, 12, 0, 0), 'Aut hor;', 'title of titles',
                                          '607-619',
@@ -85,7 +85,7 @@ class TestParse_xml(TestCase):
     def test_tag_in_title_regression(self, mock_execute):
         test_db = Mariadb_test()
         result = parse_xml("files/valid-title2.xml", self.valid_dtd, test_db)
-        self.assertEqual(result, (True, 1))
+        self.assertEqual(result, 1)
         mock_execute.assert_called_with(
                                         ('journals/kbs/FinnieS03', datetime.datetime(2004, 5, 4, 0, 0),
                                          'Gavin R. Finnie;Zhaohao Sun;', 'R5 model for case-based reasoning.', '59-65',
@@ -98,7 +98,7 @@ class TestParse_xml(TestCase):
     def test_tag_in_title_regression2(self, mock_execute):
         test_db = Mariadb_test()
         result = parse_xml("files/valid-title3.xml", self.valid_dtd, test_db)
-        self.assertEqual(result, (True, 1))
+        self.assertEqual(result, 1)
 
         mock_execute.assert_called_with(
                                         ('journals/acs/GrandjeanL03', datetime.datetime(2006, 5, 29, 0, 0), 'A. R. Grandjeán;M. P. López;',
@@ -111,7 +111,7 @@ class TestParse_xml(TestCase):
     def test_tag_in_title_regression4(self, mock_execute):
         test_db = Mariadb_test()
         result = parse_xml("files/valid-title4.xml", self.valid_dtd, test_db)
-        self.assertEqual(result, (True, 1))
+        self.assertEqual(result, 1)
 
         mock_execute.assert_called_with(
                 ('journals/tkde/PangZM13', datetime.datetime(2015, 9, 9, 0, 0),
@@ -131,7 +131,7 @@ class TestParse_xml(TestCase):
     def test_multiple_authors(self, mock_execute):
         test_db = Mariadb_test()
         result =parse_xml("files/valid-authors.xml", self.valid_dtd, test_db,("article","inproceedings"))
-        self.assertEqual(result, (True, 1))
+        self.assertEqual(result, 1)
         mock_execute.assert_called_with(
                                         ('a/b/c', datetime.datetime(2012, 2, 12, 0, 0), 'Aut hor;AutA horA;AutB horB;AutC horC;',
                                          'title of titles','607-619',
@@ -143,14 +143,14 @@ class TestParse_xml(TestCase):
     def test_article_valid_min(self):
         test_db = Mariadb_test()
         result = parse_xml("files/valid-min.xml", self.valid_dtd, test_db)
-        self.assertEqual(result, (True, 1))
+        self.assertEqual(result, 1)
 
     def test_article_valid_max(self):
         test_db = Mariadb_test()
         result = parse_xml("files/valid-full.xml", self.valid_dtd, test_db)
-        self.assertEqual(result, (True, 1))
+        self.assertEqual(result,1)
 
     def test_inproceedings_article(self):
         test_db = Mariadb_test()
         result = parse_xml("files/valid-tags.xml", self.valid_dtd, test_db)
-        self.assertEqual(result, (True, 2))
+        self.assertEqual(result, 2)

@@ -16,6 +16,16 @@ COMPLETE_TAG_LIST = (
 #TODO write logs
 #TODO include more types like inproceedings
 def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None):
+    """
+
+    :param xmlPath: path to dblp.xml file
+    :param dtdPath: path to dblp.dtd file
+    :param sql_connector:
+    :param tagList: tuple of tags we want to parse (inproceeedings,article,...) see DTD file
+    :param startDate: include all records with mdate >= startDate
+    :param endDate: include all records with mdate <= endDate
+    :return: number of succesfully added records
+    """
     # validate parameters
     if isinstance(tagList, (str, tuple)) is False:
         raise Dblp_Parsing_Exception("Invalid tagList")
@@ -95,4 +105,4 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
 
     print("Final Count :", success_count)
     sql_connector.close_connection()
-    return True,success_count
+    return success_count
