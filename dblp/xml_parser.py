@@ -12,7 +12,6 @@ COMPLETE_TAG_LIST = (
 "article", "inproceedings", "proceedings", "book", "incollection", "phdthesis", "mastersthesis", "www", "person",
 "data")
 
-#TODO create tables?
 #TODO include more types like inproceedings
 def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None):
     """
@@ -58,12 +57,12 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
     success_count = 0
     overall_count = 0
     etree.DTD(file=dtdPath)
-
+    '''
     logging.basicConfig(filename='logs/dblp.log',
                         level=logging.INFO,
                         datefmt='%y.%m.%d %H:%M:%S',)
     logging.info('Started')
-
+    '''
     time_range = startDate is not None and endDate is not None
     sql_connector.set_query(ADD_DBLP_ARTICLE)
 

@@ -42,7 +42,6 @@ class MariaDb:
                 self.connector.database = name
             else:
                 print(err)
-                exit(1)
 
     def createTable(self, name, query):
 

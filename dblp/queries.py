@@ -1,6 +1,6 @@
 
 DBLP_ARTICLE= (
-    "CREATE TABLE `article` ("
+    "CREATE TABLE `dblp_article` ("
     "  `articleId` int(15) NOT NULL AUTO_INCREMENT,"
     "  `dblp_key` varchar(200) NOT NULL,"
     "  `mdate` date NOT NULL,"
@@ -20,7 +20,7 @@ DBLP_ARTICLE= (
     ") ENGINE=TokuDB CHARSET=utf8mb4")
     #") ENGINE=InnoDB CHARSET=utf8mb4")
 
-ADD_DBLP_ARTICLE = ("INSERT INTO article"
+ADD_DBLP_ARTICLE = ("INSERT INTO dblp_article"
                     " (dblp_key,mdate, author,title,pages,pub_year,volume,journal,journal_number,ee,url,cite,crossref,booktitle) "
                     "VALUES ( %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s )")
 
