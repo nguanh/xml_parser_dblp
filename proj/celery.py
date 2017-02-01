@@ -1,12 +1,12 @@
 from __future__ import absolute_import, unicode_literals
 from celery import Celery
 from celery.schedules import crontab
-from .tasks import test,add
 
 # start celery and give a name
 app = Celery('proj')
 #import config from config file
 app.config_from_object('celeryconfig')
+
 
 '''
 @app.on_after_configure.connect
