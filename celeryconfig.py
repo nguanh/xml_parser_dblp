@@ -1,5 +1,5 @@
 # config file for Celery Daemon
-
+from celery.schedules import crontab
 # default RabbitMQ broker
 broker_url = 'amqp://'
 
@@ -17,7 +17,7 @@ imports =('tasks.tasks',)
 beat_schedule={
     'add-every-60-seconds': {
         'task': 'tasks.tasks.parse_dblp',
-        'schedule': 60.0,
+        'schedule': crontab(minute=40, hour=17),
         #'args': (16, 16)
     },
 
@@ -25,5 +25,4 @@ beat_schedule={
 
 #TODO ordentlichen start zeitpunkt wählen
 #TODO results integrieren FAIL/PENDING usw
-#refactoring tasks--> celerytask
 #start with tasks worker -A tasks -l info --beat

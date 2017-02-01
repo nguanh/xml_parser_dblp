@@ -3,34 +3,6 @@ from .celery import app
 from dblp.xml_parser import parse_xml
 from mysqlWrapper.mariadb import  MariaDb
 
-
-
-@app.task
-def add(x, y):
-    return x + y
-
-
-@app.task
-def mul(x, y):
-    return x * y
-
-
-@app.task
-def xsum(numbers):
-    return sum(numbers)
-
-@app.task
-def hello_world(x):
-    print(x)
-
-
-@app.task
-def test(arg):
-    print("FANKAR")
-    with open('workfile.txt', 'a') as f:
-        f.write(arg)
-    return "GRAMMAR"
-
 @app.task
 def parse_dblp():
     xml_path = "/home/nguyen/raw_file/dblp.xml"

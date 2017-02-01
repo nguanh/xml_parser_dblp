@@ -91,10 +91,9 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
         dataset['author'] = author_csv_list
         tup = dict_to_tuple(dataset)
 
-        print(success_count, ":", element.get('key'), end=' ')
         if sql_connector.execute(tup):
             success_count += 1
-            print(' added')
+            print(success_count, ":", element.get('key'),'added')
         element.clear()
         #TEST
         if overall_count > 100:
