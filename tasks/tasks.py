@@ -4,6 +4,7 @@ from dblp.xml_parser import parse_xml
 from mysqlWrapper.mariadb import  MariaDb
 from dblp.queries import DBLP_ARTICLE
 from dblp.exception import Dblp_Parsing_Exception
+
 from celery.utils.log import get_task_logger
 import logging.config
 import logging
@@ -18,7 +19,7 @@ LOG_CONFIG = {
     },
     'handlers': {
         'tasks.tasks.parse_dblp': {
-            'level': 'CRITICAL',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'logs/dblp.log',
             'formatter': 'default',
@@ -27,7 +28,7 @@ LOG_CONFIG = {
     'loggers': {
         'tasks.tasks.parse_dblp': {
             'handlers': ['tasks.tasks.parse_dblp'],
-            'level': 'CRITICAL',
+            'level': 'INFO',
         },
     }
 }
@@ -35,7 +36,7 @@ LOG_CONFIG = {
 logging.config.dictConfig(LOG_CONFIG)
 
 #TODO set logger setting
-@app.task
+@app.task(bind=True)
 def parse_dblp():
     xml_path = "/home/nguyen/raw_file/dblp.xml"
     dtd_path ="/home/nguyen/raw_file/dblp.dtd"
@@ -48,7 +49,7 @@ def parse_dblp():
     }
     DB_NAME="harvester"
     DBLP_TABLE_NAME = "dblp_article"
-    logger.critical("Test")
+    logger.info("Test")
 
     try:
         database = MariaDb(credentials)
@@ -58,6 +59,7 @@ def parse_dblp():
         x = parse_xml(xml_path, dtd_path, database, ("article", "inproceedings"), celery=True)
         print (x)
         print(__name__)
+        logger.info("hjkjh")
     except Dblp_Parsing_Exception as err:
         logger.critical(err)
         #TODO set state fail
