@@ -10,7 +10,6 @@ import logging.config
 import logging
 
 logger = get_task_logger(__name__)
-print(__name__)
 LOG_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -59,7 +58,6 @@ def parse_dblp():
     }
     DB_NAME="harvester"
     DBLP_TABLE_NAME = "dblp_article"
-    logger.info("Test")
 
     try:
         database = MariaDb(credentials)
@@ -67,9 +65,6 @@ def parse_dblp():
         database.create_db(DB_NAME)
         database.createTable(DBLP_TABLE_NAME, DBLP_ARTICLE)
         x = parse_xml(xml_path, dtd_path, database, ("article", "inproceedings"), celery=True)
-        print (x)
-        print(__name__)
-        logger.info("hjkjh")
     except Dblp_Parsing_Exception as err:
         logger.critical(err)
         #TODO set state fail

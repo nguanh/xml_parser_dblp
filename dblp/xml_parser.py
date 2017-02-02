@@ -66,7 +66,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
     else:
         logger = logging.getLogger(__name__)
 
-    logger.critical("Test2")
 
     time_range = startDate is not None and endDate is not None
     sql_connector.set_query(ADD_DBLP_ARTICLE)
@@ -113,9 +112,10 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
             success_count += 1
             logger.info("%s: %s added",success_count,element.get('key'))
         element.clear()
+        '''
         if overall_count > 100:
-            logger.error("testest")
             return 101
+        '''
 
 
 
