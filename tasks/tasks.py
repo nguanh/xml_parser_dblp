@@ -24,6 +24,12 @@ LOG_CONFIG = {
             'filename': 'logs/dblp.log',
             'formatter': 'default',
         },
+        'dblp.error': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/dblp_error.log',
+            'formatter': 'default',
+        },
     },
     'loggers': {
         'tasks.tasks': {
@@ -31,7 +37,7 @@ LOG_CONFIG = {
             'level': 'INFO',
         },
         'dblp.xml_parser': {
-            'handlers': ['tasks.tasks'],
+            'handlers': ['tasks.tasks','dblp.error'],
             'level': 'INFO',
         },
     }
