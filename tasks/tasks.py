@@ -6,6 +6,7 @@ from dblp.queries import DBLP_ARTICLE
 from dblp.exception import Dblp_Parsing_Exception
 from celery.utils.log import get_task_logger
 import logging.config
+import logging
 
 logger = get_task_logger(__name__)
 
@@ -16,17 +17,17 @@ LOG_CONFIG = {
         'default': {'format': '%(asctime)s - %(levelname)s - %(message)s', 'datefmt': '%Y-%m-%d %H:%M:%S'}
     },
     'handlers': {
-        'default': {
-            'level': 'INFO',
-            'formatter': 'standard',
-            'class': 'logging.StreamHandler',
+        'tasks.tasks.parse_dblp': {
+            'level': 'CRITICAL',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/dblp.log',
+            'formatter': 'default',
         },
     },
     'loggers': {
         'tasks.tasks.parse_dblp': {
-            'handlers': ['default'],
+            'handlers': ['tasks.tasks.parse_dblp'],
             'level': 'CRITICAL',
-            'propagate': True,
         },
     }
 }
