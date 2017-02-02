@@ -114,6 +114,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
             logger.info("%s: %s added",success_count,element.get('key'))
         element.clear()
         if overall_count > 100:
+            print(__name__)
             return 101
 
 
