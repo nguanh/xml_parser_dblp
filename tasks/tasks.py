@@ -18,7 +18,7 @@ LOG_CONFIG = {
         'default': {'format': '%(asctime)s - %(levelname)s - %(message)s', 'datefmt': '%Y-%m-%d %H:%M:%S'}
     },
     'handlers': {
-        'tasks.tasks.parse_dblp': {
+        'tasks.tasks': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'logs/dblp.log',
@@ -26,8 +26,8 @@ LOG_CONFIG = {
         },
     },
     'loggers': {
-        'tasks.tasks.parse_dblp': {
-            'handlers': ['tasks.tasks.parse_dblp'],
+        'tasks.tasks': {
+            'handlers': ['tasks.tasks'],
             'level': 'INFO',
         },
     }
