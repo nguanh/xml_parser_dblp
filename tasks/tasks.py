@@ -36,7 +36,7 @@ LOG_CONFIG = {
 logging.config.dictConfig(LOG_CONFIG)
 
 #TODO set logger setting
-@app.task(bind=True)
+@app.task
 def parse_dblp():
     xml_path = "/home/nguyen/raw_file/dblp.xml"
     dtd_path ="/home/nguyen/raw_file/dblp.dtd"
