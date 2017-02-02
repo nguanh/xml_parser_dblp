@@ -30,6 +30,10 @@ LOG_CONFIG = {
             'handlers': ['tasks.tasks'],
             'level': 'INFO',
         },
+        'dblp.xml_parser': {
+            'handlers': ['tasks.tasks'],
+            'level': 'INFO',
+        },
     }
 }
 
