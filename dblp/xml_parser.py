@@ -14,7 +14,7 @@ COMPLETE_TAG_LIST = (
 "article", "inproceedings", "proceedings", "book", "incollection", "phdthesis", "mastersthesis", "www", "person",
 "data")
 
-#TODO include more types like inproceedings
+#TODO include www enthält nur url und autoren als relevante informationen
 def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None, celery=False):
     """
 
@@ -66,6 +66,8 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
     else:
         logger = logging.getLogger(__name__)
 
+    logger.critical("Test2")
+
     time_range = startDate is not None and endDate is not None
     sql_connector.set_query(ADD_DBLP_ARTICLE)
 
@@ -111,10 +113,9 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
             success_count += 1
             logger.info("%s: %s added",success_count,element.get('key'))
         element.clear()
-        '''
         if overall_count > 100:
             return 101
-        '''
+
 
 
     print("Final Count :", success_count)
