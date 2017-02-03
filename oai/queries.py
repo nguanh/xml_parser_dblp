@@ -1,6 +1,6 @@
 
 OAI_DATASET= (
-    "CREATE TABLE `oaimph` ("
+    "CREATE TABLE `oaipmh_articles` ("
     "  `articleId` int(15) NOT NULL AUTO_INCREMENT,"
     "  `identifier` varchar(200) NOT NULL,"
     "  `author` TEXT NOT NULL," #author =creator(s)
@@ -21,7 +21,7 @@ OAI_DATASET= (
     #") ENGINE=TokuDB CHARSET=utf8mb4")
     ") ENGINE=InnoDB CHARSET=utf8mb4")
 
-ADD_OAI_DEFAULT = ("INSERT INTO oaimph"
+ADD_OAI_DEFAULT = ("INSERT INTO oaipmh_articles"
                     " (identifier,author, title,description,contributor,coverage,dates,"
                     "formats,languages,publisher,relation,rights,sources,subjects,type) "
                     "VALUES ( %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s )")

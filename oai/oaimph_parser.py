@@ -4,20 +4,19 @@ from requests import exceptions
 from mysqlWrapper.mariadb import MariaDb
 from .helper import parse_metadata_default
 from .queries import ADD_OAI_DEFAULT
-'''
-OAI LINKS
-http://citeseerx.ist.psu.edu/oai2
-http://export.arxiv.org/oai2
+from .exception import Oai_Parsing_Exception
+import logging
+from celery.utils.log import get_task_logger
 
+'''
 TODO
-how to process records?
 resumption token in case of emergency stop
 
 '''
 
 
 def harvestOAI(link, sql_connector, query=ADD_OAI_DEFAULT,
-               processing_function=parse_metadata_default, startDate=None, endDate=None, format="oai_dc"):
+               processing_function=parse_metadata_default, startDate=None, endDate=None, format="oai_dc", celery=False):
     """
 
     :param link: link to resource
@@ -30,8 +29,7 @@ def harvestOAI(link, sql_connector, query=ADD_OAI_DEFAULT,
     """
 
     if isinstance(sql_connector, MariaDb) is False:
-        print("Error: Invalid sql_connector instance")
-        return False, 0
+        raise Oai_Parsing_Exception("Error: Invalid sql_connector instance")
 
     # init connection to OAI provider
     sickle = Sickle(link)
@@ -44,17 +42,21 @@ def harvestOAI(link, sql_connector, query=ADD_OAI_DEFAULT,
     try:
         records = sickle.ListRecords(**{'metadataPrefix': format, 'from': startDate, 'until': endDate})
     except oaiexceptions.NoRecordsMatch:
-        print("No Records found for the the given criteria")
-        return False, 0
+        raise Oai_Parsing_Exception("No Records found for the the given criteria")
     except exceptions.MissingSchema:
-        print("Error: Link", link, "is not a valid link")
-        return False, 0
+        raise Oai_Parsing_Exception("Error: Link", link, "is not a valid link")
     except exceptions.ConnectionError:
-        print("Error: Link", link, "cannot be connected")
-        return False, 0
+        raise Oai_Parsing_Exception("Error: Link", link, "cannot be connected")
     except oaiexceptions.BadArgument:
-        print("Error: Invalid Parameters")
-        return False, 0
+        raise Oai_Parsing_Exception("Error: Invalid Parameters")
+
+    #init
+    #set logger
+    if celery:
+        logger = get_task_logger(__name__)
+    else:
+        logger = logging.getLogger(__name__)
+
 
     for record in records:
             # header is xml
@@ -63,12 +65,15 @@ def harvestOAI(link, sql_connector, query=ADD_OAI_DEFAULT,
             overall_count += 1
             metadata = record.metadata
             met_tuple = processing_function(metadata)
-            if sql_connector.execute(met_tuple):
+            try:
+                sql_connector.execute(met_tuple)
                 success_count += 1
-                # print(metadata['identifier'], "added")
-            else:
+                logger.info("%s: %s", success_count, metadata['identifier'])
+            except Exception as e:
+                logger.error("MariaDB error: %s", e)
                 for key, value in metadata.items():
-                    pass
-                        #print(key, ":", value)
-
-    return True, success_count
+                    logger.debug("%s : %s",key, value)
+            #TEST
+            if success_count > 100:
+                return 100
+    return success_count

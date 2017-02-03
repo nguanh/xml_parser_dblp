@@ -110,7 +110,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
             logger.error("MariaDB error: %s", e)
         else:
             success_count += 1
-            logger.info("%s: %s added",success_count,element.get('key'))
+            logger.info("%s: %s",success_count,element.get('key'))
         element.clear()
         '''
         if overall_count > 100:

@@ -4,12 +4,15 @@ from dblp.xml_parser import parse_xml
 from mysqlWrapper.mariadb import  MariaDb
 from dblp.queries import DBLP_ARTICLE
 from dblp.exception import Dblp_Parsing_Exception
+from oai.oaimph_parser import harvestOAI
+from oai.queries import OAI_DATASET
 
 from celery.utils.log import get_task_logger
 import logging.config
 import logging
 
 logger = get_task_logger(__name__)
+#TODO load config into single file
 LOG_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -29,6 +32,12 @@ LOG_CONFIG = {
             'filename': 'logs/dblp_error.log',
             'formatter': 'default',
         },
+        'oai.error': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/oai_error.log',
+            'formatter': 'default',
+        },
     },
     'loggers': {
         'tasks.tasks': {
@@ -39,14 +48,19 @@ LOG_CONFIG = {
             'handlers': ['tasks.tasks','dblp.error'],
             'level': 'INFO',
         },
+        'oai.harvestOAI': {
+            'handlers': ['oai.error'],
+            'level': 'INFO',
+        },
     }
 }
 
 logging.config.dictConfig(LOG_CONFIG)
 
-#TODO set logger setting
 @app.task
 def parse_dblp():
+    #TODO put into global settings
+    #TODO interface für alle harvester überlegen
     xml_path = "/home/nguyen/raw_file/dblp.xml"
     dtd_path ="/home/nguyen/raw_file/dblp.dtd"
     credentials = {
@@ -71,3 +85,27 @@ def parse_dblp():
     except Exception as err:
         print(err)
 
+
+@app.task
+def parse_oai_pmh():
+    credentials = {
+        'user': 'root',
+        'password': 'master',
+        'host': '127.0.0.1',
+        'charset': 'utf8mb4',
+        'collation': 'utf8mb4_general_ci'
+    }
+    DB_NAME="harvester"
+    OAI_TABLE_NAME = "oai_articles"
+    link = 'http://citeseerx.ist.psu.edu/oai2'
+    try:
+        database = MariaDb(credentials)
+        database.create_db(DB_NAME)
+
+        database.createTable(OAI_TABLE_NAME, OAI_DATASET)
+        x = harvestOAI(link, database, celery=True)
+    except Dblp_Parsing_Exception as err:
+        logger.critical(err)
+        #TODO set state fail
+    except Exception as err:
+        print(err)
