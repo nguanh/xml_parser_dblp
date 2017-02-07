@@ -46,9 +46,8 @@ def parse_oai_pmh():
 def harvest_source(package,className):
     mod = __import__(package, fromlist=[className])
     klass = getattr(mod, className)
-    test = klass
     try:
-        source = DblpHarvester()
+        source = klass()
         if source.init():
             result = source.run()
             harvest_source.update_state(
