@@ -10,6 +10,7 @@ from lxml import etree
 
 
 class DblpHarvester(IHarvest):
+    # TODO test
 
     def __init__(self, name, celery=False):
         # call constructor of base class for initiating values
@@ -100,13 +101,3 @@ class DblpHarvester(IHarvest):
         self.logger.info("Final Count : %s", success_count)
         self.connector.close_connection()
         return success_count
-
-
-
-
-
-
-
-x= DblpHarvester("DBLP_HARVESTER")
-print(x.init())
-print(x.run())

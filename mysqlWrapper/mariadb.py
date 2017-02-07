@@ -8,7 +8,7 @@ class MariaDb:
     #TODO als with statement
 
     def __init__(self, credentials):
-        self.query  = None
+        self.query = None
         if "database" in credentials:
             self.current_database = credentials["database"]
         else:
