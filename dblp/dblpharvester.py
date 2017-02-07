@@ -5,8 +5,6 @@ from dblp.queries import DBLP_ARTICLE
 from harvester.exception import IHarvest_Exception
 from dblp.xml_parser import parse_xml
 
-import os
-from lxml import etree
 
 NAME = "DBLP_HARVESTER"
 
@@ -21,14 +19,23 @@ class DblpHarvester(IHarvest):
         IHarvest.__init__(self, NAME, celery)
 
         # get config values
+        #required values
         try:
             self.xml_path = self.configValues["xml_path"]
             self.dtd_path = self.configValues["dtd_path"]
             self.tags = self.configValues["tags"]
             self.table_name = self.configValues["table_name"]
+            self.enabled = self.configValues["enabled"]
         except KeyError as e:
             self.logger.critical("Config value %s missing", e)
             raise IHarvest_Exception("Error: config value {} not found".format(e))
+
+        #optional values
+        if "limit" in self.configValues:
+            self.limit = self.configValues["limit"]
+        else:
+            self.limit = None
+
 
         # convert tags to tuple
         self.tags = tuple(self.tags.split(","))
@@ -44,7 +51,10 @@ class DblpHarvester(IHarvest):
 
     # time_begin and time_end are always valid datetime objects
     def run(self, time_begin=None, time_end=None):
-        return parse_xml(self.xml_path, self.dtd_path, self.connector, self.logger, self.tags, time_begin, time_end)
+        if self.enabled is False:
+            self.logger.info("Task %s is diasabled", self.name)
+            return 0
+        return parse_xml(self.xml_path, self.dtd_path, self.connector, self.logger, self.tags, time_begin, time_end, self.limit)
 
 
 

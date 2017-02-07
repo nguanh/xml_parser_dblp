@@ -69,16 +69,17 @@ def parse_oai_pmh():
 
 #TODO set state fail
 #TODO check instance
+#TODO pass any object
+#TODO check logs
 @app.task
 def harvest_source():
 
     try:
         source = DblpHarvester()
         if source.init():
-            print("hi")
             result = source.run()
         else:
-            print("ho")
+            pass
     except IHarvest_Exception as e:
         print(e)
         pass

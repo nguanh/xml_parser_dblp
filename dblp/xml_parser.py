@@ -11,9 +11,10 @@ from harvester.exception import IHarvest_Exception
 COMPLETE_TAG_LIST = ("article", "inproceedings", "proceedings", "book", "incollection",
                      "phdthesis", "mastersthesis", "www", "person", "data")
 
-#TODO limit einführen
 #TODO handle dblp parsing exception
-def parse_xml(xmlPath, dtdPath, sql_connector,logger, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None):
+
+
+def parse_xml(xmlPath, dtdPath, sql_connector,logger, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None,limit=None):
     """
 
     :param xmlPath: path to dblp.xml file
@@ -101,12 +102,11 @@ def parse_xml(xmlPath, dtdPath, sql_connector,logger, tagList=COMPLETE_TAG_LIST,
             logger.error("MariaDB error: %s", e)
         else:
             success_count += 1
-            logger.debug("%s: %s",success_count,element.get('key'))
+            logger.debug("%s: %s", success_count,element.get('key'))
         element.clear()
 
-        if overall_count > 100:
-            return 101
-
+        if limit is not None and overall_count > limit:
+            break
 
     logger.info("Final Count %s/%s", success_count, overall_count)
     sql_connector.close_connection()
