@@ -71,7 +71,7 @@ def parse_oai_pmh():
 @app.task
 def harvest_source(a,b):
     print("hiho")
-    print(a)
+    print(b)
     '''
     try:
         source = harvester()
