@@ -103,10 +103,10 @@ def parse_xml(xmlPath, dtdPath, sql_connector,logger, tagList=COMPLETE_TAG_LIST,
             success_count += 1
             logger.debug("%s: %s",success_count,element.get('key'))
         element.clear()
-        '''
+
         if overall_count > 100:
             return 101
-        '''
+
 
     logger.info("Final Count %s/%s", success_count, overall_count)
     sql_connector.close_connection()
