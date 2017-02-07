@@ -69,8 +69,9 @@ def parse_oai_pmh():
 #TODO set state fail
 #TODO check instance
 @app.task
-def harvest_source():
+def harvest_source(a,b):
     print("hiho")
+    print(a)
     '''
     try:
         source = harvester()
