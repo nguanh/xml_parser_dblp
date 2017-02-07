@@ -43,8 +43,10 @@ def parse_oai_pmh():
 #TODO pass any object
 
 @app.task
-def harvest_source():
-
+def harvest_source(package,className):
+    mod = __import__(package, fromlist=[className])
+    klass = getattr(mod, className)
+    test = klass
     try:
         source = DblpHarvester()
         if source.init():
@@ -64,6 +66,4 @@ def harvest_source():
             state=states.FAILURE,
             meta= e
         )
-
-
     raise Ignore()

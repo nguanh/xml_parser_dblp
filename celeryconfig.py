@@ -25,7 +25,7 @@ beat_schedule={
     'generic-task': {
         'task': 'tasks.tasks.harvest_source',
         'schedule': 30,
-        #'args': (DblpHarvester, 16)
+        'args': ("dblp.dblpharvester", "DblpHarvester")
     },
 
 
