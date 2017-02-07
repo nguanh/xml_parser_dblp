@@ -1,6 +1,5 @@
 # config file for Celery Daemon
 from celery.schedules import crontab
-from dblp.dblpharvester import DblpHarvester
 # default RabbitMQ broker
 broker_url = 'amqp://'
 
@@ -17,11 +16,6 @@ imports =('tasks.tasks',)
 
 #Schedule of tasks to be executed
 beat_schedule={
-    'add-every-60-seconds': {
-        'task': 'tasks.tasks.parse_dblp',
-        'schedule': crontab(minute=10, hour=2),
-        #'args': (16, 16)
-    },
     'dblp-harvester': {
         'task': 'tasks.tasks.harvest_source',
         'schedule': crontab(minute=10, hour=2),
@@ -30,6 +24,4 @@ beat_schedule={
 
 
 }
-
-#TODO results integrieren FAIL/PENDING usw
 #start with tasks worker -A tasks -l info --beat
