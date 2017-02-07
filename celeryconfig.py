@@ -14,7 +14,6 @@ result_backend = 'db+mysql+mysqlconnector://root:master@localhost/dblp'
 # List of modules to import when the Celery worker starts.
 imports =('tasks.tasks',)
 
-test = DblpHarvester()
 
 #Schedule of tasks to be executed
 beat_schedule={
@@ -26,7 +25,7 @@ beat_schedule={
     'generic-task': {
         'task': 'tasks.tasks.harvest_source',
         'schedule': 30,
-        'args': (test, 16)
+        'args': (DblpHarvester, 16)
     },
 
 
