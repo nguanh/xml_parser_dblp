@@ -12,6 +12,7 @@ import logging.config
 import logging
 
 from harvester.exception import IHarvest_Exception
+from dblp.dblpharvester import DblpHarvester
 
 logger = get_task_logger(__name__)
 logging.config.dictConfig(LOG_CONFIG)
@@ -69,14 +70,10 @@ def parse_oai_pmh():
 #TODO set state fail
 #TODO check instance
 @app.task
-def harvest_source(a,b):
-    print("hiho")
-    print(b)
-    '''
+def harvest_source():
     try:
-        source = harvester()
+        source = DblpHarvester()
         if source.init():
             result = source.run()
     except IHarvest_Exception as e:
         pass
-    '''
