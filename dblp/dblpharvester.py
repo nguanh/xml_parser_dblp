@@ -5,12 +5,11 @@ from dblp.queries import DBLP_ARTICLE, ADD_DBLP_ARTICLE
 from dblp.exception import Dblp_Parsing_Exception
 from dblp.helper import parse_mdate, parse_year, dict_to_tuple, parse_title
 
-import datetime
 import os
-
 from lxml import etree
 
-class dblp_harvester(IHarvest):
+
+class DblpHarvester(IHarvest):
 
     def __init__(self, name, celery=False):
         # call constructor of base class for initiating values
@@ -38,26 +37,8 @@ class dblp_harvester(IHarvest):
             self.logger.critical("Table could not be created")
             return False
 
+    # time_begin and time_end are always valid datetime objects
     def run(self, time_begin=None, time_end=None):
-        #TODO refactor time
-        if time_begin is not None:
-            try:
-                datetime.datetime.strptime(time_begin, '%Y-%m-%d')
-                start = parse_mdate(time_begin)
-            except:
-                if isinstance(time_begin, datetime.datetime) is False:
-                    raise Dblp_Parsing_Exception("Invalid start Date")
-                else:
-                    start = time_begin
-        if time_end is not None:
-            try:
-                datetime.datetime.strptime(time_end, '%Y-%m-%d')
-                end = parse_mdate(time_end)
-            except:
-                if isinstance(time_end, datetime.datetime) is False:
-                    raise Dblp_Parsing_Exception("Invalid end Date")
-                else:
-                    end = time_end
 
         if os.path.isfile(self.xml_path) is False:
             raise Dblp_Parsing_Exception("Invalid XML path")
@@ -83,7 +64,7 @@ class dblp_harvester(IHarvest):
 
             # check date range
             if time_range:
-                if (start <= dataset["mdate"] <= end) is False:
+                if (time_begin <= dataset["mdate"] <= time_end) is False:
                     continue
 
             author_csv_list = ''
@@ -116,7 +97,6 @@ class dblp_harvester(IHarvest):
             if overall_count > 100:
                 return 101
 
-
         self.logger.info("Final Count : %s", success_count)
         self.connector.close_connection()
         return success_count
@@ -127,6 +107,6 @@ class dblp_harvester(IHarvest):
 
 
 
-x= dblp_harvester("DBLP_HARVESTER")
+x= DblpHarvester("DBLP_HARVESTER")
 print(x.init())
-x.run()
+print(x.run())
