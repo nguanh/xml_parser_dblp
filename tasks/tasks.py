@@ -9,7 +9,7 @@ import logging.config
 import logging
 
 from harvester.exception import IHarvest_Exception
-from dblp.dblpharvester import DblpHarvester
+from harvester.IHarvester import IHarvest
 from celery.exceptions import Ignore
 from celery import states
 
@@ -48,6 +48,8 @@ def harvest_source(package,className):
     klass = getattr(mod, className)
     try:
         source = klass()
+        if isinstance(source, IHarvest):
+            raise IHarvest_Exception
         if source.init():
             result = source.run()
             harvest_source.update_state(
