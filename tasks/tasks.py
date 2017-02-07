@@ -10,7 +10,8 @@ import logging
 
 from harvester.exception import IHarvest_Exception
 from dblp.dblpharvester import DblpHarvester
-from celery import states,Celery
+from celery.exceptions import Ignore
+from celery import states
 
 logger = get_task_logger(__name__)
 logging.config.dictConfig(LOG_CONFIG)
@@ -58,3 +59,5 @@ def harvest_source():
     except IHarvest_Exception as e:
         print(e)
         pass
+
+    raise Ignore()
