@@ -22,9 +22,9 @@ beat_schedule={
         'schedule': crontab(minute=10, hour=2),
         #'args': (16, 16)
     },
-    'generic-task': {
+    'dblp-harvester': {
         'task': 'tasks.tasks.harvest_source',
-        'schedule': 30,
+        'schedule': crontab(minute=10, hour=2),
         'args': ("dblp.dblpharvester", "DblpHarvester")
     },
 
