@@ -1,4 +1,4 @@
-class Dblp_Parsing_Exception(Exception):
+class IHarvest_Exception(Exception):
     """Exception raised for errors in the input.
 
     Attributes:

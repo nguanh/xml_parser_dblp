@@ -1,6 +1,5 @@
-from datetime import date, datetime, timedelta
-from .exception import Dblp_Parsing_Exception
-from lxml import etree
+from datetime import datetime
+from .exception import IHarvest_Exception
 
 
 def is_empty_text(text):
@@ -21,7 +20,7 @@ def parse_mdate(obj):
     try:
         return datetime.strptime(obj, "%Y-%m-%d")
     except:
-        raise Dblp_Parsing_Exception('Invalid mdate')
+        raise IHarvest_Exception('Invalid mdate')
 
 
 def parse_year(obj):
@@ -33,9 +32,9 @@ def parse_year(obj):
         year = int(obj)
         return datetime(year,1,1)
     except TypeError:
-        raise Dblp_Parsing_Exception('year','Invalid year')
+        raise IHarvest_Exception('year', 'Invalid year')
     except ValueError:
-        raise Dblp_Parsing_Exception('year', 'Year is out of range')
+        raise IHarvest_Exception('year', 'Year is out of range')
 
 
 def parse_title(root):

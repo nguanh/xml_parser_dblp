@@ -3,7 +3,7 @@ from .celery import app
 from dblp.xml_parser import parse_xml
 from mysqlWrapper.mariadb import  MariaDb
 from dblp.queries import DBLP_ARTICLE
-from dblp.exception import Dblp_Parsing_Exception
+from dblp.exception import IHarvest_Exception
 from oai.oaimph_parser import harvestOAI
 from oai.queries import OAI_DATASET
 from logs.config import LOG_CONFIG
@@ -11,13 +11,13 @@ from celery.utils.log import get_task_logger
 import logging.config
 import logging
 
+from harvester.exception import IHarvest_Exception
+
 logger = get_task_logger(__name__)
 logging.config.dictConfig(LOG_CONFIG)
 
 @app.task
 def parse_dblp():
-    #TODO put into global settings
-    #TODO interface für alle harvester überlegen
     xml_path = "/home/nguyen/raw_file/dblp.xml"
     dtd_path ="/home/nguyen/raw_file/dblp.dtd"
     credentials = {
@@ -36,7 +36,7 @@ def parse_dblp():
         database.create_db(DB_NAME)
         database.createTable(DBLP_TABLE_NAME, DBLP_ARTICLE)
         x = parse_xml(xml_path, dtd_path, database, ("article", "inproceedings"), celery=True)
-    except Dblp_Parsing_Exception as err:
+    except IHarvest_Exception as err:
         logger.critical(err)
         #TODO set state fail
     except Exception as err:
@@ -61,13 +61,17 @@ def parse_oai_pmh():
 
         database.createTable(OAI_TABLE_NAME, OAI_DATASET)
         x = harvestOAI(link, database, celery=True)
-    except Dblp_Parsing_Exception as err:
+    except IHarvest_Exception as err:
         logger.critical(err)
-        #TODO set state fail
     except Exception as err:
         print(err)
 
+#TODO set state fail
 @app.task
 def harvest_source(harvester):
-    #TODO harvester for all
-    print(harvester)
+    try:
+        source = harvester()
+        if source.init():
+            result = source.run()
+    except IHarvest_Exception as e:
+        pass

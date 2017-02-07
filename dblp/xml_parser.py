@@ -6,13 +6,13 @@ from lxml import etree
 from dblp.queries import ADD_DBLP_ARTICLE
 from mysqlWrapper.mariadb import MariaDb
 from .helper import parse_mdate, parse_year, dict_to_tuple, parse_title
-from .exception import Dblp_Parsing_Exception
+from harvester.exception import IHarvest_Exception
 
-COMPLETE_TAG_LIST = (
-"article", "inproceedings", "proceedings", "book", "incollection", "phdthesis", "mastersthesis", "www", "person",
-"data")
+COMPLETE_TAG_LIST = ("article", "inproceedings", "proceedings", "book", "incollection",
+                     "phdthesis", "mastersthesis", "www", "person", "data")
 
-#TODO include www enthält nur url und autoren als relevante informationen
+#TODO limit einführen
+#TODO handle dblp parsing exception
 def parse_xml(xmlPath, dtdPath, sql_connector,logger, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None):
     """
 
@@ -26,14 +26,14 @@ def parse_xml(xmlPath, dtdPath, sql_connector,logger, tagList=COMPLETE_TAG_LIST,
     """
     # validate parameters
     if isinstance(tagList, (str, tuple)) is False:
-        raise Dblp_Parsing_Exception("Invalid tagList")
+        raise IHarvest_Exception("Invalid tagList")
     if startDate is not None:
         try:
             datetime.datetime.strptime(startDate, '%Y-%m-%d')
             start = parse_mdate(startDate)
         except:
             if isinstance(startDate, datetime.datetime) is False:
-                raise Dblp_Parsing_Exception("Invalid start Date")
+                raise IHarvest_Exception("Invalid start Date")
             else:
                 start = startDate
     if endDate is not None:
@@ -42,16 +42,16 @@ def parse_xml(xmlPath, dtdPath, sql_connector,logger, tagList=COMPLETE_TAG_LIST,
             end = parse_mdate(endDate)
         except:
             if isinstance(endDate, datetime.datetime) is False:
-                raise Dblp_Parsing_Exception("Invalid end Date")
+                raise IHarvest_Exception("Invalid end Date")
             else:
                 end = endDate
 
     if os.path.isfile(xmlPath) is False:
-        raise Dblp_Parsing_Exception("Invalid XML path")
+        raise IHarvest_Exception("Invalid XML path")
     if os.path.isfile(dtdPath) is False:
-        raise Dblp_Parsing_Exception("Invalid DTD path")
+        raise IHarvest_Exception("Invalid DTD path")
     if isinstance(sql_connector, MariaDb) is False:
-        raise Dblp_Parsing_Exception("Invalid sql_connector instance")
+        raise IHarvest_Exception("Invalid sql_connector instance")
 
     # init values
     success_count = 0
@@ -108,7 +108,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector,logger, tagList=COMPLETE_TAG_LIST,
             return 101
         '''
 
-
-    logger.info("Final Count %s/%s", success_count,overall_count)
+    logger.info("Final Count %s/%s", success_count, overall_count)
     sql_connector.close_connection()
     return success_count

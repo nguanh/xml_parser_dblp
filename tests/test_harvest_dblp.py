@@ -1,6 +1,5 @@
 from unittest import TestCase
 from harvester.exception import IHarvest_Exception
-from dblp.exception import Dblp_Parsing_Exception
 
 from dblp.dblpharvester import DblpHarvester
 
@@ -33,5 +32,6 @@ class Test_Dblp_Harvester(TestCase):
 
     def test_invalid_run(self):
         x = DblpHarvester(path="files/DH6.ini")
-        self.assertRaises(Dblp_Parsing_Exception, x.run)
+        x.init()
+        self.assertRaises(IHarvest_Exception, x.run)
 

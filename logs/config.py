@@ -37,5 +37,9 @@ LOG_CONFIG = {
             'handlers': ['oai.error'],
             'level': 'INFO',
         },
+        'DBLP_HARVESTER': {
+            'handlers': ['tasks.tasks','dblp.error'],
+            'level': 'INFO',
+        },
     }
 }

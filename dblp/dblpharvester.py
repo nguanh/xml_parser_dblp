@@ -1,9 +1,8 @@
 from harvester.IHarvester import IHarvest
 from harvester.exception import IHarvest_Exception
 
-from dblp.queries import DBLP_ARTICLE, ADD_DBLP_ARTICLE
-from dblp.exception import Dblp_Parsing_Exception
-from dblp.helper import parse_mdate, parse_year, dict_to_tuple, parse_title
+from dblp.queries import DBLP_ARTICLE
+from harvester.exception import IHarvest_Exception
 from dblp.xml_parser import parse_xml
 
 import os
