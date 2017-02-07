@@ -22,3 +22,12 @@ class Test_Dblp_Harvester(TestCase):
     def test_valid_ini(self):
         x = DblpHarvester(path="files/DH5.ini")
         self.assertEqual(x.tags, ('article', 'inproceedings'))
+
+    def test_valid_init(self):
+        x = DblpHarvester(path="files/DH5.ini")
+        self.assertEqual(x.init(),True)
+
+    def test_invalid_init(self):
+        x = DblpHarvester(path="files/DH6.ini")
+        self.assertEqual(x.init(),False)
+
