@@ -39,16 +39,15 @@ def parse_oai_pmh():
     except Exception as err:
         print(err)
 
-#TODO check instance
-#TODO pass any object
-
 @app.task
-def harvest_source(package,className):
+def harvest_source(package, className):
+    # import class from parameters
+    # TODO try catch
     mod = __import__(package, fromlist=[className])
     klass = getattr(mod, className)
     try:
         source = klass()
-        if isinstance(source, IHarvest):
+        if isinstance(source, IHarvest) is False:
             raise IHarvest_Exception
         if source.init():
             result = source.run()
@@ -65,6 +64,6 @@ def harvest_source(package,className):
     except IHarvest_Exception as e:
         harvest_source.update_state(
             state=states.FAILURE,
-            meta= e
+            meta=e
         )
     raise Ignore()
