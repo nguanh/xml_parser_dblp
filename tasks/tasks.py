@@ -75,6 +75,10 @@ def harvest_source():
     try:
         source = DblpHarvester()
         if source.init():
+            print("hi")
             result = source.run()
+        else:
+            print("ho")
     except IHarvest_Exception as e:
+        print(e)
         pass
