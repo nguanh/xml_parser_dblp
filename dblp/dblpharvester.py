@@ -8,13 +8,16 @@ from dblp.helper import parse_mdate, parse_year, dict_to_tuple, parse_title
 import os
 from lxml import etree
 
-
+NAME = "DBLP_HARVESTER"
 class DblpHarvester(IHarvest):
     # TODO test
 
-    def __init__(self, name, celery=False):
+    def __init__(self, celery=False, path= None):
+        # mainly for testing
+        if path is not None:
+            self.HARVESTER_PATH = path
         # call constructor of base class for initiating values
-        IHarvest.__init__(self, name,celery)
+        IHarvest.__init__(self, NAME, celery)
 
         # get config values
         try:
@@ -23,7 +26,7 @@ class DblpHarvester(IHarvest):
             self.tags = self.configValues["tags"]
             self.table_name = self.configValues["table_name"]
         except KeyError as e:
-            self.logger.exception("Config value %s missing", e)
+            self.logger.critical("Config value %s missing", e)
             raise IHarvest_Exception("Error: config value {} not found".format(e))
 
         # convert tags to tuple
