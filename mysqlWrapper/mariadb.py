@@ -52,9 +52,9 @@ class MariaDb:
             if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
                 print("already exists.")
             else:
-                print(err.msg)
+                return False
         else:
-            print("OK")
+            return True
 
     def set_query(self, query):
         self.query = query

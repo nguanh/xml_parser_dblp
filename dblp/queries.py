@@ -17,8 +17,8 @@ DBLP_ARTICLE= (
     "  `crossref` varchar(200),"
     "  `booktitle` varchar(200),"
     "  PRIMARY KEY (`articleId`)"
-    ") ENGINE=TokuDB CHARSET=utf8mb4")
-    #") ENGINE=InnoDB CHARSET=utf8mb4")
+    #") ENGINE=TokuDB CHARSET=utf8mb4")
+    ") ENGINE=InnoDB CHARSET=utf8mb4")
 
 ADD_DBLP_ARTICLE = ("INSERT INTO dblp_article"
                     " (dblp_key,mdate, author,title,pages,pub_year,volume,journal,journal_number,ee,url,cite,crossref,booktitle) "

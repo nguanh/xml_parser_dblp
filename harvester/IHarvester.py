@@ -28,15 +28,15 @@ class IHarvest(ABC):
         try:
             self.configValues = dict(self.config[name])
             self.logger.debug("Config found")
-        except KeyError as e:
+        except KeyError:
             self.logger.exception("Error: Config could not be loaded")
             raise IHarvest_Exception("Error: Config could not be loaded for name" + name)
 
         # connect to database
         credentials = dict(self.config["MARIADB"])
         try:
-           self.database = MariaDb(credentials)
-           self.logger.debug("MariaDB connection successful")
+            self.database = MariaDb(credentials)
+            self.logger.debug("MariaDB connection successful")
         except Exception as err:
             self.logger.exception("MARIADB ERROR: %s", err)
             raise IHarvest_Exception()
@@ -44,6 +44,7 @@ class IHarvest(ABC):
     @abstractmethod
     def init(self):
         pass
+
     @abstractmethod
     def run(self, time_begin=None, time_end=None):
         pass
