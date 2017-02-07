@@ -39,7 +39,6 @@ def parse_oai_pmh():
     except Exception as err:
         print(err)
 
-#TODO set state fail
 #TODO check instance
 #TODO pass any object
 
@@ -51,13 +50,20 @@ def harvest_source():
         if source.init():
             result = source.run()
             harvest_source.update_state(
-                state=states.FAILURE,
-                meta='REASON FOR FAILURE'
+                state=states.SUCCESS,
+                meta=''
             )
+
         else:
-            pass
+            harvest_source.update_state(
+                state=states.FAILURE,
+                meta='Init failed'
+            )
     except IHarvest_Exception as e:
-        print(e)
-        pass
+        harvest_source.update_state(
+            state=states.FAILURE,
+            meta= e
+        )
+
 
     raise Ignore()
