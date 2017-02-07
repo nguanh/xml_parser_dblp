@@ -33,6 +33,7 @@ class DblpHarvester(IHarvest):
         #optional values
         if "limit" in self.configValues:
             self.limit = int(self.configValues["limit"])
+            #TODO try catch
         else:
             self.limit = None
 
@@ -52,7 +53,7 @@ class DblpHarvester(IHarvest):
     # time_begin and time_end are always valid datetime objects
     def run(self, time_begin=None, time_end=None):
         if self.enabled is False:
-            self.logger.info("Task %s is diasabled", self.name)
+            self.logger.info("Task %s is disabled", self.name)
             return 0
         return parse_xml(self.xml_path, self.dtd_path, self.connector, self.logger, self.tags, time_begin, time_end, self.limit)
 

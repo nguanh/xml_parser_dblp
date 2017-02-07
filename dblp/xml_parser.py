@@ -105,7 +105,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector,logger, tagList=COMPLETE_TAG_LIST,
             logger.debug("%s: %s", success_count,element.get('key'))
         element.clear()
 
-        if limit is not None and overall_count > limit:
+        if limit is not None and overall_count >= limit:
             break
 
     logger.info("Final Count %s/%s", success_count, overall_count)
