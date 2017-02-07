@@ -8,7 +8,7 @@ from mysqlWrapper.mariadb import MariaDb
 
 
 class IHarvest(ABC):
-    HARVESTER_PATH = "../harvester.ini"
+    HARVESTER_PATH = "harvester.ini"
 
     def __init__(self, name, celery=False):
         self.name = name

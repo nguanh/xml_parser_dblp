@@ -71,6 +71,7 @@ def parse_oai_pmh():
 #TODO check instance
 @app.task
 def harvest_source():
+
     try:
         source = DblpHarvester()
         if source.init():
