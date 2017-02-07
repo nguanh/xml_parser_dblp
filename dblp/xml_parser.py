@@ -7,15 +7,13 @@ from dblp.queries import ADD_DBLP_ARTICLE
 from mysqlWrapper.mariadb import MariaDb
 from .helper import parse_mdate, parse_year, dict_to_tuple, parse_title
 from .exception import Dblp_Parsing_Exception
-import logging
-from celery.utils.log import get_task_logger
 
 COMPLETE_TAG_LIST = (
 "article", "inproceedings", "proceedings", "book", "incollection", "phdthesis", "mastersthesis", "www", "person",
 "data")
 
 #TODO include www enthält nur url und autoren als relevante informationen
-def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None, celery=False):
+def parse_xml(xmlPath, dtdPath, sql_connector,logger, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None):
     """
 
     :param xmlPath: path to dblp.xml file
@@ -60,13 +58,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
     overall_count = 0
     etree.DTD(file=dtdPath)
 
-    #set logger
-    if celery:
-        logger = get_task_logger(__name__)
-    else:
-        logger = logging.getLogger(__name__)
-
-
     time_range = startDate is not None and endDate is not None
     sql_connector.set_query(ADD_DBLP_ARTICLE)
 
@@ -110,7 +101,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
             logger.error("MariaDB error: %s", e)
         else:
             success_count += 1
-            logger.info("%s: %s",success_count,element.get('key'))
+            logger.debug("%s: %s",success_count,element.get('key'))
         element.clear()
         '''
         if overall_count > 100:
@@ -118,7 +109,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, tagList=COMPLETE_TAG_LIST, startD
         '''
 
 
-
-    print("Final Count :", success_count)
+    logger.info("Final Count %s/%s", success_count,overall_count)
     sql_connector.close_connection()
     return success_count
