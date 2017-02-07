@@ -51,6 +51,7 @@ class MariaDb:
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
                 print("already exists.")
+                return True
             else:
                 return False
         else:

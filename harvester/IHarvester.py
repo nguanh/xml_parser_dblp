@@ -35,7 +35,7 @@ class IHarvest(ABC):
         # connect to database
         credentials = dict(self.config["MARIADB"])
         try:
-            self.database = MariaDb(credentials)
+            self.connector = MariaDb(credentials)
             self.logger.debug("MariaDB connection successful")
         except Exception as err:
             self.logger.exception("MARIADB ERROR: %s", err)

@@ -1,9 +1,14 @@
 from harvester.IHarvester import IHarvest
 from harvester.exception import IHarvest_Exception
 
-from dblp.queries import DBLP_ARTICLE
+from dblp.queries import DBLP_ARTICLE, ADD_DBLP_ARTICLE
 from dblp.exception import Dblp_Parsing_Exception
+from dblp.helper import parse_mdate, parse_year, dict_to_tuple, parse_title
 
+import datetime
+import os
+
+from lxml import etree
 
 class dblp_harvester(IHarvest):
 
@@ -26,16 +31,95 @@ class dblp_harvester(IHarvest):
 
     def init(self):
         # create database if not available
-        if self.database.createTable(self.table_name, DBLP_ARTICLE):
+        if self.connector.createTable(self.table_name, DBLP_ARTICLE):
             self.logger.info("Table %s created", self.table_name)
             return True
         else:
             self.logger.critical("Table could not be created")
             return False
 
+    def run(self, time_begin=None, time_end=None):
+        #TODO refactor time
+        if time_begin is not None:
+            try:
+                datetime.datetime.strptime(time_begin, '%Y-%m-%d')
+                start = parse_mdate(time_begin)
+            except:
+                if isinstance(time_begin, datetime.datetime) is False:
+                    raise Dblp_Parsing_Exception("Invalid start Date")
+                else:
+                    start = time_begin
+        if time_end is not None:
+            try:
+                datetime.datetime.strptime(time_end, '%Y-%m-%d')
+                end = parse_mdate(time_end)
+            except:
+                if isinstance(time_end, datetime.datetime) is False:
+                    raise Dblp_Parsing_Exception("Invalid end Date")
+                else:
+                    end = time_end
 
-    def run(self,time_begin = None, time_end=None):
-        pass
+        if os.path.isfile(self.xml_path) is False:
+            raise Dblp_Parsing_Exception("Invalid XML path")
+        if os.path.isfile(self.xml_path) is False:
+            raise Dblp_Parsing_Exception("Invalid DTD path")
+
+        # init values
+        success_count = 0
+        overall_count = 0
+        etree.DTD(file=self.dtd_path)
+
+        time_range = time_begin is not None and time_end is not None
+        self.connector.set_query(ADD_DBLP_ARTICLE)
+
+        for event, element in etree.iterparse(self.xml_path, tag=self.tags, load_dtd=True):
+
+            overall_count += 1
+            dataset = {
+                'key': element.get('key'),
+                'mdate': parse_mdate(element.get('mdate')),
+                'title': ''
+            }
+
+            # check date range
+            if time_range:
+                if (start <= dataset["mdate"] <= end) is False:
+                    continue
+
+            author_csv_list = ''
+
+            # iterate through elements of block
+            for child in element:
+                if child.tag == 'author':
+                    # stores authors as csv
+                    author_csv_list += child.text + ";"
+                elif child.tag == 'year':
+                    dataset[child.tag] = parse_year(child.text)
+                elif child.tag == 'title':
+                    title = parse_title(child).replace('\n', '')
+                    dataset[child.tag] = title
+                else:
+                    dataset[child.tag] = str(child.text).strip()
+
+            dataset['author'] = author_csv_list
+            tup = dict_to_tuple(dataset)
+
+            try:
+                self.connector.execute(tup)
+            except Exception as e:
+                self.logger.error("MariaDB error: %s", e)
+            else:
+                success_count += 1
+                self.logger.info("%s: %s", success_count, element.get('key'))
+            element.clear()
+
+            if overall_count > 100:
+                return 101
+
+
+        self.logger.info("Final Count : %s", success_count)
+        self.connector.close_connection()
+        return success_count
 
 
 
@@ -45,3 +129,4 @@ class dblp_harvester(IHarvest):
 
 x= dblp_harvester("DBLP_HARVESTER")
 print(x.init())
+x.run()
