@@ -32,7 +32,7 @@ class DblpHarvester(IHarvest):
 
         #optional values
         if "limit" in self.configValues:
-            self.limit = self.configValues["limit"]
+            self.limit = int(self.configValues["limit"])
         else:
             self.limit = None
 
