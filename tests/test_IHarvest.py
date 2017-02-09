@@ -1,6 +1,6 @@
 from unittest import TestCase
 from harvester.IHarvester import IHarvest
-from harvester.exception import IHarvest_Exception
+from harvester.exception import IHarvest_Exception,IHarvest_Disabled
 
 class H1 (IHarvest):
     def __init__(self):
@@ -47,6 +47,48 @@ class H5 (IHarvest):
     def run(self):
         pass
 
+class H6 (IHarvest):
+    def __init__(self):
+        self.HARVESTER_PATH= "files/h4.ini"
+        IHarvest.__init__(self, "h1", False)
+    def init(self):
+        pass
+    def run(self):
+        pass
+
+class H7 (IHarvest):
+    def __init__(self):
+        self.HARVESTER_PATH= "files/h5.ini"
+        IHarvest.__init__(self, "h1", False)
+    def init(self):
+        pass
+    def run(self):
+        pass
+class H8 (IHarvest):
+    def __init__(self):
+        self.HARVESTER_PATH= "files/h6.ini"
+        IHarvest.__init__(self, "h1", False)
+    def init(self):
+        pass
+    def run(self):
+        pass
+class H9 (IHarvest):
+    def __init__(self):
+        self.HARVESTER_PATH= "files/h7.ini"
+        IHarvest.__init__(self, "h1", False)
+    def init(self):
+        pass
+    def run(self):
+        pass
+class H10 (IHarvest):
+    def __init__(self):
+        self.HARVESTER_PATH= "files/h8.ini"
+        IHarvest.__init__(self, "h1", False)
+    def init(self):
+        pass
+    def run(self):
+        pass
+
 
 class TestIHarvest(TestCase):
     def test_h1(self):
@@ -64,4 +106,25 @@ class TestIHarvest(TestCase):
     def test_h5(self):
         #all valid
         H5()
+    def test_h6(self):
+        #missing enabled in ini
+        self.assertRaises(IHarvest_Exception,H6)
+    def test_h7(self):
+        #enabled is false in ini
+        self.assertRaises(IHarvest_Disabled,H7)
+    def test_h8(self):
+        #no limit is set, it is None
+        x = H5()
+        self.assertEqual(x.limit,None)
+    def test_h9(self):
+        #limit is valid
+        x = H8()
+        self.assertEqual(x.limit,100)
+    def test_h10(self):
+        #limit is negative, hence invalid
+        self.assertRaises(IHarvest_Exception, H9)
+    def test_h11(self):
+        #limit is not int
+        self.assertRaises(IHarvest_Exception, H10)
+
 

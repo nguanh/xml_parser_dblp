@@ -5,7 +5,7 @@ from celery.utils.log import get_task_logger
 import logging.config
 import logging
 
-from harvester.exception import IHarvest_Exception
+from harvester.exception import IHarvest_Exception,IHarvest_Disabled
 from harvester.IHarvester import IHarvest
 from celery.exceptions import Ignore
 from celery import states
@@ -42,5 +42,11 @@ def harvest_source(package, className,parameters):
         harvest_source.update_state(
             state=states.FAILURE,
             meta=e
+        )
+    except IHarvest_Disabled:
+        #task is disabled
+        harvest_source.update_state(
+            state=states.SUCCESS,
+            meta=''
         )
     raise Ignore()

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .exception import IHarvest_Exception
+from .exception import IHarvest_Exception, IHarvest_Disabled
 import configparser
 import os.path
 import logging
@@ -29,7 +29,6 @@ class IHarvest(ABC):
             raise IHarvest_Exception("")
 
         # connect to database
-        self.configValues = dict(self.config[name])
         credentials = dict(self.config["MARIADB"])
         try:
             self.connector = MariaDb(credentials)
@@ -37,7 +36,32 @@ class IHarvest(ABC):
         except Exception as err:
             self.logger.critical("MARIADB ERROR: %s", err)
             raise IHarvest_Exception("")
+        # check certain parameters in specific config
+        self.configValues = dict(self.config[name])
 
+        #check enabled
+        try:
+            self.enabled = self.config[name].getboolean("enabled")
+            if self.enabled is None:
+                raise KeyError()
+        except KeyError as e:
+            self.logger.critical("Config value %s missing", e)
+            raise IHarvest_Exception("Error: config value {} not found".format(e))
+
+        if self.enabled is False:
+            self.connector.close_connection()
+            raise IHarvest_Disabled()
+        # check optional limit
+        if "limit" in self.configValues:
+            try:
+                self.limit = int(self.configValues["limit"])
+                if self.limit < 0:
+                    raise
+            except:
+                self.logger.critical("Invalid limit")
+                raise IHarvest_Exception("Error: Invalid limit")
+        else:
+            self.limit = None
 
     @abstractmethod
     def init(self):
