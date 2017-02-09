@@ -11,12 +11,23 @@ LOG_CONFIG = {
             'filename': 'logs/dblp.log',
             'formatter': 'default',
         },
+        'oai': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/oai.log',
+            'formatter': 'default',
+        },
 
     },
     'loggers': {
 
         'DBLP_HARVESTER': {
             'handlers': ['dblp'],
+            'level': 'INFO',
+        },
+
+        'OAI_HARVESTER': {
+            'handlers': ['oai'],
             'level': 'INFO',
         },
     }

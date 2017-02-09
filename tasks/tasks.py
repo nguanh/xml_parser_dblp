@@ -15,14 +15,15 @@ logging.config.dictConfig(LOG_CONFIG)
 
 
 #TODO test
+#TODO parameters as dict
 @app.task
-def harvest_source(package, className):
+def harvest_source(package, className,parameters):
     # import class from parameters
     # TODO try catch
     mod = __import__(package, fromlist=[className])
     klass = getattr(mod, className)
     try:
-        source = klass()
+        source = klass(parameters)
         if isinstance(source, IHarvest) is False:
             raise IHarvest_Exception
         if source.init():
