@@ -12,9 +12,11 @@ COMPLETE_TAG_LIST = ("article", "inproceedings", "proceedings", "book", "incolle
                      "phdthesis", "mastersthesis", "www", "person", "data")
 
 #TODO handle dblp parsing exception
+#TODO test limit
 
 
-def parse_xml(xmlPath, dtdPath, sql_connector,logger, tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None,limit=None):
+def parse_xml(xmlPath, dtdPath, sql_connector, logger,
+              tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None,limit=None):
     """
 
     :param xmlPath: path to dblp.xml file

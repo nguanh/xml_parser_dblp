@@ -5,7 +5,6 @@ from mysql.connector import errorcode
 
 class MariaDb:
     #TODO test
-    #TODO als with statement
 
     def __init__(self, credentials):
         self.query = None

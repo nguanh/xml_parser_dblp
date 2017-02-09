@@ -29,8 +29,6 @@ class DblpHarvester(IHarvest):
             self.logger.critical("Config value %s missing", e)
             raise IHarvest_Exception("Error: config value {} not found".format(e))
 
-
-
         # convert tags to tuple
         self.tags = tuple(self.tags.split(","))
 

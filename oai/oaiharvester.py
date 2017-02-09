@@ -18,17 +18,9 @@ class OaiHarvester(IHarvest):
         try:
             self.link = self.configValues["link"]
             self.table_name = self.configValues["table_name"]
-            self.enabled = self.configValues["enabled"]
         except KeyError as e:
             self.logger.critical("Config value %s missing", e)
             raise IHarvest_Exception("Error: config value {} not found".format(e))
-
-        # optional values
-        if "limit" in self.configValues:
-            self.limit = int(self.configValues["limit"])
-            #TODO try catch
-        else:
-            self.limit = None
 
     def init(self):
         # create database if not available
@@ -41,10 +33,8 @@ class OaiHarvester(IHarvest):
 
     # time_begin and time_end are always valid datetime objects
     def run(self, time_begin=None, time_end=None):
-        if self.enabled is False:
-            self.logger.info("Task %s is disabled", self.name)
-            return 0
-        return harvestOAI(self.link,self.connector,self.logger,startDate=time_begin,endDate=time_end,limit=self.limit)
+        return harvestOAI(self.link, self.connector, self.logger,
+                          startDate=time_begin, endDate=time_end, limit=self.limit)
 
 
 
