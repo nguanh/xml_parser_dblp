@@ -1,22 +1,17 @@
 from harvester.IHarvester import IHarvest
-from harvester.exception import IHarvest_Exception
-
 from oai.queries import OAI_DATASET
 from harvester.exception import IHarvest_Exception
 from oai.oaimph_parser import harvestOAI
 
 
-NAME = "OAI_HARVESTER"
-
-
 class OaiHarvester(IHarvest):
 
-    def __init__(self, celery=False, path=None):
+    def __init__(self,name, celery=False, path=None):
         # mainly for testing
         if path is not None:
             self.HARVESTER_PATH = path
         # call constructor of base class for initiating values
-        IHarvest.__init__(self, NAME, celery)
+        IHarvest.__init__(self, name, celery)
 
         # get config values
         # required values
@@ -44,13 +39,12 @@ class OaiHarvester(IHarvest):
             self.logger.critical("Table could not be created")
             return False
 
-    #TODO
     # time_begin and time_end are always valid datetime objects
     def run(self, time_begin=None, time_end=None):
         if self.enabled is False:
             self.logger.info("Task %s is disabled", self.name)
             return 0
-        #return parse_xml(self.xml_path, self.dtd_path, self.connector, self.logger, self.tags, time_begin, time_end, self.limit)
+        return harvestOAI(self.link,self.connector,self.logger,startDate=time_begin,endDate=time_end,limit=self.limit)
 
 
 

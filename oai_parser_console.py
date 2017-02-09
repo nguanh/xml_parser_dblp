@@ -20,7 +20,7 @@ try:
 except Exception as err:
     print(err)
 else:
-    x = harvestOAI(link2, database, processing_function=parse_arxiv, parsing_class=ArXivRecord, format="arXiv", query=ADD_ARXIV)
+    x = harvestOAI(link2, database, processing_function=parse_arxiv, parsing_class=ArXivRecord, xml_format="arXiv", query=ADD_ARXIV)
 
 
 '''

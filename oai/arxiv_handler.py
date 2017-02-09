@@ -4,7 +4,7 @@ from datetime import datetime
 #TODO handle exception
 class ArXivRecord(Record):
 
-    def __init__(self,record_element, strip_ns=True):
+    def __init__(self, record_element, strip_ns=True):
         super(Record, self).__init__(record_element, strip_ns=strip_ns)
         self.header = Header(self.xml.find(
             './/' + self._oai_namespace + 'header'))
@@ -13,14 +13,15 @@ class ArXivRecord(Record):
         if not self.deleted:
             tree = self.xml.find(".//" + self._oai_namespace + "metadata/{http://arxiv.org/OAI/arXiv/}arXiv")
             for element in tree.getchildren():
-                tag = element.tag.replace("{http://arxiv.org/OAI/arXiv/}","")
+                tag = element.tag.replace("{http://arxiv.org/OAI/arXiv/}", "")
                 text = element.text
                 if tag == "authors":
                     text = self.parse_authors(element)
                 elif tag == "created" or tag == "updated":
                     text = datetime.strptime(text, "%Y-%m-%d")
                 elif tag == "id":
-                    tag ="identifier"# rename
+                    tag = "identifier"
+                    # rename
 
                 self.metadata[tag] = text
 
