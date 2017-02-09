@@ -6,7 +6,7 @@ import logging
 from celery.utils.log import get_task_logger
 from mysqlWrapper.mariadb import MariaDb
 
-
+#TODO logs entfernen, da sie durch exceptions redundant sind
 class IHarvest(ABC):
     HARVESTER_PATH = "harvester.ini"
 

@@ -27,5 +27,28 @@ ADD_OAI_DEFAULT = ("INSERT INTO oaipmh_articles"
                     "VALUES ( %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s )")
 
 
+ARXIV_ARTICLE = (
+    "CREATE TABLE `arxiv_articles` ("
+    "  `articleId` int(15) NOT NULL AUTO_INCREMENT,"
+    "  `identifier` varchar(50) NOT NULL,"
+    "  `created` DATE,"
+    "  `updated` DATE,"
+    "  `author` TEXT NOT NULL,"
+    "  `title` TEXT NOT NULL,"
+    "  `mscclass` varchar(200),"
+    "  `acmclass` varchar(200),"
+    "  `reportno` varchar(200),"
+    "  `journalref` varchar(200),"
+    "  `comments` TEXT,"
+    "  `description` TEXT,"
+    "  `categories` VARCHAR(200),"
+    "  `doi` varchar(200),"
+    "  PRIMARY KEY (`articleId`)"
+    # ") ENGINE=TokuDB CHARSET=utf8mb4")
+    ") ENGINE=InnoDB CHARSET=utf8mb4")
 
 
+ADD_ARXIV = ("INSERT INTO arxiv_articles"
+                    " (identifier,created, updated,author,title,mscclass,acmclass,"
+                    "reportno,journalref,comments,description,categories,doi) "
+                    "VALUES ( %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s )")
