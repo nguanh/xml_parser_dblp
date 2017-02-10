@@ -52,6 +52,7 @@ class MariaDb:
                 print("already exists.")
                 return True
             else:
+                print(err)
                 return False
         else:
             return True
