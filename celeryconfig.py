@@ -19,7 +19,7 @@ beat_schedule = {
     'dblp-harvester': {
         'task': 'tasks.tasks.harvest_source',
         'schedule': 60,
-        'args': ("dblp.dblpharvester", "DblpHarvester")
+        'args': ("dblp.dblpharvester", "DblpHarvester","")
     }
 }
 #start with tasks worker -A tasks -l info --beat
