@@ -20,8 +20,6 @@ logging.config.dictConfig(LOG_CONFIG)
 def harvest_source(package, className,parameters):
     # import class from parameters
     try:
-        print(__path__)
-        print(__file__)
         print(__name__)
         print(package)
         print(className)
