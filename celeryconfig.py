@@ -26,7 +26,7 @@ beat_schedule = {
     'oai-harvester': {
         'task': 'tasks.tasks.harvest_source',
         'schedule': 120,
-        'args': ("oaiharvester", "OaiHarvester", "OAI_HARVESTER")
+        'args': ("dblp.dblpharvester", "DblpHarvester", "OAI_HARVESTER")
     },
 
 
