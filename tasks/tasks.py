@@ -21,6 +21,8 @@ logging.config.dictConfig(LOG_CONFIG)
 def harvest_source(package, className,parameters):
     # import class from parameters
     try:
+        sys.path.append("/home/nguyen/xml_parser_dblp/")
+        sys.path.append("/home/nguyen/xml_parser_dblp/tasks/")
         print(sys.path)
         print(package)
         print(className)
