@@ -1,4 +1,4 @@
-#from __future__ import absolute_import, unicode_literals
+from __future__ import absolute_import, unicode_literals
 from .celery import app
 from logs.config import LOG_CONFIG
 from celery.utils.log import get_task_logger
@@ -9,6 +9,7 @@ from harvester.exception import IHarvest_Exception,IHarvest_Disabled
 from harvester.IHarvester import IHarvest
 from celery.exceptions import Ignore
 from celery import states
+import sys
 
 logger = get_task_logger(__name__)
 logging.config.dictConfig(LOG_CONFIG)
@@ -20,7 +21,7 @@ logging.config.dictConfig(LOG_CONFIG)
 def harvest_source(package, className,parameters):
     # import class from parameters
     try:
-        print(__name__)
+        print(sys.path)
         print(package)
         print(className)
         mod = __import__(package, fromlist=[className])
