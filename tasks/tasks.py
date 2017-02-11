@@ -24,6 +24,7 @@ def harvest_source(package, className,parameters):
         print(sys.path)
         print(package)
         print(className)
+        __i
         mod = __import__(package, fromlist=[className])
         klass = getattr(mod, className)
     except ImportError as e:
