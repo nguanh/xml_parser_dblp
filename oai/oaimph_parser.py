@@ -63,7 +63,7 @@ def harvestOAI(link, sql_connector, logger,
             try:
                 sql_connector.execute(met_tuple)
                 success_count += 1
-                logger.info("%s: %s", success_count, metadata['identifier'])
+                logger.debug("%s: %s", success_count, metadata['identifier'])
             except Exception as e:
                 logger.error("MariaDB error %s: %s", metadata['identifier'], e)
 
