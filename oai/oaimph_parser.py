@@ -69,4 +69,6 @@ def harvestOAI(link, sql_connector, logger,
 
             if limit is not None and overall_count >= limit:
                 break
+    logger.info("Final Count %s/%s", success_count, overall_count)
+    sql_connector.close_connection()
     return success_count

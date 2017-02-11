@@ -17,6 +17,7 @@ logging.config.dictConfig(LOG_CONFIG)
 
 #TODO test
 #TODO parameters as dict
+#TODO set logger
 @app.task
 def harvest_source(package, className,parameters):
     # import class from parameters
