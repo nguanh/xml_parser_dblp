@@ -19,9 +19,15 @@ logging.config.dictConfig(LOG_CONFIG)
 @app.task
 def harvest_source(package, className,parameters):
     # import class from parameters
-    # TODO try catch
-    mod = __import__(package, fromlist=[className])
-    klass = getattr(mod, className)
+    try:
+        mod = __import__(package, fromlist=[className])
+        klass = getattr(mod, className)
+    except ImportError as e:
+        print(e)
+        harvest_source.update_state(
+            state=states.FAILURE,
+            meta=e,
+        )
     try:
         source = klass(parameters)
         if isinstance(source, IHarvest) is False:
@@ -44,7 +50,7 @@ def harvest_source(package, className,parameters):
             meta=e
         )
     except IHarvest_Disabled:
-        #task is disabled
+        # task is disabled
         harvest_source.update_state(
             state=states.SUCCESS,
             meta=''

@@ -6,7 +6,7 @@ from oai.oaimph_parser import harvestOAI
 
 class OaiHarvester(IHarvest):
 
-    def __init__(self,name, celery=False, path=None):
+    def __init__(self, name, celery=False, path=None):
         # mainly for testing
         if path is not None:
             self.HARVESTER_PATH = path

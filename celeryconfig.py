@@ -11,11 +11,11 @@ broker_url = 'amqp://'
 result_backend = 'db+mysql+mysqlconnector://root:master@localhost/dblp'
 
 # List of modules to import when the Celery worker starts.
-imports =('tasks.tasks',)
+imports = ('tasks.tasks',)
 
 
 #Schedule of tasks to be executed
-beat_schedule={
+beat_schedule = {
     '''
     'dblp-harvester': {
         'task': 'tasks.tasks.harvest_source',
