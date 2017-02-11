@@ -20,6 +20,8 @@ logging.config.dictConfig(LOG_CONFIG)
 def harvest_source(package, className,parameters):
     # import class from parameters
     try:
+        print(package)
+        print(className)
         mod = __import__(package, fromlist=[className])
         klass = getattr(mod, className)
     except ImportError as e:
