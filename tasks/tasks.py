@@ -22,10 +22,7 @@ def harvest_source(package, className,parameters):
     # import class from parameters
     try:
         sys.path.append("/home/nguyen/xml_parser_dblp/")
-        sys.path.append("/home/nguyen/xml_parser_dblp/tasks/")
-        print(sys.path)
-        print(package)
-        print(className)
+        #sys.path.append("/home/nguyen/xml_parser_dblp/tasks/")
         mod = __import__(package, fromlist=[className])
         klass = getattr(mod, className)
     except ImportError as e:
@@ -42,12 +39,14 @@ def harvest_source(package, className,parameters):
             raise IHarvest_Exception
         if source.init():
             result = source.run()
+            print("test")
             harvest_source.update_state(
                 state=states.SUCCESS,
                 meta=''
             )
 
         else:
+            print("fail")
             harvest_source.update_state(
                 state=states.FAILURE,
                 meta='Init failed'
