@@ -39,12 +39,11 @@ def harvest_source(package, className,parameters):
             raise IHarvest_Exception
         if source.init():
             result = source.run()
-            print("test")
+            print(result)
             harvest_source.update_state(
                 state=states.SUCCESS,
                 meta=''
             )
-
         else:
             print("fail")
             harvest_source.update_state(
@@ -52,11 +51,13 @@ def harvest_source(package, className,parameters):
                 meta='Init failed'
             )
     except IHarvest_Exception as e:
+        print("fail3")
         harvest_source.update_state(
             state=states.FAILURE,
             meta=e
         )
     except IHarvest_Disabled:
+        print("fail2")
         # task is disabled
         harvest_source.update_state(
             state=states.SUCCESS,
