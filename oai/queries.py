@@ -1,8 +1,7 @@
 
 OAI_DATASET= (
     "CREATE TABLE `oaipmh_articles` ("
-    "  `articleId` int(15) NOT NULL AUTO_INCREMENT,"
-    "  `identifier` varchar(200) NOT NULL,"
+    "  `identifier` varchar(150) NOT NULL,"
     "  `author` TEXT NOT NULL," #author =creator(s)
     "  `title` TEXT NOT NULL,"
     "  `description` TEXT,"
@@ -17,14 +16,34 @@ OAI_DATASET= (
     "  `sources` varchar(200),"
     "  `subjects` TEXT,"
     "  `type` varchar(200),"
-    "  PRIMARY KEY (`articleId`)"
+    "  `last_updated` TIMESTAMP,"
+    "  `last_harvested` TIMESTAMP,"
+    "  PRIMARY KEY (`identifier`)"
     #") ENGINE=TokuDB CHARSET=utf8mb4")
     ") ENGINE=InnoDB CHARSET=utf8mb4")
 
 ADD_OAI_DEFAULT = ("INSERT INTO oaipmh_articles"
                     " (identifier,author, title,description,contributor,coverage,dates,"
-                    "formats,languages,publisher,relation,rights,sources,subjects,type) "
-                    "VALUES ( %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s )")
+                    "formats,languages,publisher,relation,rights,sources,"
+                    "subjects,type,last_updated,last_harvested) "
+                    "VALUES ( %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s, CURRENT_TIMESTAMP, 0  )"
+                    "ON DUPLICATE KEY UPDATE last_updated= CURRENT_TIMESTAMP,"
+                    "author =VALUES(author),"
+                    "title =VALUES(title),"
+                    "description =VALUES(description),"
+                    "contributor =VALUES(contributor),"
+                    "coverage =VALUES(coverage),"
+                    "dates =VALUES(dates),"
+                    "formats =VALUES(formats),"
+                    "languages =VALUES(languages),"
+                    "publisher =VALUES(publisher),"
+                    "relation =VALUES(relation),"
+                    "rights =VALUES(rights),"
+                    "sources =VALUES(sources)"
+
+                   )
+
+
 
 
 ARXIV_ARTICLE = (
