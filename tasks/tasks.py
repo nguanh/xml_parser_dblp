@@ -28,6 +28,8 @@ def harvest_source(package, className,parameters):
             state=states.FAILURE,
             meta=e,
         )
+        raise Ignore()
+        return None
     try:
         source = klass(parameters)
         if isinstance(source, IHarvest) is False:
