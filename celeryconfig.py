@@ -18,8 +18,13 @@ imports = ('tasks.tasks',)
 beat_schedule = {
     'dblp-harvester': {
         'task': 'tasks.tasks.harvest_source',
-        'schedule': 60,
+        'schedule': 120,
         'args': ("dblp.dblpharvester", "DblpHarvester","")
+    }
+    'oai-harvester': {
+        'task': 'tasks.tasks.harvest_source',
+        'schedule': 60,
+        'args': ("oai.oaiharvester", "OaiHarvester", "")
     }
 }
 #start with tasks worker -A tasks -l info --beat
