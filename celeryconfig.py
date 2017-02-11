@@ -18,8 +18,9 @@ imports = ('tasks.tasks',)
 beat_schedule = {
     'dblp-harvester': {
         'task': 'tasks.tasks.harvest_source',
-        'schedule': crontab(minute=10, hour=2),
+        'schedule': 60,
         'args': ("dblp.dblpharvester", "DblpHarvester")
     }
 }
 #start with tasks worker -A tasks -l info --beat
+#'schedule': crontab(minute=10, hour=2),
