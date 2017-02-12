@@ -2,7 +2,7 @@ import datetime
 import os
 
 from lxml import etree
-
+from dblp.exception import IHarvest_Exception
 from dblp.queries import ADD_DBLP_ARTICLE
 from mysqlWrapper.mariadb import MariaDb
 from .helper import parse_mdate, parse_year, dict_to_tuple, parse_title
@@ -10,9 +10,6 @@ from harvester.exception import IHarvest_Exception
 
 COMPLETE_TAG_LIST = ("article", "inproceedings", "proceedings", "book", "incollection",
                      "phdthesis", "mastersthesis", "www", "person", "data")
-
-#TODO handle dblp parsing exception
-#TODO test limit
 
 
 def parse_xml(xmlPath, dtdPath, sql_connector, logger,
@@ -64,16 +61,24 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
     time_range = startDate is not None and endDate is not None
     sql_connector.set_query(ADD_DBLP_ARTICLE)
 
-
     # iterate through XML
     for event, element in etree.iterparse(xmlPath, tag=tagList, load_dtd=True):
 
+        if limit is not None and overall_count >= limit:
+            break
+
         overall_count += 1
-        dataset = {
-            'key': element.get('key'),
-            'mdate': parse_mdate(element.get('mdate')),
-            'title': ''
-        }
+
+        try:
+            dataset = {
+                'key': element.get('key'),
+                'mdate': parse_mdate(element.get('mdate')),
+                'title': ''
+            }
+        except:
+            logger.error("%s invalid mdate", overall_count)
+            # skip dataset if invalid
+            continue
 
         # check date range
         if time_range:
@@ -83,17 +88,21 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
         author_csv_list = ''
 
         # iterate through elements of block
-        for child in element:
-            if child.tag == 'author':
-                # stores authors as csv
-                author_csv_list += child.text + ";"
-            elif child.tag == 'year':
-                dataset[child.tag] = parse_year(child.text)
-            elif child.tag == 'title':
-                title = parse_title(child).replace('\n', '')
-                dataset[child.tag] = title
-            else:
-                dataset[child.tag] = str(child.text).strip()
+        try:
+            for child in element:
+                if child.tag == 'author':
+                    # stores authors as csv
+                    author_csv_list += child.text + ";"
+                elif child.tag == 'year':
+                    dataset[child.tag] = parse_year(child.text)
+                elif child.tag == 'title':
+                    title = parse_title(child).replace('\n', '')
+                    dataset[child.tag] = title
+                else:
+                    dataset[child.tag] = str(child.text).strip()
+        except:
+            logger.error("%s invalid year", overall_count)
+            continue
 
         dataset['author'] = author_csv_list
         tup = dict_to_tuple(dataset)
@@ -101,14 +110,12 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
         try:
             sql_connector.execute(tup)
         except Exception as e:
-            logger.error("MariaDB error: %s", e)
+            logger.error("%s MariaDB error: %s",overall_count, e)
         else:
             success_count += 1
             logger.debug("%s: %s", success_count,element.get('key'))
         element.clear()
 
-        if limit is not None and overall_count >= limit:
-            break
 
     logger.info("Final Count %s/%s", success_count, overall_count)
     sql_connector.close_connection()

@@ -17,6 +17,7 @@ logging.config.dictConfig(LOG_CONFIG)
 
 #TODO test
 #TODO parameters as dict
+#TODO fix logging bug
 @app.task
 def harvest_source(package, class_name, name, **parameters):
     """
@@ -50,7 +51,7 @@ def harvest_source(package, class_name, name, **parameters):
             raise IHarvest_Exception(class_name + " is not an instance of IHarvest")
         if source.init():
             print("Starting", name)
-            logger.error("Starting Task %s", name)
+            logger.info("Starting Task %s", name)
             result = source.run()
             print("Finishing", name)
             logger.info("Finished Task %s", name)

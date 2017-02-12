@@ -46,6 +46,16 @@ class TestParse_xml(TestCase):
         self.assertRaises(IHarvest_Exception, parse_xml, self.valid_xml, self.valid_dtd, None,
                           self.valid_logger, self.valid_tag_list, self.valid_start_date_2, self.valid_end_date_2)
 
+    def test_invalid_mdate(self):
+        test_db = Mariadb_test()
+        self.assertEqual(1,parse_xml("files/invalid-mdate.xml", self.valid_dtd, test_db,
+                          self.valid_logger, self.valid_tag_list, self.valid_start_date_2, self.valid_end_date_2))
+
+    def test_invalid_year(self):
+        test_db = Mariadb_test()
+        self.assertEqual(1,parse_xml("files/invalid-year.xml", self.valid_dtd, test_db,
+                          self.valid_logger, self.valid_tag_list, self.valid_start_date_2, self.valid_end_date_2))
+
     @mock.patch.object(Mariadb_test, 'execute')
     def test_article_valid(self,mock_execute):
         test_db = Mariadb_test()
@@ -158,3 +168,26 @@ class TestParse_xml(TestCase):
         test_db = Mariadb_test()
         result = parse_xml("files/valid-tags.xml", self.valid_dtd, test_db, self.valid_logger)
         self.assertEqual(result, 2)
+
+    def test_limit_0(self):
+        test_db = Mariadb_test()
+        result = parse_xml("files/valid-limit.xml", self.valid_dtd, test_db, self.valid_logger, limit=0)
+        self.assertEqual(result, 0)
+
+    def test_limit_1(self):
+        test_db = Mariadb_test()
+        result = parse_xml("files/valid-limit.xml", self.valid_dtd, test_db, self.valid_logger, limit=1)
+        self.assertEqual(result, 1)
+
+    def test_limit_max(self):
+        test_db = Mariadb_test()
+        result = parse_xml("files/valid-limit.xml", self.valid_dtd, test_db, self.valid_logger, limit=99)
+        self.assertEqual(result, 5)
+
+    def test_limit_equal(self):
+        test_db = Mariadb_test()
+        result = parse_xml("files/valid-limit.xml", self.valid_dtd, test_db, self.valid_logger, limit=5)
+        self.assertEqual(result, 5)
+
+
+
