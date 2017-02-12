@@ -6,12 +6,12 @@ from oai.oaimph_parser import harvestOAI
 
 class OaiHarvester(IHarvest):
 
-    def __init__(self, logger, name, celery=False, path=None):
+    def __init__(self, logger, name, path=None):
         # mainly for testing
         if path is not None:
             self.HARVESTER_PATH = path
         # call constructor of base class for initiating values
-        IHarvest.__init__(self, logger, name, celery)
+        IHarvest.__init__(self, logger, name)
 
         # get config values
         # required values
