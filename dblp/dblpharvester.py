@@ -8,12 +8,12 @@ from dblp.xml_parser import parse_xml
 
 class DblpHarvester(IHarvest):
 
-    def __init__(self,name, celery=False, path=None):
+    def __init__(self, logger, name, celery=False, path=None):
         # mainly for testing
         if path is not None:
             self.HARVESTER_PATH = path
         # call constructor of base class for initiating values
-        IHarvest.__init__(self, name, celery)
+        IHarvest.__init__(self, logger, name, celery)
 
         # get config values
         # required values

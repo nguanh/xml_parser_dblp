@@ -10,13 +10,9 @@ from mysqlWrapper.mariadb import MariaDb
 class IHarvest(ABC):
     HARVESTER_PATH = "harvester.ini"
 
-    def __init__(self, name, celery=False):
+    def __init__(self, logger, name):
         self.name = name
-        # set logger
-        if celery:
-            self.logger = get_task_logger(name)
-        else:
-            self.logger = logging.getLogger(name)
+        self.logger = logger
 
         # load config
         self.config = configparser.ConfigParser()
