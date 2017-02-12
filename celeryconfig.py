@@ -24,7 +24,7 @@ beat_schedule = {
     'oai-harvester': {
         'task': 'tasks.tasks.harvest_source',
         'schedule': 60,
-        'args': ("oai.oaiharvester", "OaiHarvester", "OAI_HARVESTER")
+        'args': ("oai.oaiharvester", "OaiHarvester", "OAI_HARVESTE")
     }
 }
 #start with tasks worker -A tasks -l info --beat

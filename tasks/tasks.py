@@ -45,7 +45,7 @@ def harvest_source(package, class_name, name, **parameters):
         return None
     try:
         #TODO parameter
-        source = imported_class(logger,name)
+        source = imported_class(logger, name)
         if isinstance(source, IHarvest) is False:
             raise IHarvest_Exception(class_name + " is not an instance of IHarvest")
         if source.init():
@@ -59,7 +59,7 @@ def harvest_source(package, class_name, name, **parameters):
                 meta=''
             )
         else:
-            logger.critical("Initialization of %s failed", name)
+            logger.error("Initialization of %s failed", name)
             harvest_source.update_state(
                 state=states.FAILURE,
                 meta='Init failed'
