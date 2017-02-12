@@ -14,6 +14,7 @@ class IHarvest(ABC):
         self.name = name
         self.logger = logger
 
+        logger.info("Success")
         # load config
         self.config = configparser.ConfigParser()
         self.config.read(self.HARVESTER_PATH)

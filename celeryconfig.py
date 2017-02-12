@@ -19,7 +19,7 @@ beat_schedule = {
     'dblp-harvester': {
         'task': 'tasks.tasks.harvest_source',
         'schedule': 120,
-        'args': ("dblp.dblpharvester", "DblpHarvester", "DBLP_HARVESTE")
+        'args': ("dblp.dblpharvester", "DblpHarvester", "DBLP_HARVESTER")
     },
     'oai-harvester': {
         'task': 'tasks.tasks.harvest_source',
