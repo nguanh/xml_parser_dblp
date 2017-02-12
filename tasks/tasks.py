@@ -50,7 +50,7 @@ def harvest_source(package, class_name, name, **parameters):
             raise IHarvest_Exception(class_name + " is not an instance of IHarvest")
         if source.init():
             print("Starting", name)
-            logger.info("Starting Task %s", name)
+            logger.error("Starting Task %s", name)
             result = source.run()
             print("Finishing", name)
             logger.info("Finished Task %s", name)
