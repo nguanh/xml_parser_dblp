@@ -11,11 +11,11 @@ class TestParse_xml(TestCase):
     valid_dtd = "files/test.dtd"
     valid_xml = "files/valid.xml"
     valid_sql = None
-    valid_tag_list = ("article","inproceedings")
+    valid_tag_list = ("article", "inproceedings")
     valid_start_date_1 = "1992-1-31"
-    valid_start_date_2 = datetime.datetime(1991,1,31)
+    valid_start_date_2 = datetime.datetime(1991, 1, 31)
     valid_end_date_1 = "1992-2-15"
-    valid_end_date_2 = datetime.datetime(2012,2,15)
+    valid_end_date_2 = datetime.datetime(2012, 2, 15)
     valid_logger = logging.getLogger("test")
 
     def test_taglist_fail(self):

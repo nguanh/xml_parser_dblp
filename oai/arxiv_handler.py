@@ -1,6 +1,6 @@
 from sickle.models import Record,Header
 from datetime import datetime
-
+#TODO add suffix for authors
 #TODO handle exception
 class ArXivRecord(Record):
 
@@ -13,6 +13,7 @@ class ArXivRecord(Record):
         if not self.deleted:
             tree = self.xml.find(".//" + self._oai_namespace + "metadata/{http://arxiv.org/OAI/arXiv/}arXiv")
             for element in tree.getchildren():
+                # remove namespace from tag
                 tag = element.tag.replace("{http://arxiv.org/OAI/arXiv/}", "")
                 text = element.text
                 if tag == "authors":
@@ -20,8 +21,8 @@ class ArXivRecord(Record):
                 elif tag == "created" or tag == "updated":
                     text = datetime.strptime(text, "%Y-%m-%d")
                 elif tag == "id":
-                    tag = "identifier"
                     # rename
+                    tag = "identifier"
 
                 self.metadata[tag] = text
 

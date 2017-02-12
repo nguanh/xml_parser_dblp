@@ -13,7 +13,7 @@ COMPLETE_TAG_LIST = ("article", "inproceedings", "proceedings", "book", "incolle
 
 
 def parse_xml(xmlPath, dtdPath, sql_connector, logger,
-              tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None,limit=None):
+              tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None, limit=None):
     """
 
     :param xmlPath: path to dblp.xml file
@@ -115,7 +115,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
             success_count += 1
             logger.debug("%s: %s", success_count,element.get('key'))
         element.clear()
-
 
     logger.info("Final Count %s/%s", success_count, overall_count)
     sql_connector.close_connection()
