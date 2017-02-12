@@ -6,17 +6,14 @@ from harvester.exception import IHarvest_Exception
 from dblp.xml_parser import parse_xml
 
 
-NAME = "DBLP_HARVESTER"
-
-
 class DblpHarvester(IHarvest):
 
-    def __init__(self, celery=False, path=None):
+    def __init__(self,name, celery=False, path=None):
         # mainly for testing
         if path is not None:
             self.HARVESTER_PATH = path
         # call constructor of base class for initiating values
-        IHarvest.__init__(self, NAME, celery)
+        IHarvest.__init__(self, name, celery)
 
         # get config values
         # required values
