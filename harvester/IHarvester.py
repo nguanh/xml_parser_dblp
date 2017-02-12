@@ -19,11 +19,9 @@ class IHarvest(ABC):
         self.config = configparser.ConfigParser()
         self.config.read(self.HARVESTER_PATH)
         if name not in self.config:
-            #self.logger.critical("Error: Config could not be loaded")
-            raise IHarvest_Exception("Error: Config could not be loaded for name " + name)
+            raise IHarvest_Exception("Error: Config could not be loaded for " + name)
         if "MARIADB" not in self.config:
-            self.logger.critical("MARIADB ERROR: Missing Credentials in Config")
-            raise IHarvest_Exception("")
+            raise IHarvest_Exception("MARIADB ERROR: Missing Credentials in Config")
 
         # connect to database
         credentials = dict(self.config["MARIADB"])
@@ -31,8 +29,7 @@ class IHarvest(ABC):
             self.connector = MariaDb(credentials)
             self.logger.debug("MariaDB connection successful")
         except Exception as err:
-            self.logger.critical("MARIADB ERROR: %s", err)
-            raise IHarvest_Exception("")
+            raise IHarvest_Exception("MARIADB ERROR: {}".format(err))
         # check certain parameters in specific config
         self.configValues = dict(self.config[name])
 
@@ -42,7 +39,6 @@ class IHarvest(ABC):
             if self.enabled is None:
                 raise KeyError()
         except KeyError as e:
-            self.logger.critical("Config value %s missing", e)
             raise IHarvest_Exception("Error: config value {} not found".format(e))
 
         if self.enabled is False:
@@ -55,7 +51,6 @@ class IHarvest(ABC):
                 if self.limit < 0:
                     raise
             except:
-                self.logger.critical("Invalid limit")
                 raise IHarvest_Exception("Error: Invalid limit")
         else:
             self.limit = None
