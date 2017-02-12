@@ -19,7 +19,6 @@ class OaiHarvester(IHarvest):
             self.link = self.configValues["link"]
             self.table_name = self.configValues["table_name"]
         except KeyError as e:
-            self.logger.critical("Config value %s missing", e)
             raise IHarvest_Exception("Error: config value {} not found".format(e))
 
     def init(self):

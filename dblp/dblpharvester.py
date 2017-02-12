@@ -1,6 +1,4 @@
 from harvester.IHarvester import IHarvest
-from harvester.exception import IHarvest_Exception
-
 from dblp.queries import DBLP_ARTICLE
 from harvester.exception import IHarvest_Exception
 from dblp.xml_parser import parse_xml

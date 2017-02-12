@@ -65,8 +65,7 @@ def harvest_source(package, class_name, name, **parameters):
                 meta='Init failed'
             )
     except IHarvest_Exception as e:
-        logger.info("hihoi")
-        logger.error("hiho")
+        logger.critical(e)
         harvest_source.update_state(
             state=states.FAILURE,
             meta=e
