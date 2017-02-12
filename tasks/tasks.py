@@ -28,7 +28,8 @@ def harvest_source(package, class_name, name, **parameters):
     :return:
     """
     # init logger
-    logger = get_task_logger(name)
+    #logger = get_task_logger(name)
+    logger = logging.getLogger(name)
     try:
         #add path to system TODO rework
         sys.path.append("/home/nguyen/xml_parser_dblp/")
