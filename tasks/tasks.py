@@ -48,7 +48,6 @@ def harvest_source(package, class_name, name, **parameters):
         raise Ignore()
         return None
     try:
-        #TODO parameter
         source = imported_class(logger, name, **parameters)
         if isinstance(source, IHarvest) is False:
             raise IHarvest_Exception(class_name + " is not an instance of IHarvest")

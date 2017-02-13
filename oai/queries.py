@@ -48,8 +48,7 @@ ADD_OAI_DEFAULT = ("INSERT INTO oaipmh_articles"
 
 ARXIV_ARTICLE = (
     "CREATE TABLE `arxiv_articles` ("
-    "  `articleId` int(15) NOT NULL AUTO_INCREMENT,"
-    "  `identifier` varchar(50) NOT NULL,"
+    "  `identifier` varchar(150) NOT NULL,"
     "  `created` DATE,"
     "  `updated` DATE,"
     "  `author` TEXT NOT NULL,"
@@ -57,17 +56,33 @@ ARXIV_ARTICLE = (
     "  `mscclass` varchar(200),"
     "  `acmclass` varchar(200),"
     "  `reportno` varchar(200),"
-    "  `journalref` varchar(200),"
+    "  `journalref` TEXT,"
     "  `comments` TEXT,"
     "  `description` TEXT,"
     "  `categories` VARCHAR(200),"
     "  `doi` varchar(200),"
-    "  PRIMARY KEY (`articleId`)"
+    "  `last_updated` TIMESTAMP,"
+    "  `last_harvested` TIMESTAMP,"
+    "  PRIMARY KEY (`identifier`)"
     # ") ENGINE=TokuDB CHARSET=utf8mb4")
     ") ENGINE=InnoDB CHARSET=utf8mb4")
 
 
 ADD_ARXIV = ("INSERT INTO arxiv_articles"
-                    " (identifier,created, updated,author,title,mscclass,acmclass,"
-                    "reportno,journalref,comments,description,categories,doi) "
-                    "VALUES ( %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s )")
+             "(identifier,created, updated,author,title,mscclass,acmclass,"
+             "reportno,journalref,comments,description,categories,doi,"
+             "last_updated, last_harvested) "
+             "VALUES ( %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, CURRENT_TIMESTAMP, 0  )"
+             "ON DUPLICATE KEY UPDATE last_updated= CURRENT_TIMESTAMP,"
+             "created =VALUES(created),"
+             "updated =VALUES(updated),"
+             "author =VALUES(author),"
+             "title =VALUES(mscclass),"
+             "acmclass =VALUES(acmclass),"
+             "reportno =VALUES(reportno),"
+             "journalref =VALUES(journalref),"
+             "comments =VALUES(comments),"
+             "description =VALUES(description),"
+             "categories =VALUES(categories),"
+             "doi =VALUES(doi)"
+             )

@@ -2,6 +2,7 @@ from mysqlWrapper.mariadb import MariaDb
 from oai.oaimph_parser import harvestOAI
 from oai.arxiv_handler import parse_arxiv,ArXivRecord
 from oai.queries import ARXIV_ARTICLE,ADD_ARXIV
+import logging
 credentials = {
     'user': 'root',
     'password': 'master',
@@ -20,7 +21,7 @@ try:
 except Exception as err:
     print(err)
 else:
-    x = harvestOAI(link2, database, processing_function=parse_arxiv, parsing_class=ArXivRecord, xml_format="arXiv", query=ADD_ARXIV)
+    x = harvestOAI(link2, database,logging.getLogger("__test__") , processing_function=parse_arxiv, parsing_class=ArXivRecord, xml_format="arXiv", query=ADD_ARXIV)
 
 
 '''
