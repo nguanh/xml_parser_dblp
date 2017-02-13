@@ -1,5 +1,5 @@
 
-OAI_DATASET= (
+OAI_DATASET = (
     "CREATE TABLE `oaipmh_articles` ("
     "  `identifier` varchar(150) NOT NULL,"
     "  `author` TEXT NOT NULL," #author =creator(s)

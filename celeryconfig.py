@@ -4,9 +4,9 @@ from celery.schedules import crontab
 broker_url = 'amqp://'
 
 # default RabbitMQ backend
-#backend liefert ergebnisse unserer asynchronen tasks
-#amqp ist das rabbitmq protokoll
-#result_backend = 'amqp://'
+# backend liefert ergebnisse unserer asynchronen tasks
+# amqp ist das rabbitmq protokoll
+# result_backend = 'amqp://'
 # use mysql to store results
 result_backend = 'db+mysql+mysqlconnector://root:master@localhost/dblp'
 
@@ -14,18 +14,23 @@ result_backend = 'db+mysql+mysqlconnector://root:master@localhost/dblp'
 imports = ('tasks.tasks',)
 
 
-#Schedule of tasks to be executed
+# Schedule of tasks to be executed
 beat_schedule = {
     'dblp-harvester': {
         'task': 'tasks.tasks.harvest_source',
-        'schedule': 120,
+        'schedule': 300,
         'args': ("dblp.dblpharvester", "DblpHarvester", "DBLP_HARVESTER")
     },
     'oai-harvester': {
         'task': 'tasks.tasks.harvest_source',
-        'schedule': 60,
+        'schedule': 300,
         'args': ("oai.oaiharvester", "OaiHarvester", "OAI_HARVESTER")
+    },
+    'arxiv-harvester': {
+        'task': 'tasks.tasks.harvest_source',
+        'schedule': 60,
+        'args': ("oai.arxivharvester", "ArXivHarvester", "ARXIV_HARVESTER")
     }
 }
-#start with tasks worker -A tasks -l info --beat
-#'schedule': crontab(minute=10, hour=2),
+# start with tasks worker -A tasks -l info --beat
+# 'schedule': crontab(minute=10, hour=2),
