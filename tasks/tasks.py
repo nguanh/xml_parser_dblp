@@ -32,10 +32,10 @@ def harvest_source(package, class_name, name, **parameters):
     # init logger
     logger = get_task_logger(name)
     try:
-        #add path to system TODO rework
+        # add path to system
         file_path = os.path.realpath(__file__)
-        print(os.path.dirname(file_path))
-        sys.path.append("/home/nguyen/xml_parser_dblp/")
+        project_path = os.path.dirname(os.path.dirname(file_path))
+        sys.path.append(project_path)
         # import class from parameters
         mod = __import__(package, fromlist=[class_name])
         imported_class = getattr(mod, class_name)
