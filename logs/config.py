@@ -17,7 +17,12 @@ LOG_CONFIG = {
             'filename': 'logs/oai.log',
             'formatter': 'default',
         },
-
+        'arxiv': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/arxiv.log',
+            'formatter': 'default',
+        }
     },
     'loggers': {
 
@@ -28,6 +33,10 @@ LOG_CONFIG = {
 
         'OAI_HARVESTER': {
             'handlers': ['oai'],
+            'level': 'INFO',
+        },
+        'ARXIV_HARVESTER': {
+            'handlers': ['arxiv'],
             'level': 'INFO',
         },
     }
