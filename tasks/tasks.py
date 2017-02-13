@@ -37,7 +37,7 @@ def harvest_source(package, class_name, name, **parameters):
         sys.path.append("/home/nguyen/xml_parser_dblp/")
         # import class from parameters
         mod = __import__(package, fromlist=[class_name])
-        imported_class = getattr(mod, class_name, **parameters)
+        imported_class = getattr(mod, class_name)
     except ImportError as e:
         logger.error(e)
         harvest_source.update_state(
@@ -48,7 +48,7 @@ def harvest_source(package, class_name, name, **parameters):
         return None
     try:
         #TODO parameter
-        source = imported_class(logger, name)
+        source = imported_class(logger, name, **parameters)
         if isinstance(source, IHarvest) is False:
             raise IHarvest_Exception(class_name + " is not an instance of IHarvest")
         if source.init():
