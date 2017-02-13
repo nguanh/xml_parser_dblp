@@ -9,7 +9,6 @@ class IHarvest(ABC):
     def __init__(self, logger, name):
         self.name = name
         self.logger = logger
-        raise IHarvest_Exception("Test")
 
         # load config
         self.config = configparser.ConfigParser()

@@ -18,7 +18,6 @@ logging.config.dictConfig(LOG_CONFIG)
 
 #TODO test
 #TODO parameters as dict
-#TODO fix logging bug
 @app.task
 def harvest_source(package, class_name, name, **parameters):
     """
