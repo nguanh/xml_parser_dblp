@@ -14,7 +14,7 @@ class IHarvest(ABC):
         self.config = configparser.ConfigParser()
         self.config.read(self.HARVESTER_PATH)
         if name not in self.config:
-            raise IHarvest_Exception("Error: Config could not be loaded for {}".format(name))
+            raise IHarvest_Exception("Error: Config could not be loaded")
         if "MARIADB" not in self.config:
             raise IHarvest_Exception("MARIADB ERROR: Missing Credentials in Config")
 
@@ -44,7 +44,7 @@ class IHarvest(ABC):
             try:
                 self.limit = int(self.configValues["limit"])
                 if self.limit < 0:
-                    raise
+                    raise Exception()
             except:
                 raise IHarvest_Exception("Error: Invalid limit")
         else:
