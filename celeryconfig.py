@@ -18,17 +18,17 @@ imports = ('tasks.tasks',)
 beat_schedule = {
     'dblp-harvester': {
         'task': 'tasks.tasks.harvest_source',
-        'schedule': 300,
+        'schedule': crontab(minute=10, hour=2),
         'args': ("dblp.dblpharvester", "DblpHarvester", "DBLP_HARVESTER")
     },
     'oai-harvester': {
         'task': 'tasks.tasks.harvest_source',
-        'schedule': 300,
+        'schedule': crontab(minute=10, hour=2),
         'args': ("oai.oaiharvester", "OaiHarvester", "OAI_HARVESTER")
     },
     'arxiv-harvester': {
         'task': 'tasks.tasks.harvest_source',
-        'schedule': 60,
+        'schedule': crontab(minute=10, hour=2),
         'args': ("oai.arxivharvester", "ArXivHarvester", "ARXIV_HARVESTER")
     }
 }
