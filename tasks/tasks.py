@@ -46,7 +46,6 @@ def harvest_source(package, class_name, name, **parameters):
             meta=e,
         )
         raise Ignore()
-        return None
     try:
         source = imported_class(logger, name, **parameters)
         if isinstance(source, IHarvest) is False:

@@ -14,7 +14,7 @@ class IHarvest(ABC):
         self.config = configparser.ConfigParser()
         self.config.read(self.HARVESTER_PATH)
         if name not in self.config:
-            raise IHarvest_Exception("Error: Config could not be loaded for " + name)
+            raise IHarvest_Exception("Error: Config could not be loaded for {}".format(name))
         if "MARIADB" not in self.config:
             raise IHarvest_Exception("MARIADB ERROR: Missing Credentials in Config")
 

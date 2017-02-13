@@ -29,7 +29,7 @@ beat_schedule = {
     'arxiv-harvester': {
         'task': 'tasks.tasks.harvest_source',
         'schedule': 60,
-        'args': ("oai.arxivharvester", "ArXivHarvester", "ARXIV_HARVESTER")
+        'args': ("oai.arxivharvester", "ArXivHarvester", "ARXIV_HARVESTE")
     }
 }
 # start with tasks worker -A tasks -l info --beat
