@@ -9,27 +9,18 @@ class IHarvest(ABC):
     def __init__(self, logger, name):
         self.name = name
         self.logger = logger
+        raise IHarvest_Exception("Test")
 
         # load config
         self.config = configparser.ConfigParser()
         self.config.read(self.HARVESTER_PATH)
-        try:
-            credentials = dict(self.config["MARIADB"])
-        except:
-            raise IHarvest_Exception("MARIADB ERROR: Missing Credentials in Config")
-
-        try:
-            self.configValues = dict(self.config[name])
-        except:
-            raise IHarvest_Exception("Error: Config could not be loaded")
-        '''
         if name not in self.config:
             raise IHarvest_Exception("Error: Config could not be loaded")
         if "MARIADB" not in self.config:
             raise IHarvest_Exception("MARIADB ERROR: Missing Credentials in Config")
-        '''
+
         # connect to database
-        #credentials = dict(self.config["MARIADB"])
+        credentials = dict(self.config["MARIADB"])
         try:
             self.connector = MariaDb(credentials)
             self.logger.debug("MariaDB connection successful")
