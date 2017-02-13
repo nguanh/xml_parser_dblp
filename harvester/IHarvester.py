@@ -22,12 +22,12 @@ class IHarvest(ABC):
             self.configValues = dict(self.config[name])
         except:
             raise IHarvest_Exception("Error: Config could not be loaded")
-
+        '''
         if name not in self.config:
             raise IHarvest_Exception("Error: Config could not be loaded")
         if "MARIADB" not in self.config:
             raise IHarvest_Exception("MARIADB ERROR: Missing Credentials in Config")
-
+        '''
         # connect to database
         #credentials = dict(self.config["MARIADB"])
         try:
