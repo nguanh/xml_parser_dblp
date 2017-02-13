@@ -10,6 +10,7 @@ from harvester.IHarvester import IHarvest
 from celery.exceptions import Ignore
 from celery import states
 import sys
+import os
 
 
 logging.config.dictConfig(LOG_CONFIG)
@@ -24,7 +25,7 @@ def harvest_source(package, class_name, name, **parameters):
 
     :param package: relative path to package
     :param class_name: class name in package
-    :param name: name of the harvester (important for config
+    :param name: name of the harvester (important for config)
     :param parameters: parameters for harvester as dict parameters
     :return:
     """
@@ -32,10 +33,11 @@ def harvest_source(package, class_name, name, **parameters):
     logger = get_task_logger(name)
     try:
         #add path to system TODO rework
+        print(os.path.realpath(__file__))
         sys.path.append("/home/nguyen/xml_parser_dblp/")
         # import class from parameters
         mod = __import__(package, fromlist=[class_name])
-        imported_class = getattr(mod, class_name)
+        imported_class = getattr(mod, class_name, **parameters)
     except ImportError as e:
         logger.error(e)
         harvest_source.update_state(
