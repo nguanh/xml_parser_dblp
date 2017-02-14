@@ -12,19 +12,23 @@ class ArXivRecord(Record):
         self.metadata = {}
         if not self.deleted:
             tree = self.xml.find(".//" + self._oai_namespace + "metadata/{http://arxiv.org/OAI/arXiv/}arXiv")
-            for element in tree.getchildren():
-                # remove namespace from tag
-                tag = element.tag.replace("{http://arxiv.org/OAI/arXiv/}", "")
-                text = element.text
-                if tag == "authors":
-                    text = self.parse_authors(element)
-                elif tag == "created" or tag == "updated":
-                    text = datetime.strptime(text, "%Y-%m-%d")
-                elif tag == "id":
-                    # rename
-                    tag = "identifier"
+            if tree is None:
+                print(self.xml)
+                self.metadata={}
+            else:
+                for element in tree.getchildren():
+                    # remove namespace from tag
+                    tag = element.tag.replace("{http://arxiv.org/OAI/arXiv/}", "")
+                    text = element.text
+                    if tag == "authors":
+                        text = self.parse_authors(element)
+                    elif tag == "created" or tag == "updated":
+                        text = datetime.strptime(text, "%Y-%m-%d")
+                    elif tag == "id":
+                        # rename
+                        tag = "identifier"
 
-                self.metadata[tag] = text
+                    self.metadata[tag] = text
 
     def parse_authors(self, element):
         result = ""
