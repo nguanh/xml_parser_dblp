@@ -28,7 +28,7 @@ beat_schedule = {
     },
     'arxiv-harvester': {
         'task': 'tasks.tasks.harvest_source',
-        'schedule': crontab(minute=10, hour=2),
+        'schedule': crontab(minute=38, hour=21),
         'args': ("oai.arxivharvester", "ArXivHarvester", "ARXIV_HARVESTER")
     }
 }
