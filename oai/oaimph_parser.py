@@ -65,7 +65,10 @@ def harvestOAI(link, sql_connector, logger,
                 success_count += 1
                 logger.debug("%s: %s", success_count, metadata['identifier'])
             except Exception as e:
-                logger.error("MariaDB error %s: %s", metadata['identifier'], e)
+                if("identifier" not in metadata):
+                    logger.error("MariaDB error headerdata %s: %s", record.header, e)
+                else:
+                    logger.error("MariaDB error %s: %s", metadata['identifier'], e)
 
             if limit is not None and overall_count >= limit:
                 break
