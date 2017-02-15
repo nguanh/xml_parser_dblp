@@ -10,10 +10,9 @@ class ArXivRecord(Record):
             './/' + self._oai_namespace + 'header'))
         self.deleted = self.header.deleted
         self.metadata = {}
-        if not self.deleted:
-            tree = self.xml.find(".//" + self._oai_namespace + "metadata/{http://arxiv.org/OAI/arXiv/}arXiv")
-            if tree is None:
-                print(self.header)
+        tree = self.xml.find(".//" + self._oai_namespace + "metadata/{http://arxiv.org/OAI/arXiv/}arXiv")
+        if self.deleted is False and tree is not None:
+
 
             for element in tree.getchildren():
                 # remove namespace from tag
@@ -23,6 +22,8 @@ class ArXivRecord(Record):
                     text = self.parse_authors(element)
                 elif tag == "created" or tag == "updated":
                     text = datetime.strptime(text, "%Y-%m-%d")
+                elif tag == "title":
+                    text = text.strip()
                 elif tag == "id":
                     # rename
                     tag = "identifier"

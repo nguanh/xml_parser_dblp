@@ -42,7 +42,8 @@ def harvestOAI(link, sql_connector, logger,
     # for every of the OAI verbs (ListRecords, GetRecord, Identify, ListSets, ListMetadataFormats, ListIdentifiers)
     # there is a separate sickle method
     try:
-        records = sickle.ListRecords(**{'metadataPrefix': xml_format, 'from': startDate, 'until': endDate})
+        records = sickle.ListRecords(**{'metadataPrefix': xml_format, 'from': startDate,
+                                        'until': endDate, 'ignore_deleted': True})
     except oaiexceptions.NoRecordsMatch:
         return 0
     except exceptions.MissingSchema:
@@ -58,6 +59,10 @@ def harvestOAI(link, sql_connector, logger,
             # metadata is a dict
             overall_count += 1
             metadata = record.metadata
+            identifier = record.header.identifier
+            if not metadata:
+                logger.error("Skipping deleted record")
+                continue
             met_tuple = processing_function(metadata)
 
             try:
@@ -65,10 +70,7 @@ def harvestOAI(link, sql_connector, logger,
                 success_count += 1
                 logger.debug("%s: %s", success_count, metadata['identifier'])
             except Exception as e:
-                if("identifier" not in metadata):
-                    logger.error("MariaDB error headerdata %s: %s", record.header, e)
-                else:
-                    logger.error("MariaDB error %s: %s", metadata['identifier'], e)
+                logger.error("MariaDB error %s: %s", identifier, e)
 
             if limit is not None and overall_count >= limit:
                 break
