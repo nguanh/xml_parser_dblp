@@ -8,7 +8,8 @@ class MariaDb:
 
     def __init__(self, credentials):
         self.query = None
-        if "database" in credentials:
+        self.storage_engine = "InnoDB"
+        if "pub_storage" in credentials:
             self.current_database = credentials["database"]
         else:
             self.current_database = None
@@ -26,7 +27,7 @@ class MariaDb:
             self.cursor.execute(
             "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(name))
         except mysql.connector.Error as err:
-            print("Failed creating database: {}".format(err))
+            print("Failed creating pub_storage: {}".format(err))
 
     def create_db(self, name):
 
@@ -42,11 +43,13 @@ class MariaDb:
             else:
                 print(err)
 
+    #TODO remove name parameter and get name from query
     def createTable(self, name, query):
 
         try:
             print("Creating table {}: ".format(name), end='')
-            self.cursor.execute(query)
+            #insert storage engine
+            self.cursor.execute(query.format(self.storage_engine))
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
                 print("already exists.")
@@ -60,7 +63,7 @@ class MariaDb:
     def set_query(self, query):
         self.query = query
 
-    def execute(self,tup):
+    def execute(self, tup):
         if self.query is None:
             raise Exception("query not set")
         try:
@@ -68,6 +71,9 @@ class MariaDb:
             self.connector.commit()
         except mysql.connector.Error as err:
             raise Exception("MariaDB query error: {} File not added".format(err))
+
+    def set_storage_engine(self,engine):
+        self.storage_engine= engine
 
     def close_connection(self):
         if self.cursor is not None:

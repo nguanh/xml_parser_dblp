@@ -7,7 +7,7 @@ credentials = {
     'user': 'root',
     'password': 'master',
     'host': '127.0.0.1',
-    'database': 'harvester',
+    'pub_storage': 'harvester',
     'charset': 'utf8mb4',
     'collation': 'utf8mb4_general_ci'
 }
