@@ -25,14 +25,15 @@ GLOBAL_URL = (
     "CREATE TABLE `global_url` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `domain` TEXT NOT NULL ,"
+    "  `url` TEXT NOT NULL ,"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 
-local_URL = (
-    "CREATE TABLE `global_url` ("
+LOCAL_URL = (
+    "CREATE TABLE `local_url` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `global_url_id` INT NOT NULL ,"
-    "  `page` VARCHAR(200) NOT NULL ,"
+    "  `url` VARCHAR(200) NOT NULL ,"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 

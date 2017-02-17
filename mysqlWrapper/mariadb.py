@@ -58,7 +58,23 @@ class MariaDb:
                 print(err)
                 return False
         else:
+            print("successful")
             return True
+
+    def add_foreign_key(self,query):
+
+        try:
+            print("Adding foreign key ", end='')
+            self.cursor.execute(query)
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_CANT_CREATE_TABLE:
+                print("already exists.")
+                return True
+            else:
+                print(err)
+                return False
+        print("successful")
+        return True
 
     def set_query(self, query):
         self.query = query
