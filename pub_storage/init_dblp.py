@@ -20,11 +20,13 @@ def init_dblp():
                              "VALUES ('http://dblp.uni-trier.de','http://dblp.uni-trier.de/rec/xml/')")
         connector.set_query(insert_global_url)
         connector.execute(())
+        connector.cursor.execute(global_url_query)
         result = connector.cursor.fetchone()
 
     connector.close_connection()
 
     #clear results
     #connector.cursor.fetchall()
+    print(result)
     retVal["global_url"] = result[0]
     return retVal

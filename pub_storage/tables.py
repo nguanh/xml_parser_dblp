@@ -17,7 +17,7 @@ PUBLICATION = (
 CLUSTER = (
     "CREATE TABLE `cluster` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
-    "  `name` TEXT,"
+    "  `cluster_name` TEXT,"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 
