@@ -1,6 +1,4 @@
 
-DATABASE_NAME = "storage"
-
 
 PUBLICATION = (
     "CREATE TABLE `publication` ("

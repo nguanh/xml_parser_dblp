@@ -64,15 +64,6 @@ def dict_to_tuple(obj):
     all_attributes ={'key','mdate','author','title','ee','url','journal','number','volume','pages','year',"cite", "crossref","booktitle"}
     optional_attributes= ['ee','url','journal','number','volume','pages',"cite", "crossref","booktitle","year"]
 
-    #check for outlier keys
-    key_list = set(obj.keys())
-    diff = key_list-all_attributes
-    if len(diff)> 0:
-       # print(obj['key'],":",diff)
-       pass
-
-
-
     # set missing attributes as None
     for attr in optional_attributes:
         if attr not in obj:

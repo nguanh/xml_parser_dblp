@@ -13,10 +13,16 @@ NAME_ALIAS_FK = ("ALTER TABLE `name_alias` "
                  "     local_url(id) ON UPDATE CASCADE ON DELETE CASCADE")
 
 PUBLICATIONS_AUTHORS_FK = ("ALTER TABLE `publication_authors` "
-                           "   ADD CONSTRAINT `FK_authors_group` "
+                           "   ADD CONSTRAINT `FK_local_url` "
                            "     FOREIGN KEY (`url_id`) REFERENCES "
                            "     local_url(id) ON UPDATE CASCADE ON DELETE CASCADE,"
                            "   ADD CONSTRAINT `FK_authors` "
                            "     FOREIGN KEY (`author_id`) REFERENCES "
                            "     authors(id) ON UPDATE CASCADE ON DELETE CASCADE")
+
+
+DEFAULT_TABLE_FK = ("ALTER TABLE `default_table` "
+                           "   ADD CONSTRAINT `FK_local_url` "
+                           "     FOREIGN KEY (`url_id`) REFERENCES "
+                           "     local_url(id) ON UPDATE CASCADE ON DELETE CASCADE")
 
