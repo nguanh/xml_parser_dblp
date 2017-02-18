@@ -18,8 +18,11 @@ def setup_database():
     connector.createTable("local_url", LOCAL_URL.format("InnoDB"))
     connector.createTable("authors", AUTHORS.format("InnoDB"))
     connector.createTable("name_alias", NAMEALIAS.format("InnoDB"))
+    connector.createTable("publication_authors", PUBLICATION_AUTHORS.format("InnoDB"))
+    connector.createTable("authors_group", AUTHORS_GROUP.format("InnoDB"))
     connector.add_foreign_key(LOCAL_URL_FK)
     connector.add_foreign_key(NAME_ALIAS_FK)
+    connector.add_foreign_key(PUBLICATIONS_AUTHORS_FK)
 
     connector.close_connection()
 

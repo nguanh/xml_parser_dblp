@@ -26,7 +26,5 @@ def init_dblp():
     connector.close_connection()
 
     #clear results
-    #connector.cursor.fetchall()
-    print(result)
     retVal["global_url"] = result[0]
     return retVal

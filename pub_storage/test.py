@@ -15,7 +15,7 @@ credentials = dict(config["MARIADB"])
 read_connector = MariaDb(credentials)
 write_connector = MariaDb(credentials)
 dblp_data = init_dblp()
-print(dblp_data)
+
 
 # iterate through dblp articles
 query = "SELECT * FROM harvester.dblp_article WHERE last_harvested = 0"
@@ -39,6 +39,12 @@ for (key, mdate, authors, title, pages, pub_year,
     write_connector.set_query(insert_cluster)
     write_connector.execute((normalized_title,))
 
+    #create new authors group
+    insert_author_group = ("INSERT INTO storage.authors_group VALUES ()")
+    write_connector.set_query(insert_author_group)
+    write_connector.execute(())
+    author_group_id = write_connector.cursor.lastrowid
+
     # insert authors
     authors_list = parse_authors(authors)
     for autor_name in authors_list:
@@ -52,6 +58,11 @@ for (key, mdate, authors, title, pages, pub_year,
                          "VALUES (%s, %s,%s)")
         write_connector.set_query(insert_alias)
         write_connector.execute((author_id,identifier,autor_name["original"]))
+        #add to publication authors
+        insert_publication_authors = ("INSERT INTO storage.publication_authors(group_id, author_id)"
+                         "VALUES (%s, %s)")
+        write_connector.set_query(insert_publication_authors)
+        write_connector.execute((author_group_id,author_id))
 
 
 
