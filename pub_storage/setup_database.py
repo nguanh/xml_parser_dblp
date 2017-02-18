@@ -4,6 +4,7 @@ from pub_storage.foreign_keys import *
 from pub_storage.constants import *
 import configparser
 
+
 def setup_database():
     config = configparser.ConfigParser()
     config.read(CONFIG_PATH)
@@ -11,7 +12,10 @@ def setup_database():
     credentials = dict(config["MARIADB"])
     connector = MariaDb(credentials)
 
+    # create database
     connector.create_db(DATABASE_NAME)
+
+    # create tables
     connector.createTable("cluster", CLUSTER.format("InnoDB"))
     connector.createTable("publication", PUBLICATION.format("InnoDB"))
     connector.createTable("global_url", GLOBAL_URL.format("InnoDB"))
@@ -19,12 +23,16 @@ def setup_database():
     connector.createTable("authors", AUTHORS.format("InnoDB"))
     connector.createTable("name_alias", NAMEALIAS.format("InnoDB"))
     connector.createTable("publication_authors", PUBLICATION_AUTHORS.format("InnoDB"))
-    connector.createTable("authors_group", AUTHORS_GROUP.format("InnoDB"))
+
+    # create foreign keys
     connector.add_foreign_key(LOCAL_URL_FK)
     connector.add_foreign_key(NAME_ALIAS_FK)
     connector.add_foreign_key(PUBLICATIONS_AUTHORS_FK)
 
     connector.close_connection()
+
+
+
 
 
 

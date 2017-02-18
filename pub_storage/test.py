@@ -27,7 +27,7 @@ for (key, mdate, authors, title, pages, pub_year,
      crossref, booktitle, last_updated, harvested) in read_connector.cursor:
 
     # insert local url
-    insert_local_url = ("INSERT INTO storage.local_url(global_url_id,url) VALUES (%s, %s)")
+    insert_local_url = "INSERT INTO storage.local_url(global_url_id,url) VALUES (%s, %s)"
     write_connector.set_query(insert_local_url)
     write_connector.execute((dblp_data['global_url'], key))
     # store local url id as id of this dataset
@@ -35,15 +35,9 @@ for (key, mdate, authors, title, pages, pub_year,
 
     # insert cluster name
     normalized_title = normalize_title(title)
-    insert_cluster = ("INSERT INTO storage.cluster(cluster_name) VALUES (%s)")
+    insert_cluster = "INSERT INTO storage.cluster(cluster_name) VALUES (%s)"
     write_connector.set_query(insert_cluster)
     write_connector.execute((normalized_title,))
-
-    #create new authors group
-    insert_author_group = ("INSERT INTO storage.authors_group VALUES ()")
-    write_connector.set_query(insert_author_group)
-    write_connector.execute(())
-    author_group_id = write_connector.cursor.lastrowid
 
     # insert authors
     authors_list = parse_authors(authors)
@@ -55,14 +49,18 @@ for (key, mdate, authors, title, pages, pub_year,
         author_id = write_connector.cursor.lastrowid
         # add alias
         insert_alias = ("INSERT INTO storage.name_alias(authors_id, local_url_id, alias) "
-                         "VALUES (%s, %s,%s)")
+                        "VALUES (%s, %s,%s)")
         write_connector.set_query(insert_alias)
         write_connector.execute((author_id,identifier,autor_name["original"]))
-        #add to publication authors
-        insert_publication_authors = ("INSERT INTO storage.publication_authors(group_id, author_id)"
-                         "VALUES (%s, %s)")
+        # add to publication authors
+        insert_publication_authors = ("INSERT INTO storage.publication_authors(url_id, author_id)"
+                                      "VALUES (%s, %s)")
         write_connector.set_query(insert_publication_authors)
-        write_connector.execute((author_group_id,author_id))
+        write_connector.execute((identifier, author_id))
+
+
+
+    # store rest in default table
 
 
 

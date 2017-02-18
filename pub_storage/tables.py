@@ -33,7 +33,8 @@ LOCAL_URL = (
     "CREATE TABLE `local_url` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `global_url_id` INT NOT NULL ,"
-    "  `url` VARCHAR(200) NOT NULL ,"
+    "  `url` TEXT NOT NULL ,"
+    "  `last_updated` TIMESTAMP NOT NULL ,"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 
@@ -48,7 +49,7 @@ KEYWORDS = (
 PUBLICATION_KEYWORDS = (
     "CREATE TABLE `keywords` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
-    "  `group_id` INT NOT NULL,"
+    "  `url_id` INT NOT NULL,"
     "  `keyword_id` INT NOT NULL,"
     "  `source` MEDIUMTEXT,"
     "  `last_update` TIMESTAMP,"
@@ -85,24 +86,6 @@ NAMEALIAS = (
     ") ENGINE={} CHARSET=utf8mb4")
 
 
-KEYWORDS_GROUP = (
-    "CREATE TABLE `keywords_group` ("
-    "  `id` INT NOT NULL AUTO_INCREMENT,"
-    "  PRIMARY KEY (`id`)"
-    ") ENGINE={} CHARSET=utf8mb4")
-
-AUTHORS_GROUP = (
-    "CREATE TABLE `authors_group` ("
-    "  `id` INT NOT NULL AUTO_INCREMENT,"
-    "  PRIMARY KEY (`id`)"
-    ") ENGINE={} CHARSET=utf8mb4")
-
-reference_GROUP = (
-    "CREATE TABLE `reference_group` ("
-    "  `id` INT NOT NULL AUTO_INCREMENT,"
-    "  PRIMARY KEY (`id`)"
-    ") ENGINE={} CHARSET=utf8mb4")
-
 AUTHORS = (
     "CREATE TABLE `authors` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
@@ -120,7 +103,7 @@ AUTHORS = (
 PUBLICATION_AUTHORS = (
     "CREATE TABLE `publication_authors` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
-    "  `group_id` INT NOT NULL ,"
+    "  `url_id` INT NOT NULL ,"
     "  `author_id` INT NOT NULL ,"
     "  `priority` INT,"
     "  PRIMARY KEY (`id`)"
@@ -153,9 +136,7 @@ DEFAULT_TABLE = (
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `type_id` INT,"
     "  `study_field_id` INT,"
-    "  `authors_id` INT NOT NULL ,"
-    "  `keywords_id` INT,"
-    "  `reference_id` INT NOT NULL ,"
+    "  `url_id` INT NOT NULL ,"
     "  `title` TEXT,"
     "  `pages_from` INT,"
     "  `pages_to` INT,"
@@ -186,9 +167,7 @@ DIFFERENCE_TABLE = (
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `type_id` TINYBLOB,"
     "  `study_field_id` TINYBLOB,"
-    "  `authors_id` TINYBLOB ,"
-    "  `keywords_id` TINYBLOB,"
-    "  `reference_id` TINYBLOB ,"
+    "  `url_id` TINYBLOB ,"
     "  `title` BLOB,"
     "  `pages_from` TINYBLOB,"
     "  `pages_to` TINYBLOB,"

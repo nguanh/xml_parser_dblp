@@ -14,8 +14,8 @@ NAME_ALIAS_FK = ("ALTER TABLE `name_alias` "
 
 PUBLICATIONS_AUTHORS_FK = ("ALTER TABLE `publication_authors` "
                            "   ADD CONSTRAINT `FK_authors_group` "
-                           "     FOREIGN KEY (`group_id`) REFERENCES "
-                           "     authors_group(id) ON UPDATE CASCADE ON DELETE CASCADE,"
+                           "     FOREIGN KEY (`url_id`) REFERENCES "
+                           "     local_url(id) ON UPDATE CASCADE ON DELETE CASCADE,"
                            "   ADD CONSTRAINT `FK_authors` "
                            "     FOREIGN KEY (`author_id`) REFERENCES "
                            "     authors(id) ON UPDATE CASCADE ON DELETE CASCADE")
