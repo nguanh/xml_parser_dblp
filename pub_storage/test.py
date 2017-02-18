@@ -3,7 +3,7 @@ from pub_storage.setup_database import setup_database
 from pub_storage.constants import *
 from pub_storage.init_dblp import init_dblp
 
-from pub_storage.helper import normalize_title
+from pub_storage.helper import normalize_title,parse_authors
 import configparser
 
 
@@ -36,19 +36,10 @@ for (key, mdate, authors, title, pages, pub_year,
     insert_cluster = ("INSERT INTO storage.cluster(cluster_name) VALUES (%s)")
     write_connector.set_query(insert_cluster)
     write_connector.execute((normalized_title,))
-    print(title)
+    parse_authors(authors)
     # 2. get authors name
     # 3. generate cluster name
     # 4. generate url
     # 5. add author
 
 
-
-def parse_authors(authors_list):
-    pass
-    #1. autoren nach ; aufsplitten
-    #2. (DBLP) zahlen entfernen und zahlen namen und echten namen speichern
-    #3. Nachname extrahieren
-    #4. Vornamen extrahieren
-    #5. alle aliases aus vornamen generieren. z.b Andreas Peter Wendt = A. P. Wendt , A. Wendt, Andreas P. Wendt usw
-    #6. normalisieren
