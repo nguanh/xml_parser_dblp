@@ -78,9 +78,9 @@ STUDYFIELDS = (
 NAMEALIAS = (
     "CREATE TABLE `name_alias` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
-    "  `name_block_id` INT NOT NULL,"
-    "  `name` VARCHAR(100) NOT NULL ,"
-    "  `description` TEXT,"
+    "  `authors_id` INT NOT NULL,"
+    "  `local_url_id` INT NOT NULL ,"
+    "  `alias` VARCHAR(150) NOT NULL ,"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 
@@ -106,12 +106,13 @@ reference_GROUP = (
 AUTHORS = (
     "CREATE TABLE `authors` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
-    "  `orcid_id` VARCHAR(45),"
-    "  `given` VARCHAR(45),"
+    "  `main_name` VARCHAR(100)NOT NULL ,"
+    "  `block_name` VARCHAR(100) NOT NULL ,"
     "  `website` TEXT,"
     "  `contact` TEXT,"
     "  `about` TEXT,"
     "  `modified` TIMESTAMP,"
+    "  `orcid_id` VARCHAR(45),"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 

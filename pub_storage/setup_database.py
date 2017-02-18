@@ -16,7 +16,10 @@ def setup_database():
     connector.createTable("publication", PUBLICATION.format("InnoDB"))
     connector.createTable("global_url", GLOBAL_URL.format("InnoDB"))
     connector.createTable("local_url", LOCAL_URL.format("InnoDB"))
-    connector.add_foreign_key(GLOBAL_URL_LOCAL_URL_FK)
+    connector.createTable("authors", AUTHORS.format("InnoDB"))
+    connector.createTable("name_alias", NAMEALIAS.format("InnoDB"))
+    connector.add_foreign_key(LOCAL_URL_FK)
+    connector.add_foreign_key(NAME_ALIAS_FK)
 
     connector.close_connection()
 

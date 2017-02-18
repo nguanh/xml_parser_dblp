@@ -1,6 +1,7 @@
 from unittest import TestCase
 from pub_storage.helper import parse_authors
 
+
 class TestParse_authors(TestCase):
     def test_parse_authors1(self):
         name = parse_authors("Walter Vogler;")[0]
