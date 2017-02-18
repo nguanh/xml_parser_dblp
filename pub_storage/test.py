@@ -3,7 +3,7 @@ from pub_storage.setup_database import setup_database
 from pub_storage.constants import *
 from pub_storage.init_dblp import init_dblp
 
-from pub_storage.helper import normalize_title,parse_authors
+from pub_storage.helper import normalize_title,parse_authors, parse_pages
 import configparser
 
 
@@ -58,15 +58,16 @@ for (key, mdate, authors, title, pages, pub_year,
                                       "VALUES (%s, %s)")
         write_connector.set_query(insert_publication_authors)
         write_connector.execute((identifier, author_id))
-
-    print(pages,"  ", volume, " ", pub_year, " ", journal)
+    page_from, page_to = parse_pages(pages)
 
     # store rest in default table
-    '''
+
     insert_default_table = ("INSERT INTO default_table"
-                            "(url_id, title, volume, number)"
-                                      "VALUES (%s, %s,%s, %s)")
-    '''
+                            "(url_id, title,pages_from,pages_to,journal, number,"
+                            " volume,date_published,doi,book_title)"
+                                      "VALUES (%s, %s,%s, %s,%s,%s,%s,%s,%s,%s)")
+    write_connector.set_query(insert_default_table)
+    write_connector.execute((identifier,title,page_from,page_to,journal,journal_number,volume,pub_year.year,ee,booktitle))
 
 
 

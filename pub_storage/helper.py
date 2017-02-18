@@ -2,6 +2,8 @@ import string
 from unidecode import unidecode
 from nameparser import HumanName
 import re
+from datetime import datetime
+
 punctuation_dict = str.maketrans({key: None for key in (string.punctuation)})
 whitespace_dict = str.maketrans({key: None for key in (string.whitespace.replace(" ", ""))})
 ascii_dict = str.maketrans({key: None for key in (string.printable)})
@@ -51,3 +53,12 @@ def parse_authors(author_csv):
     return names
 
 
+def parse_pages(pages, separator="-"):
+    result = pages.split(separator)
+    # publication contains only one page
+    if len(result) == 1:
+        return [result[0], result[0]]
+    if len(result) == 2:
+        return [result[0], result[1]]
+    #TODO log invalid page
+    return [None, None]

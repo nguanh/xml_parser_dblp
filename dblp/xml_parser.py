@@ -108,7 +108,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
         tup = dict_to_tuple(dataset)
 
         try:
-            print(tup)
             sql_connector.execute(tup)
         except Exception as e:
             logger.error("%s MariaDB error: %s",overall_count, e)

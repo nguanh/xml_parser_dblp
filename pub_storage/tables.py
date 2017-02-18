@@ -152,7 +152,7 @@ DEFAULT_TABLE = (
     "  `abstract` TEXT,"
     "  `copyright` TEXT,"
     "  `date_added` VARCHAR(100),"
-    "  `date_published` VARCHAR(100),"
+    "  `date_published` VARCHAR(5),"
     "  `book_title` VARCHAR(100),"
     "  `journal` VARCHAR(100),"
     "  `volume` VARCHAR(20),"
