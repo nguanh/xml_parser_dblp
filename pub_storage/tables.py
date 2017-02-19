@@ -32,7 +32,7 @@ LOCAL_URL = (
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `global_url_id` INT NOT NULL ,"
     "  `url` TEXT NOT NULL ,"
-    "  `last_updated` TIMESTAMP NOT NULL ,"
+    "  `last_updated` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 

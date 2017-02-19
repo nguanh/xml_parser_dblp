@@ -2,6 +2,7 @@ from mysqlWrapper.mariadb import MariaDb
 from pub_storage.setup_database import setup_database
 from pub_storage.constants import *
 from pub_storage.init_dblp import init_dblp
+from pub_storage.queries import *
 
 from dblp.queries import INGESTION
 from dblp.ingestion import map_to_dict
@@ -26,17 +27,40 @@ read_connector.cursor.execute(INGESTION)
 
 for query_dataset in read_connector.cursor:
     mapping = map_to_dict(query_dataset)
-    # insert local url
-    insert_local_url = "INSERT INTO local_url(global_url_id,url) VALUES (%s, %s)"
-    write_connector.set_query(insert_local_url)
-    identifier = write_connector.execute((dblp_data['global_url'], mapping["local_url"]))
-    '''
-    # insert cluster name
-    normalized_title = normalize_title(title)
-    insert_cluster = "INSERT INTO cluster(cluster_name) VALUES (%s)"
-    write_connector.set_query(insert_cluster)
-    write_connector.execute((normalized_title,))
 
+    # ------------------------- LOCAL_URL ------------------------------------------------------------------------------
+    # check for duplicates by looking up the local URL
+    write_connector.cursor.execute(CHECK_LOCAL_URL, (mapping["local_url"], dblp_data['global_url']))
+    duplicate_id = write_connector.cursor.fetchone()
+    if duplicate_id is not None:
+        #TODO duplicate skip
+        print("Skipping duplicate", mapping["local_url"])
+        continue
+    # insert local url
+    write_connector.set_query(INSERT_LOCAL_URL)
+    identifier = write_connector.execute((mapping["local_url"], dblp_data['global_url']))
+
+    # ------------------------- CLUSTER --------------------------------------------------------------------------------
+    cluster_name = normalize_title(mapping["publication"]["title"])
+    # check for matching cluster (so far ONLY COMPLETE MATCH) TODO levenshtein distance
+    write_connector.cursor.execute(CHECK_CLUSTER, (cluster_name,))
+    cluster_matches =[]
+    for match in write_connector.cursor:
+        cluster_matches.append(match[0])
+
+    if len(cluster_matches) == 0:
+        print("Creating new Cluster")
+        write_connector.set_query(INSERT_CLUSTER)
+        write_connector.execute((cluster_name,))
+
+    elif len(cluster_matches) == 1:
+        print("Appending cluster")
+        #TODO
+    else:
+        print("ambiguous matches, move dataset to other database  ")
+        #TODO
+
+    '''
     # insert authors
     authors_list = parse_authors(authors)
     for autor_name in authors_list:
