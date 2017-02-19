@@ -51,5 +51,6 @@ ADD_DBLP_ARTICLE = ("INSERT INTO dblp_article"
                     "booktitle =VALUES(booktitle)"
                      )
 
-
+# TODO über joins an mehr informationen kommen und mehr Daten einbeziehen
+INGESTION = "SELECT * FROM harvester.dblp_article WHERE last_harvested = 0"
 

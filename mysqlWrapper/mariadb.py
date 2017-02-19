@@ -85,6 +85,7 @@ class MariaDb:
         try:
             self.cursor.execute(self.query, tup)
             self.connector.commit()
+            return self.cursor.lastrowid
         except mysql.connector.Error as err:
             raise Exception("MariaDB query error: {} File not added".format(err))
 

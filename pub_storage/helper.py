@@ -9,9 +9,11 @@ whitespace_dict = str.maketrans({key: None for key in (string.whitespace.replace
 ascii_dict = str.maketrans({key: None for key in (string.printable)})
 
 # TODO interpret latex commands
+def filter_latex(text):
+    pass
+    #\\[a-zA-z]+   matches all math commands \ddadad but not \jl{
 
-
-def normalize_title(title):
+def normalize_title(title, latex=False):
 
     # translate unicode characters to closest ascii characters
     ascii_decoded = unidecode(title)
@@ -26,10 +28,15 @@ def normalize_title(title):
     return only_one_space.strip()
 
 
-def parse_authors(author_csv):
-    authors_list= author_csv.split(";")
+def split_authors(author_csv):
+    authors_list = author_csv.split(";")
     # remove last entry since its always empty
     del authors_list[-1]
+    return authors_list
+
+
+def parse_authors(author_csv):
+    authors_list = split_authors(author_csv)
     names = []
     for author in authors_list:
         name_dict = {'original': author}

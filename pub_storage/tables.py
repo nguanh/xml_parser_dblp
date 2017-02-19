@@ -49,9 +49,6 @@ PUBLICATION_KEYWORDS = (
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `url_id` INT NOT NULL,"
     "  `keyword_id` INT NOT NULL,"
-    "  `source` MEDIUMTEXT,"
-    "  `last_update` TIMESTAMP,"
-    "  `is_default` BOOL,"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 
@@ -60,7 +57,7 @@ TYPES = (
     "CREATE TABLE `types` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `name` VARCHAR(45) NOT NULL ,"
-    "  `description` TEXT,"
+    # "  `description` TEXT,"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 
@@ -69,7 +66,9 @@ STUDYFIELDS = (
     "CREATE TABLE `study_fields` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `name` VARCHAR(45) NOT NULL ,"
-    "  `description` TEXT,"
+    # "  `description` TEXT,"
+    # brauchen wir wohl nicht, weil viele seiten entweder keine beschreibung haben
+    # oder unterschiedliche, von denen alle richtig sind
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 
