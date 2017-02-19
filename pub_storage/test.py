@@ -3,7 +3,7 @@ from pub_storage.setup_database import setup_database
 from pub_storage.constants import *
 from pub_storage.init_dblp import init_dblp
 
-from pub_storage.helper import normalize_title,parse_authors, parse_pages
+from pub_storage.helper import normalize_title,get_name_block, parse_pages
 import configparser
 
 
@@ -41,7 +41,7 @@ for (key, mdate, authors, title, pages, pub_year,
     write_connector.execute((normalized_title,))
 
     # insert authors
-    authors_list = parse_authors(authors)
+    authors_list = get_name_block(authors)
     for autor_name in authors_list:
         insert_author = ("INSERT INTO authors(main_name, block_name, modified) "
                          "VALUES (%s, %s, CURRENT_TIMESTAMP)")

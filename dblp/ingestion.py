@@ -1,41 +1,42 @@
 from pub_storage.helper import parse_pages, split_authors
 import re
 
+def generate_empty_mapping():
+    return{
+        "local_url": "",
+        "publication": {
+            "type_id": None,
+            "study_field_id": None,
+            "url_id": None,
+            "title": None,  # for title and cluster name
+            "pages_from": None,
+            "pages_to": None,
+            "series": None,
+            "edition": None,
+            "note": None,
+            "location": None,
+            "publisher": None,
+            "institution": None,
+            "school": None,
+            "address": None,
+            "isbn": None,
+            "doi": None,
+            "howpublished": None,
+            "abstract": None,
+            "copyright": None,
+            "date_added": None,
+            "date_published": None,
+            "book_title": None,
+            "journal": None,
+            "volume": None,
+            "number": None,
+        },
+        "authors": [],
+        "study_fields": [],
+        "types": [],
+        "keywords": [],
+    }
 
-COMPLETE_DATASET_DICT = {
-    "local_url": "",
-    "publication": {
-        "type_id": None,
-        "study_field_id": None,
-        "url_id": None,
-        "title": None,  # for title and cluster name
-        "pages_from": None,
-        "pages_to": None,
-        "series": None,
-        "edition": None,
-        "note": None,
-        "location": None,
-        "publisher": None,
-        "institution": None,
-        "school": None,
-        "address": None,
-        "isbn": None,
-        "doi": None,
-        "howpublished": None,
-        "abstract": None,
-        "copyright": None,
-        "date_added": None,
-        "date_published": None,
-        "book_title": None,
-        "journal": None,
-        "volume": None,
-        "number": None,
-    },
-    "authors": [],
-    "study_fields": [],
-    "types": [],
-    "keywords": [],
-}
 
 """
 SAMPLE AUTHORS
@@ -52,10 +53,11 @@ SAMPLE AUTHORS
 
 
 def map_to_dict(query_tuple):
-    mapping = COMPLETE_DATASET_DICT.copy()
+    mapping = generate_empty_mapping()
     mapping["local_url"] = query_tuple[0]
     mapping["publication"]["date_added"] = query_tuple[1].year
     authors_list = split_authors(query_tuple[2])
+    #print(len(authors_list))
     for author in authors_list:
         stripped_numbers = re.sub(r'\d{4}', '', author).strip()
         author_dict = {

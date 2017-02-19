@@ -91,7 +91,7 @@ AUTHORS = (
     "  `website` TEXT,"
     "  `contact` TEXT,"
     "  `about` TEXT,"
-    "  `modified` TIMESTAMP,"
+    "  `modified` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
     "  `orcid_id` VARCHAR(45),"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")

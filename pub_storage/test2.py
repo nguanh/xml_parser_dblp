@@ -7,7 +7,7 @@ from pub_storage.queries import *
 from dblp.queries import INGESTION
 from dblp.ingestion import map_to_dict
 
-from pub_storage.helper import normalize_title, parse_authors, parse_pages
+from pub_storage.helper import normalize_title, get_name_block, parse_pages
 import configparser
 
 
@@ -44,7 +44,7 @@ for query_dataset in read_connector.cursor:
     cluster_name = normalize_title(mapping["publication"]["title"])
     # check for matching cluster (so far ONLY COMPLETE MATCH) TODO levenshtein distance
     write_connector.cursor.execute(CHECK_CLUSTER, (cluster_name,))
-    cluster_matches =[]
+    cluster_matches = []
     for match in write_connector.cursor:
         cluster_matches.append(match[0])
 
@@ -60,15 +60,36 @@ for query_dataset in read_connector.cursor:
         print("ambiguous matches, move dataset to other database  ")
         #TODO
 
+    # ------------------------- AUTHORS --------------------------------------------------------------------------------
+    for author_dict in mapping["authors"]:
+        name_block = get_name_block(author_dict["parsed_name"])
+        write_connector.cursor.execute(COUNT_PUBLICATION_AUTHORS, (name_block,))
+        # find matching existing author with name block
+        author_block_match = write_connector.cursor.fetchone()[0]
+        # case 0 matching name blocks: create new  publication author
+        if author_block_match == 0:
+            write_connector.set_query(INSERT_PUBLICATION_AUTHORS)
+            author_id = write_connector.execute((author_dict["parsed_name"],
+                                                 name_block,
+                                                 author_dict["website"],
+                                                 author_dict["contact"],
+                                                 author_dict["about"],
+                                                 author_dict["orcid_id"],
+                                                 ))
+            # add alias
+
+        # case 1 matching name blocks: include author names as possible alias
+        elif author_block_match == 1:
+            pass
+        # case more than 1 matching name blocks: create new block TODO match by alias ?
+        else:
+            pass
+
+
     '''
     # insert authors
     authors_list = parse_authors(authors)
     for autor_name in authors_list:
-        insert_author = ("INSERT INTO authors(main_name, block_name, modified) "
-                         "VALUES (%s, %s, CURRENT_TIMESTAMP)")
-        write_connector.set_query(insert_author)
-        write_connector.execute((autor_name["real"], autor_name["block"]))
-        author_id = write_connector.cursor.lastrowid
         # add alias
         insert_alias = ("INSERT INTO name_alias(authors_id, local_url_id, alias) "
                         "VALUES (%s, %s,%s)")
