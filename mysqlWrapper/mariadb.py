@@ -79,6 +79,21 @@ class MariaDb:
     def set_query(self, query):
         self.query = query
 
+    def execute_ex(self, operation, params=None,multi=False):
+        """
+        wrapper for execute method from mysql_connector with try catch and commit
+        :param operation:
+        :param params:
+        :param multi:
+        :return:
+        """
+        try:
+            self.cursor.execute(operation, params, multi)
+            self.connector.commit()
+        except mysql.connector.Error as err:
+            raise Exception("MariaDB query error: {}".format(err))
+        return self.cursor.lastrowid
+
     def execute(self, tup):
         if self.query is None:
             raise Exception("query not set")
@@ -88,6 +103,21 @@ class MariaDb:
             return self.cursor.lastrowid
         except mysql.connector.Error as err:
             raise Exception("MariaDB query error: {} File not added".format(err))
+
+    def fetch_one(self, tup, query=None):
+        if query is None:
+            query = self.query
+        try:
+            self.cursor.execute(query, tup)
+        except mysql.connector.Error as err:
+            raise Exception("MariaDB query error: {} invalid single fetch".format(err))
+
+        result = self.cursor.fetchone()
+        #TODO clear rest of results from cursor
+        if result is not None:
+            return result[0]
+        return None
+
 
     def set_storage_engine(self,engine):
         self.storage_engine= engine

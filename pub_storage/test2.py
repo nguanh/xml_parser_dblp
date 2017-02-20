@@ -30,15 +30,13 @@ for query_dataset in read_connector.cursor:
 
     # ------------------------- LOCAL_URL ------------------------------------------------------------------------------
     # check for duplicates by looking up the local URL
-    write_connector.cursor.execute(CHECK_LOCAL_URL, (mapping["local_url"], dblp_data['global_url']))
-    duplicate_id = write_connector.cursor.fetchone()
+    duplicate_id = write_connector.fetch_one((mapping["local_url"], dblp_data['global_url']),CHECK_LOCAL_URL)
     if duplicate_id is not None:
         #TODO duplicate skip
         print("Skipping duplicate", mapping["local_url"])
         continue
     # insert local url
-    write_connector.set_query(INSERT_LOCAL_URL)
-    identifier = write_connector.execute((mapping["local_url"], dblp_data['global_url']))
+    identifier = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"], dblp_data['global_url']))
 
     # ------------------------- CLUSTER --------------------------------------------------------------------------------
     cluster_name = normalize_title(mapping["publication"]["title"])
@@ -50,8 +48,7 @@ for query_dataset in read_connector.cursor:
 
     if len(cluster_matches) == 0:
         print("Creating new Cluster")
-        write_connector.set_query(INSERT_CLUSTER)
-        write_connector.execute((cluster_name,))
+        write_connector.execute_ex(INSERT_CLUSTER, (cluster_name,))
 
     elif len(cluster_matches) == 1:
         print("Appending cluster")
@@ -63,39 +60,24 @@ for query_dataset in read_connector.cursor:
     # ------------------------- AUTHORS --------------------------------------------------------------------------------
     for author_dict in mapping["authors"]:
         name_block = get_name_block(author_dict["parsed_name"])
-        write_connector.cursor.execute(COUNT_AUTHORS, (name_block,))
         # find matching existing author with name block
-        author_block_match = write_connector.cursor.fetchone()[0]
+        author_block_match = write_connector.fetch_one((name_block,), COUNT_AUTHORS)
         # case 0 matching name blocks: create new  publication author
+        # TODO handle None
+        # TODO durch dict ersetzen die query
         if author_block_match == 0:
-            write_connector.set_query(INSERT_AUTHORS)
-            author_id = write_connector.execute((author_dict["parsed_name"],
-                                                 name_block,
-                                                 author_dict["website"],
-                                                 author_dict["contact"],
-                                                 author_dict["about"],
-                                                 author_dict["orcid_id"],
-                                                 ))
+            author_dict["block_name"] = name_block
+            author_id = write_connector.execute_ex(INSERT_AUTHORS, author_dict)
             # add original name as alias
-            write_connector.set_query(INSERT_ALIAS)
-            write_connector.execute((author_id, author_dict["original_name"]))
-            write_connector.set_query(SELECT_ALIAS)
-            write_connector.execute((author_id, author_dict["original_name"]))
-            write_connector.set_query(INSERT_ALIAS_SOURCE)
-            write_connector.execute((identifier,))
-
+            write_connector.execute_ex(INSERT_ALIAS, (author_id, author_dict["original_name"]))
+            write_connector.execute_ex(SELECT_ALIAS, (author_id, author_dict["original_name"]))
+            write_connector.execute_ex(INSERT_ALIAS_SOURCE, (identifier,))
             # add parsed name as alias, if it's = original name, skip
-            write_connector.set_query(INSERT_ALIAS)
-            write_connector.execute((author_id, author_dict["parsed_name"]))
-            write_connector.set_query(SELECT_ALIAS)
-            write_connector.execute((author_id, author_dict["parsed_name"]))
-            write_connector.set_query(INSERT_ALIAS_SOURCE)
-            write_connector.execute((identifier,))
-
+            write_connector.execute_ex(INSERT_ALIAS, (author_id, author_dict["parsed_name"]))
+            write_connector.execute_ex(SELECT_ALIAS, (author_id, author_dict["parsed_name"]))
+            write_connector.execute_ex(INSERT_ALIAS_SOURCE, (identifier,))
             # add to publication authors
-            write_connector.set_query(INSERT_PUBLICATION_AUTHORS)
-            write_connector.execute((identifier, author_id))
-
+            write_connector.execute_ex(INSERT_PUBLICATION_AUTHORS, (identifier, author_id))
 
         # case 1 matching name blocks: include author names as possible alias
         elif author_block_match == 1:
@@ -108,8 +90,7 @@ for query_dataset in read_connector.cursor:
     mapping['publication']['url_id'] = identifier
     # new cluster, insert into default table
     if len(cluster_matches) == 0:
-        write_connector.set_query(INSERT_DEFAULT_TABLE)
-        write_connector.cursor.execute(INSERT_DEFAULT_TABLE, mapping["publication"])
+        write_connector.execute_ex(INSERT_DEFAULT_TABLE, mapping["publication"])
     else:
         #TODO
         pass
