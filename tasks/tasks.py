@@ -13,7 +13,7 @@ import sys
 import os
 
 
-logging.config.dictConfig(LOG_CONFIG)
+#logging.config.dictConfig(LOG_CONFIG)
 
 
 #TODO test
@@ -28,8 +28,16 @@ def harvest_source(package, class_name, name, **parameters):
     :param parameters: parameters for harvester as dict parameters
     :return:
     """
-    # init logger
+    # init logger, generate logger for every tasks
     logger = get_task_logger(name)
+    logger.setLevel(logging.INFO)
+    # create the logging file handler
+    fh = logging.FileHandler("{}.log".format(name))
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    # add handler to logger object
+    logger.addHandler(fh)
+
     try:
         # add path to system
         file_path = os.path.realpath(__file__)

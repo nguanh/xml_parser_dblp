@@ -7,7 +7,7 @@ from pub_storage.queries import *
 from dblp.queries import INGESTION
 from dblp.ingestion import map_to_dict
 
-from pub_storage.helper import normalize_title, get_name_block, parse_pages
+from pub_storage.helper import normalize_title, get_name_block
 import configparser
 
 
@@ -52,7 +52,7 @@ for query_dataset in read_connector.cursor:
 
     elif len(cluster_matches) == 1:
         print("Appending cluster")
-        #TODO
+        #TODO add to difference table
     else:
         print("ambiguous matches, move dataset to other database  ")
         #TODO
