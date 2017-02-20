@@ -104,18 +104,17 @@ for query_dataset in read_connector.cursor:
         else:
             pass
 
+    # ------------------------- DEFAULT/DIFFERENCE TABLE ---------------------------------------------------------------
+    mapping['publication']['url_id'] = identifier
+    # new cluster, insert into default table
+    if len(cluster_matches) == 0:
+        write_connector.set_query(INSERT_DEFAULT_TABLE)
+        write_connector.cursor.execute(INSERT_DEFAULT_TABLE, mapping["publication"])
+    else:
+        #TODO
+        pass
 
-
-    '''
-    # store rest in default table
-
-    insert_default_table = ("INSERT INTO default_table"
-                            "(url_id, title,pages_from,pages_to,journal, number,"
-                            " volume,date_published,doi,book_title)"
-                                      "VALUES (%s, %s,%s, %s,%s,%s,%s,%s,%s,%s)")
-    write_connector.set_query(insert_default_table)
-    write_connector.execute((identifier,title,page_from,page_to,journal,journal_number,volume,pub_year.year,ee,booktitle))
-    '''
+write_connector.close_connection()
 read_connector.close_connection()
 
 

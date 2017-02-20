@@ -1,6 +1,7 @@
 from pub_storage.helper import parse_pages, split_authors
 import re
 
+
 def generate_empty_mapping():
     return{
         "local_url": "",
@@ -54,10 +55,10 @@ SAMPLE AUTHORS
 
 def map_to_dict(query_tuple):
     mapping = generate_empty_mapping()
+    # is set later
     mapping["local_url"] = query_tuple[0]
     mapping["publication"]["date_added"] = query_tuple[1].year
     authors_list = split_authors(query_tuple[2])
-    #print(len(authors_list))
     for author in authors_list:
         stripped_numbers = re.sub(r'\d{4}', '', author).strip()
         author_dict = {
