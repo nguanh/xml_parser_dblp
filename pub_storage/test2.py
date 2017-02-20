@@ -63,12 +63,12 @@ for query_dataset in read_connector.cursor:
     # ------------------------- AUTHORS --------------------------------------------------------------------------------
     for author_dict in mapping["authors"]:
         name_block = get_name_block(author_dict["parsed_name"])
-        write_connector.cursor.execute(COUNT_PUBLICATION_AUTHORS, (name_block,))
+        write_connector.cursor.execute(COUNT_AUTHORS, (name_block,))
         # find matching existing author with name block
         author_block_match = write_connector.cursor.fetchone()[0]
         # case 0 matching name blocks: create new  publication author
         if author_block_match == 0:
-            write_connector.set_query(INSERT_PUBLICATION_AUTHORS)
+            write_connector.set_query(INSERT_AUTHORS)
             author_id = write_connector.execute((author_dict["parsed_name"],
                                                  name_block,
                                                  author_dict["website"],
@@ -92,6 +92,10 @@ for query_dataset in read_connector.cursor:
             write_connector.set_query(INSERT_ALIAS_SOURCE)
             write_connector.execute((identifier,))
 
+            # add to publication authors
+            write_connector.set_query(INSERT_PUBLICATION_AUTHORS)
+            write_connector.execute((identifier, author_id))
+
 
         # case 1 matching name blocks: include author names as possible alias
         elif author_block_match == 1:
@@ -101,22 +105,8 @@ for query_dataset in read_connector.cursor:
             pass
 
 
-    '''
-    # insert authors
-    authors_list = parse_authors(authors)
-    for autor_name in authors_list:
-        # add alias
-        insert_alias = ("INSERT INTO name_alias(authors_id, local_url_id, alias) "
-                        "VALUES (%s, %s,%s)")
-        write_connector.set_query(insert_alias)
-        write_connector.execute((author_id,identifier,autor_name["original"]))
-        # add to publication authors
-        insert_publication_authors = ("INSERT INTO publication_authors(url_id, author_id)"
-                                      "VALUES (%s, %s)")
-        write_connector.set_query(insert_publication_authors)
-        write_connector.execute((identifier, author_id))
-    page_from, page_to = parse_pages(pages)
 
+    '''
     # store rest in default table
 
     insert_default_table = ("INSERT INTO default_table"
