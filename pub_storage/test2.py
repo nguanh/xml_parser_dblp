@@ -76,7 +76,22 @@ for query_dataset in read_connector.cursor:
                                                  author_dict["about"],
                                                  author_dict["orcid_id"],
                                                  ))
-            # add alias
+            # add original name as alias
+            write_connector.set_query(INSERT_ALIAS)
+            write_connector.execute((author_id, author_dict["original_name"]))
+            write_connector.set_query(SELECT_ALIAS)
+            write_connector.execute((author_id, author_dict["original_name"]))
+            write_connector.set_query(INSERT_ALIAS_SOURCE)
+            write_connector.execute((identifier,))
+            #TODO add parsed name as alias, if it's = original name, skip
+            '''
+            write_connector.set_query(INSERT_ALIAS)
+            write_connector.execute((author_id, author_dict["parsed_name"]))
+            write_connector.set_query(SELECT_ALIAS)
+            write_connector.execute((author_id, author_dict["parsed_name"]))
+            write_connector.set_query(INSERT_ALIAS_SOURCE)
+            write_connector.execute((identifier,))
+            '''
 
         # case 1 matching name blocks: include author names as possible alias
         elif author_block_match == 1:

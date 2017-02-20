@@ -77,8 +77,16 @@ NAMEALIAS = (
     "CREATE TABLE `name_alias` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `authors_id` INT NOT NULL,"
-    "  `local_url_id` INT NOT NULL ,"
     "  `alias` VARCHAR(150) NOT NULL ,"
+    "  PRIMARY KEY (`id`),"
+    "  UNIQUE KEY (`authors_id`,`alias`)"
+    ") ENGINE={} CHARSET=utf8mb4")
+
+ALIASSOURCE = (
+    "CREATE TABLE `alias_source` ("
+    "  `id` INT NOT NULL AUTO_INCREMENT,"
+    "  `url_id` INT NOT NULL,"
+    "  `alias_id` INT  NOT NULL,"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 
