@@ -87,7 +87,8 @@ ALIASSOURCE = (
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `url_id` INT NOT NULL,"
     "  `alias_id` INT  NOT NULL,"
-    "  PRIMARY KEY (`id`)"
+    "  PRIMARY KEY (`id`),"
+    "  UNIQUE KEY (`url_id`,`alias_id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 
 
