@@ -30,7 +30,7 @@ for query_dataset in read_connector.cursor:
 
     # ------------------------- LOCAL_URL ------------------------------------------------------------------------------
     # check for duplicates by looking up the local URL
-    duplicate_id = write_connector.fetch_one((mapping["local_url"], dblp_data['global_url']),CHECK_LOCAL_URL)
+    duplicate_id = write_connector.fetch_one((mapping["local_url"], dblp_data['global_url']), CHECK_LOCAL_URL)
     if duplicate_id is not None:
         #TODO duplicate skip
         print("Skipping duplicate", mapping["local_url"])
