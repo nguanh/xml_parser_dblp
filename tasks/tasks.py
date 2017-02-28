@@ -1,6 +1,5 @@
 from __future__ import absolute_import, unicode_literals
 from .celery import app
-from logs.config import LOG_CONFIG
 from celery.utils.log import get_task_logger
 import logging.config
 import logging

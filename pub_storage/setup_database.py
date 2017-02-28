@@ -5,9 +5,9 @@ from pub_storage.constants import *
 import configparser
 
 
-def setup_database(db_name):
+def setup_database(db_name, path=CONFIG_PATH):
     config = configparser.ConfigParser()
-    config.read(CONFIG_PATH)
+    config.read(path)
 
     credentials = dict(config["MARIADB"])
     connector = MariaDb(credentials)

@@ -6,13 +6,17 @@ from mysqlWrapper.mariadb import MariaDb
 class IHarvest(ABC):
     HARVESTER_PATH = "harvester.ini"
 
-    def __init__(self, logger, name):
+    def __init__(self, logger, name, config_path= None):
         self.name = name
         self.logger = logger
 
+        # mainy for testing
+        if config_path is None:
+            config_path = self.HARVESTER_PATH
+
         # load config
         self.config = configparser.ConfigParser()
-        self.config.read(self.HARVESTER_PATH)
+        self.config.read(config_path)
         if name not in self.config:
             raise IHarvest_Exception("Error: Config could not be loaded")
         if "MARIADB" not in self.config:
