@@ -54,5 +54,5 @@ def harvest_task(package, class_name, name, path=None, **parameters):
         except IHarvest_Disabled:
             # task is disabled
             print("Skipping Task", name)
-            logger.info("Task %s is disabled and skipped", name);
+            logger.info("Task %s is disabled and skipped", name)
             raise
