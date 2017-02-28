@@ -13,7 +13,6 @@ class ArXivRecord(Record):
         tree = self.xml.find(".//" + self._oai_namespace + "metadata/{http://arxiv.org/OAI/arXiv/}arXiv")
         if self.deleted is False and tree is not None:
 
-
             for element in tree.getchildren():
                 # remove namespace from tag
                 tag = element.tag.replace("{http://arxiv.org/OAI/arXiv/}", "")
@@ -29,6 +28,7 @@ class ArXivRecord(Record):
                     tag = "identifier"
 
                 self.metadata[tag] = text
+            self.metadata["mdate"] = datetime.strptime(self.header.datestamp, "%Y-%m-%d")
 
     def parse_authors(self, element):
         result = ""
@@ -48,7 +48,7 @@ class ArXivRecord(Record):
 
 
 ATTRIBUTE_ORDER = ["identifier", "created", "updated", "authors", "title", "msc-class", "acm-class",
-                   "report-no", "journal-ref", "comments", "abstract", "categories", "doi"]
+                   "report-no", "journal-ref", "comments", "abstract", "categories", "doi", "mdate"]
 
 
 def parse_arxiv(metadata):

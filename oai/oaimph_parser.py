@@ -64,10 +64,12 @@ def harvestOAI(link, sql_connector, logger,
                 logger.error("Skipping deleted record")
                 continue
             met_tuple = processing_function(metadata)
+            print(met_tuple)
 
             try:
                 sql_connector.execute(met_tuple)
                 success_count += 1
+                print("jo")
                 logger.debug("%s: %s", success_count, metadata['identifier'])
             except Exception as e:
                 logger.error("MariaDB error %s: %s", identifier, e)

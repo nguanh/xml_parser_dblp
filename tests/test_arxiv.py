@@ -26,7 +26,10 @@ class Test_Arxiv(TestCase):
                                           'title': 'Calculation of prompt diphoton production cross sections at Tevatron and LHC energies',
                                           'categories': 'hep-ph',
                                           'identifier': '0704.0001',
-                                          'report-no': 'ANL-HEP-PR-07-12'}
+                                          'report-no': 'ANL-HEP-PR-07-12',
+                                          'mdate': datetime.datetime(2008,11,26,0,0)
+
+                                           }
                         )
 
     def test_deleted(self):
