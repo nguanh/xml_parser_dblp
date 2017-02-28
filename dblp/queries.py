@@ -52,5 +52,5 @@ ADD_DBLP_ARTICLE = ("INSERT INTO dblp_article"
                      )
 
 # TODO über joins an mehr informationen kommen und mehr Daten einbeziehen
-INGESTION = "SELECT * FROM harvester.dblp_article WHERE last_harvested = 0"
+INGESTION = "SELECT * FROM {} WHERE last_harvested = 0"
 

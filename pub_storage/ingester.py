@@ -1,20 +1,12 @@
 from mysqlWrapper.mariadb import MariaDb
 from pub_storage.constants import *
 from pub_storage.queries import *
-
-
-from dblp.ingestion import map_to_dict
-
+from conf.config import get_config
 from pub_storage.helper import normalize_title, get_name_block
-import configparser
 
 
 def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME):
-    # read config file
-    config = configparser.ConfigParser()
-    config.read(CONFIG_PATH)
-
-    credentials = dict(config["MARIADB"])
+    credentials = dict(get_config("MARIADB"))
     # establish mariadb connections, one for reading from harvester, one for writing in ingester
     read_connector = MariaDb(credentials)
     write_connector = MariaDb(credentials)
