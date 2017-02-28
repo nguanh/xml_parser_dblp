@@ -1,9 +1,10 @@
 from unittest import TestCase
 from pub_storage.setup_database import setup_database
 from mysqlWrapper.mariadb import MariaDb
-from dblp.queries import DBLP_ARTICLE
+from dblp.queries import DBLP_ARTICLE,ADD_DBLP_ARTICLE
 import configparser
 from .queries import IMPORT_CSV
+import csv
 
 from mysql.connector.constants import ClientFlag
 
@@ -16,17 +17,26 @@ class TestIngsterDblp(TestCase):
         # load testconfig
         config = configparser.ConfigParser()
         config.read("test.ini")
-        print(ClientFlag.LOCAL_FILES)
         credentials = dict(config["MARIADB"])
-        credentials["client_flags"] = ClientFlag.LOCAL_FILES
-        print(credentials)
         # setup database
         connector = MariaDb(credentials)
         connector.create_db(TESTDB)
         connector.connector.database = TESTDB
         connector.createTable("test dblp table", DBLP_ARTICLE)
-        print(IMPORT_CSV.format("test.ini", "dblp_article"))
-        connector.execute_ex(IMPORT_CSV.format("test.ini", "dblp_article"))
+
+        with open('dblp_test1.csv', newline='') as csvfile:
+            spamreader = csv.reader(csvfile, delimiter=';', quotechar='"')
+            do_once = False
+            for row in spamreader:
+                # remove last updated and harvest date
+                del row[-2:]
+                # skip first line
+                if do_once is True:
+                    tup = tuple(map(lambda x: x if x != "" else None, row))
+                    connector.execute_ex(ADD_DBLP_ARTICLE, tup)
+                else:
+                    do_once = True
+
         # setup test ingester database
         setup_database(TESTDB, path="test.ini")
         # import records from csv
