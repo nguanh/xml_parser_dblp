@@ -23,10 +23,17 @@ test_success = {
         [4, "Christian Stahl", "stahl,c", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None],
         [5, "Richard Müller", "muller,r", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None]
     ],
+    "name_alias": [
+        [1,1, "Ian F. Akyildiz"],
+        [3,2, "Horst von Brand"],
+        [5,3, "Walter Vogler"],
+        [7,4, "Christian Stahl"],
+        [10,5, "Richard Müller"],
+        [9,5, "Richard Müller 0001"],
+    ],
     "cluster": [
         [1, "bla bla bla"],
         [2, "kam kim kum"]
-
     ]
 }
 
