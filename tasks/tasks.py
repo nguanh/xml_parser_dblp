@@ -17,7 +17,7 @@ def harvest_source(package, class_name, name, **parameters):
     :return:
     """
     try:
-        harvest_task(package, class_name, name,None , parameters)
+        harvest_task(package, class_name, name, None)
     except ImportError as e:
         harvest_source.update_state(
             state=states.FAILURE,
