@@ -3,13 +3,13 @@ from conf.config import get_config
 import datetime
 from pub_storage.setup_database import setup_database
 import csv
+TESTDB = "ingester_test"
 
-
-def get_table_data(table,database, null_dates = True):
+def get_table_data(table, null_dates = True):
     credentials = dict(get_config("MARIADB"))
     # connect to database
     connector = MariaDb(credentials)
-    connector.connector.database = database
+    connector.connector.database = TESTDB
     # fetch everything
     query = "SELECT * FROM {}".format(table)
     connector.cursor.execute(query)
@@ -23,13 +23,14 @@ def get_table_data(table,database, null_dates = True):
             else:
                 tmp+=(element,)
         result.add(tmp)
+    connector.close_connection()
     return result
 
 
-def compare_tables(self, comp_object,database, ignore_id = True):
+def compare_tables(self, comp_object, ignore_id = True):
     # TODO ignore
     for key,value in comp_object.items():
-        self.assertEqual(get_table_data(key, database), value)
+        self.assertEqual(get_table_data(key, TESTDB), value)
 
 
 def delete_database(database):
@@ -38,19 +39,20 @@ def delete_database(database):
     connector = MariaDb(credentials)
     connector.connector.database = database
     connector.execute_ex("DROP DATABASE {}".format(database))
+    connector.close_connection()
 
 
-def setup_tables(filename, database, table_query, insert_query):
+def setup_tables(filename, table_query, insert_query):
     # load testconfig
     credentials = dict(get_config("MARIADB"))
     # setup database
     connector = MariaDb(credentials)
-    connector.create_db(database)
-    connector.connector.database = database
+    connector.create_db(TESTDB)
+    connector.connector.database = TESTDB
     connector.createTable("test dblp table", table_query)
 
     # setup test ingester database
-    setup_database(database)
+    setup_database(TESTDB)
     # import records from csv
     with open(filename, newline='', encoding='utf-8') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=';', quotechar='"')
@@ -66,3 +68,17 @@ def setup_tables(filename, database, table_query, insert_query):
                 do_once = True
     connector.close_connection()
 
+
+def insert_data(query):
+    """
+    execute insertion query
+    :param query:
+    :return:
+    """
+    # load testconfig
+    credentials = dict(get_config("MARIADB"))
+    # setup database
+    connector = MariaDb(credentials)
+    connector.connector.database = TESTDB
+    connector.execute_ex(query)
+    connector.close_connection()

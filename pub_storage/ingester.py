@@ -84,11 +84,27 @@ def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME)
 
                 write_connector.execute_ex(INSERT_PUBLICATION_AUTHORS, (identifier, author_id, author_index))
 
-
-
-            # case more than 1 matching name blocks: create new block TODO match by alias ?
+            # case more than 1 matching name blocks:  match by alias
             else:
-                pass
+                # count possible matching name blocks by matching alias
+                alias_count_match = write_connector.fetch_one((name_block, author_dict["original_name"]),
+                                                              COUNT_MATCH_AUTHOR_BY_ALIAS)
+                if alias_count_match == 1:
+                    author_id = write_connector.fetch_one((name_block, author_dict["original_name"]),
+                                                          MATCH_AUTHOR_BY_ALIAS)
+                    # insert both names as alias
+                    write_connector.execute_ex(INSERT_ALIAS, (author_id, author_dict["original_name"]))
+                    write_connector.execute_ex(SELECT_ALIAS, (author_id, author_dict["original_name"]))
+                    write_connector.execute_ex(INSERT_ALIAS_SOURCE, (identifier,))
+
+                    write_connector.execute_ex(INSERT_ALIAS, (author_id, author_dict["parsed_name"]))
+                    write_connector.execute_ex(SELECT_ALIAS, (author_id, author_dict["parsed_name"]))
+                    write_connector.execute_ex(INSERT_ALIAS_SOURCE, (identifier,))
+
+                    write_connector.execute_ex(INSERT_PUBLICATION_AUTHORS, (identifier, author_id, author_index))
+                else:
+                    print("trolololo")
+
 
         # ------------------------- DEFAULT/DIFFERENCE TABLE -----------------------------------------------------------
 
