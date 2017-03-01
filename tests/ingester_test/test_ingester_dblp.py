@@ -12,40 +12,84 @@ TESTDB = "ingester_test"
 
 #TODO weitere tabellen hinzufügen
 test_success = {
-    "local_url": [
-        [1, 1, None, None, None, 'journals/acta/AkyildizB89', datetime.datetime(1990, 1, 1, 1, 1, 1)],
-        [2, 1, None, None, None, 'journals/acta/VoglerS014', datetime.datetime(1990, 1, 1, 1, 1, 1)],
-    ],
-    "authors": [
-        [1, "Ian F. Akyildiz", "akyildiz,i", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None],
-        [2, "Horst von Brand", "von brand,h", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None],
-        [3, "Walter Vogler", "vogler,w", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None],
-        [4, "Christian Stahl", "stahl,c", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None],
-        [5, "Richard Müller", "muller,r", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None]
-    ],
-    "name_alias": [
-        [1,1, "Ian F. Akyildiz"],
-        [3,2, "Horst von Brand"],
-        [5,3, "Walter Vogler"],
-        [7,4, "Christian Stahl"],
-        [10,5, "Richard Müller"],
-        [9,5, "Richard Müller 0001"],
-    ],
-    "cluster": [
-        [1, "bla bla bla"],
-        [2, "kam kim kum"]
-    ],
-    "publication": [
-        [1,1,1, None,"Bla Bla Bla",1,5,None,"dummydoi",None,None,"2011","1989","1","2"],
-        [2,2,2, None,"Kam? Kim! Kum.",10,11,None,"doidoi",None,None,"2014","2014","51","8"]
-    ],
-    "publication_authors": [
-        [1,1,1,0],
-        [2,1,2,1],
-        [3,2,3,0],
-        [4,2,4,1],
-        [5,2,5,2],
-    ]
+    "local_url": {
+        (1, 1, None, None, None, 'journals/acta/AkyildizB89', datetime.datetime(1990, 1, 1, 1, 1, 1)),
+        (2, 1, None, None, None, 'journals/acta/VoglerS014', datetime.datetime(1990, 1, 1, 1, 1, 1)),
+    },
+    "authors": {
+        (1, "Ian F. Akyildiz", "akyildiz,i", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None),
+        (2, "Horst von Brand", "von brand,h", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None),
+        (3, "Walter Vogler", "vogler,w", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None),
+        (4, "Christian Stahl", "stahl,c", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None),
+        (5, "Richard Müller", "muller,r", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None)
+    },
+    "name_alias": {
+        (1, 1, "Ian F. Akyildiz"),
+        (3, 2, "Horst von Brand"),
+        (5, 3, "Walter Vogler"),
+        (7, 4, "Christian Stahl"),
+        (9, 5, "Richard Müller 0001"),
+        (10, 5, "Richard Müller"),
+    },
+    "alias_source": {
+        (1, 1, 1),
+        (3, 1, 3),
+        (5, 2, 5),
+        (7, 2, 7),
+        (9, 2, 9),
+        (10, 2, 10),
+    },
+    "cluster": {
+        (1, "bla bla bla"),
+        (2, "kam kim kum")
+    },
+    "publication": {
+        (1, 1, 1, None, "Bla Bla Bla", 1, 5, None, "dummydoi", None, None, "2011", "1989", "1", "2"),
+        (2, 2, 2, None, "Kam? Kim! Kum.", 10, 11, None, "doidoi", None, None, "2014", "2014", "51", "8")
+    },
+    "publication_authors": {
+        (1, 1, 1, 0),
+        (2, 1, 2, 1),
+        (3, 2, 3, 0),
+        (4, 2, 4, 1),
+        (5, 2, 5, 2),
+    }
+
+}
+
+
+test_same_authors = {
+
+    "authors": {
+        (1, "Ian F. Akyildiz", "akyildiz,i", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None),
+        (2, "Horst von Brand", "von brand,h", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None),
+        (3, "Richard Müller", "muller,r", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None)
+    },
+
+    "name_alias": {
+        (1, 1, "Ian F. Akyildiz"),
+        (5, 1, "Ian Fanning Akyildiz"),
+        (7, 2, "Horst K. von Brand"),
+        (3, 2, "Horst von Brand"),
+        (10, 3, "Richard Müller"),
+        (9, 3, "Richard Müller 0001"),
+    },
+    "cluster": {
+        (1, "bla bla bla"),
+        (2, "kam kim kum")
+    },
+    "publication": {
+        (1,1,1, None,"Bla Bla Bla",1,5,None,"dummydoi",None,None,"2011","1989","1","2"),
+        (2,2,2, None,"Kam? Kim! Kum.",10,11,None,"doidoi",None,None,"2014","2014","51","8")
+    },
+    "publication_authors": {
+        (1,1,1,0),
+        (2,1,2,1),
+        (3,2,1,0),
+        (4,2,2,1),
+        (5,2,3,2),
+    }
+
 }
 
 
@@ -56,7 +100,14 @@ class TestIngsterDblp(TestCase):
         dblp_data = init_dblp(TESTDB)
         self.assertEqual(dblp_data["global_url"], 1)
         ingest_data(dblp_data, INGESTION.format(TESTDB + ".dblp_article"), map_to_dict, TESTDB)
-        compare_tables(self, test_success, TESTDB)
+        compare_tables(self, test_success, TESTDB, ignore_id=True)
+
+    def test_same_authors(self):
+        # both publications share 2 common authors, with different style of writing the name
+        setup_tables("dblp_test2.csv", TESTDB, DBLP_ARTICLE, ADD_DBLP_ARTICLE)
+        dblp_data = init_dblp(TESTDB)
+        ingest_data(dblp_data, INGESTION.format(TESTDB + ".dblp_article"), map_to_dict, TESTDB)
+        compare_tables(self, test_same_authors, TESTDB, ignore_id= True)
 
     def tearDown(self):
         delete_database(TESTDB)

@@ -13,20 +13,21 @@ def get_table_data(table,database, null_dates = True):
     # fetch everything
     query = "SELECT * FROM {}".format(table)
     connector.cursor.execute(query)
-    result = []
+    result = set()
     for dataset in connector.cursor:
-        tmp = []
+        tmp = ()
         for element in dataset:
             # overwrite timestamps with generic date for easier testing
             if null_dates and isinstance(element,datetime.datetime):
-                tmp.append(datetime.datetime(1990,1,1,1,1,1))
+                tmp+=((datetime.datetime(1990,1,1,1,1,1),))
             else:
-                tmp.append(element)
-        result.append(tmp)
+                tmp+=(element,)
+        result.add(tmp)
     return result
 
 
-def compare_tables(self, comp_object,database):
+def compare_tables(self, comp_object,database, ignore_id = True):
+    # TODO ignore
     for key,value in comp_object.items():
         self.assertEqual(get_table_data(key, database), value)
 
