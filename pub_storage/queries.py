@@ -16,6 +16,38 @@ INSERT_ALIAS_SOURCE = "INSERT IGNORE INTO alias_source(alias_id,url_id) VALUES (
 
 INSERT_PUBLICATION_AUTHORS = ("INSERT INTO publication_authors(url_id, author_id) VALUES (%s, %s)")
 
+INSERT_PUBLICATION=   ("INSERT INTO publication"
+                       "       (url_id,"
+                       "        cluster_id,"
+                       "        differences,"
+                       "        title,"
+                       "        pages_from, "
+                       "        pages_to,"
+                       "        note,"
+                       "        doi,"
+                       "        abstract,"
+                       "        copyright,"
+                       "        date_added,"
+                       "        date_published,"
+                       "        volume,"
+                       "        number)"
+                       "VALUES (%(url_id)s, "
+                       "        %(cluster_id)s,"
+                       "        %(differences)s,"
+                       "        %(title)s,"
+                       "        %(pages_from)s, "
+                       "        %(pages_to)s,"
+                       "        %(note)s,"
+                       "        %(doi)s,"
+                       "        %(abstract)s,"
+                       "        %(copyright)s,"
+                       "        %(date_added)s,"
+                       "        %(date_published)s,"
+                       "        %(volume)s,"
+                       "        %(number)s"
+                       "       )")
+
+
 INSERT_DEFAULT_TABLE= ("INSERT INTO default_table"
                        "       (type_id, "
                        "        study_field_id,"

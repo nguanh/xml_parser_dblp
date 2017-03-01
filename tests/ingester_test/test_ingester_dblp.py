@@ -13,8 +13,8 @@ TESTDB = "ingester_test"
 #TODO weitere tabellen hinzufügen
 test_success = {
     "local_url": [
-        [1, 1, 'journals/acta/AkyildizB89', datetime.datetime(1990, 1, 1, 1, 1, 1)],
-        [2, 1, 'journals/acta/VoglerS014', datetime.datetime(1990, 1, 1, 1, 1, 1)],
+        [1, 1, None, None, None, 'journals/acta/AkyildizB89', datetime.datetime(1990, 1, 1, 1, 1, 1)],
+        [2, 1, None, None, None, 'journals/acta/VoglerS014', datetime.datetime(1990, 1, 1, 1, 1, 1)],
     ],
     "authors": [
         [1, "Ian F. Akyildiz", "akyildiz,i", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None],
@@ -34,6 +34,10 @@ test_success = {
     "cluster": [
         [1, "bla bla bla"],
         [2, "kam kim kum"]
+    ],
+    "publication": [
+        [1,1,1, None,"Bla Bla Bla",1,5,None,"dummydoi",None,None,"2011","1989","1","2"],
+        [2,2,2, None,"Kam? Kim! Kum.",10,11,None,"doidoi",None,None,"2014","2014","51","8"]
     ]
 }
 
@@ -48,6 +52,7 @@ class TestIngsterDblp(TestCase):
         compare_tables(self, test_success, TESTDB)
 
     def tearDown(self):
-        delete_database(TESTDB)
+        #delete_database(TESTDB)
+        pass
 
 

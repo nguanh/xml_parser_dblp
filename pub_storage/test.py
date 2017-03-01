@@ -9,4 +9,4 @@ from dblp.ingestion import map_to_dict
 setup_database(DATABASE_NAME)
 dblp_data = init_dblp()
 
-ingest_data(dblp_data, INGESTION, map_to_dict, DATABASE_NAME)
+ingest_data(dblp_data, INGESTION.format("storage.dblp_article"), map_to_dict, DATABASE_NAME)

@@ -91,6 +91,7 @@ class MariaDb:
             self.cursor.execute(operation, params, multi)
             self.connector.commit()
         except mysql.connector.Error as err:
+            print("MariaDB query error: {}".format(err))
             raise Exception("MariaDB query error: {}".format(err))
         return self.cursor.lastrowid
 

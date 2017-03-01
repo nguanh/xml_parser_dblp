@@ -32,12 +32,14 @@ def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME)
         # check for matching cluster (so far ONLY COMPLETE MATCH) TODO levenshtein distance
         write_connector.cursor.execute(CHECK_CLUSTER, (cluster_name,))
         cluster_matches = []
+
         for match in write_connector.cursor:
             cluster_matches.append(match[0])
 
         if len(cluster_matches) == 0:
             print("Creating new Cluster")
-            write_connector.execute_ex(INSERT_CLUSTER, (cluster_name,))
+            cluster_id = write_connector.execute_ex(INSERT_CLUSTER, (cluster_name,))
+            mapping['publication']['cluster_id'] = cluster_id
 
         elif len(cluster_matches) == 1:
             print("Appending cluster")
@@ -47,6 +49,7 @@ def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME)
             #TODO
 
         # ------------------------- AUTHORS ----------------------------------------------------------------------------
+        # TODO set priority
         for author_dict in mapping["authors"]:
             name_block = get_name_block(author_dict["parsed_name"])
             # find matching existing author with name block
@@ -76,14 +79,14 @@ def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME)
                 pass
 
         # ------------------------- DEFAULT/DIFFERENCE TABLE -----------------------------------------------------------
+
         mapping['publication']['url_id'] = identifier
         # new cluster, insert into default table
-        if len(cluster_matches) == 0:
-            write_connector.execute_ex(INSERT_DEFAULT_TABLE, mapping["publication"])
+        if len(cluster_matches) <= 1:
+            write_connector.execute_ex(INSERT_PUBLICATION, mapping["publication"])
         else:
             # TODO
             pass
-
     write_connector.close_connection()
     read_connector.close_connection()
 
