@@ -3,7 +3,7 @@ from pub_storage.constants import *
 from pub_storage.queries import *
 from conf.config import get_config
 from pub_storage.helper import normalize_title, get_name_block
-
+from .difference_storage import *
 
 
 def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME):
@@ -27,6 +27,7 @@ def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME)
             continue
         # insert local url
         identifier = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"], harvester_data['global_url']))
+        #TODO create separate local url for default
 
         # ------------------------- CLUSTER ----------------------------------------------------------------------------
         cluster_name = normalize_title(mapping["publication"]["title"])
@@ -85,10 +86,10 @@ def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME)
             # add to publication authors
             write_connector.execute_ex(INSERT_PUBLICATION_AUTHORS, (identifier, author_id, author_index))
 
-
         # ------------------------- DEFAULT/DIFFERENCE TABLE -----------------------------------------------------------
 
         mapping['publication']['url_id'] = identifier
+
         # new cluster, insert into default table
         if len(cluster_matches) <= 1:
             write_connector.execute_ex(INSERT_PUBLICATION, mapping["publication"])
