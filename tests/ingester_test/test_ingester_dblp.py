@@ -38,6 +38,13 @@ test_success = {
     "publication": [
         [1,1,1, None,"Bla Bla Bla",1,5,None,"dummydoi",None,None,"2011","1989","1","2"],
         [2,2,2, None,"Kam? Kim! Kum.",10,11,None,"doidoi",None,None,"2014","2014","51","8"]
+    ],
+    "publication_authors": [
+        [1,1,1,0],
+        [2,1,2,1],
+        [3,2,3,0],
+        [4,2,4,1],
+        [5,2,5,2],
     ]
 }
 
@@ -52,7 +59,7 @@ class TestIngsterDblp(TestCase):
         compare_tables(self, test_success, TESTDB)
 
     def tearDown(self):
-        #delete_database(TESTDB)
+        delete_database(TESTDB)
         pass
 
 

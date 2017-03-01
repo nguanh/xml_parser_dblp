@@ -26,7 +26,7 @@ PUBLICATION_AUTHORS = (
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `url_id` INT NOT NULL ,"
     "  `author_id` INT NOT NULL ,"
-    "  `priority` INT,"
+    "  `priority` INT NOT NULL ,"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 
