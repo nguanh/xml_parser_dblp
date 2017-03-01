@@ -7,7 +7,7 @@ from .harvest_task import harvest_task
 
 #TODO parameters as dict
 @app.task
-def harvest_source(package, class_name, name, path=None, **parameters):
+def harvest_source(package, class_name, name, **parameters):
     """
 
     :param package: relative path to package
@@ -17,7 +17,7 @@ def harvest_source(package, class_name, name, path=None, **parameters):
     :return:
     """
     try:
-        harvest_task(package, class_name, name, path, parameters)
+        harvest_task(package, class_name, name,None , parameters)
     except ImportError as e:
         harvest_source.update_state(
             state=states.FAILURE,
