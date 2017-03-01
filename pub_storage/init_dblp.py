@@ -1,6 +1,7 @@
 from mysqlWrapper.mariadb import MariaDb
 from conf.config import get_config
 
+
 def init_dblp(database = "storage"):
     # 1. iterate through dblp dataset
     retVal = {}
@@ -8,21 +9,17 @@ def init_dblp(database = "storage"):
     credentials = dict(get_config("MARIADB"))
     connector = MariaDb(credentials)
     connector.connector.database = database
-    #find global url/ add global URL
+    # find global url/ add global URL
     global_url_query = "SELECT id FROM global_url WHERE domain = 'http://dblp.uni-trier.de'"
-    connector.cursor.execute(global_url_query)
-    result = connector.cursor.fetchone()
+    result = connector.fetch_one((), global_url_query)
     if result is None:
 
         insert_global_url = ("INSERT INTO global_url(domain,url) "
                              "VALUES ('http://dblp.uni-trier.de','http://dblp.uni-trier.de/rec/xml/')")
-        connector.set_query(insert_global_url)
-        connector.execute(())
-        connector.cursor.execute(global_url_query)
-        result = connector.cursor.fetchone()
+        connector.execute_ex(insert_global_url)
+        result = connector.fetch_one((), global_url_query)
 
     connector.close_connection()
 
-    #clear results
-    retVal["global_url"] = result[0]
+    retVal["global_url"] = result
     return retVal

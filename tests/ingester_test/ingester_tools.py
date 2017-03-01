@@ -49,7 +49,7 @@ def setup_tables(filename, database, table_query, insert_query):
     connector.createTable("test dblp table", table_query)
 
     # setup test ingester database
-    setup_database(database, path="test.ini")
+    setup_database(database)
     # import records from csv
     with open(filename, newline='', encoding='utf-8') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=';', quotechar='"')
