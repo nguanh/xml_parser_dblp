@@ -74,6 +74,14 @@ test_same_authors = {
         (10, 3, "Richard Müller"),
         (9, 3, "Richard Müller 0001"),
     },
+    "alias_source": {
+        (1, 1, 1),
+        (3, 1, 3),
+        (5, 2, 5),
+        (7, 2, 7),
+        (9, 2, 9),
+        (10, 2, 10),
+    },
     "cluster": {
         (1, "bla bla bla"),
         (2, "kam kim kum")
