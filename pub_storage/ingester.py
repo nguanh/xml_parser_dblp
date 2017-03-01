@@ -5,6 +5,7 @@ from conf.config import get_config
 from pub_storage.helper import normalize_title, get_name_block
 
 
+
 def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME):
     credentials = dict(get_config("MARIADB"))
     # establish mariadb connections, one for reading from harvester, one for writing in ingester
@@ -58,32 +59,10 @@ def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME)
             if author_block_match == 0:
                 author_dict["block_name"] = name_block
                 author_id = write_connector.execute_ex(INSERT_AUTHORS, author_dict)
-                # add original name as alias
-                write_connector.execute_ex(INSERT_ALIAS, (author_id, author_dict["original_name"]))
-                write_connector.execute_ex(SELECT_ALIAS, (author_id, author_dict["original_name"]))
-                write_connector.execute_ex(INSERT_ALIAS_SOURCE, (identifier,))
-                # add parsed name as alias, if it's = original name, skip
-                write_connector.execute_ex(INSERT_ALIAS, (author_id, author_dict["parsed_name"]))
-                write_connector.execute_ex(SELECT_ALIAS, (author_id, author_dict["parsed_name"]))
-                write_connector.execute_ex(INSERT_ALIAS_SOURCE, (identifier,))
-                # add to publication authors
-                write_connector.execute_ex(INSERT_PUBLICATION_AUTHORS, (identifier, author_id, author_index))
-
             # case 1 matching name blocks: include author names as possible alias
             elif author_block_match == 1:
                 # get authors id
                 author_id = write_connector.fetch_one((name_block,), CHECK_AUTHORS)
-                # insert both names as alias
-                write_connector.execute_ex(INSERT_ALIAS, (author_id, author_dict["original_name"]))
-                write_connector.execute_ex(SELECT_ALIAS, (author_id, author_dict["original_name"]))
-                write_connector.execute_ex(INSERT_ALIAS_SOURCE, (identifier,))
-
-                write_connector.execute_ex(INSERT_ALIAS, (author_id, author_dict["parsed_name"]))
-                write_connector.execute_ex(SELECT_ALIAS, (author_id, author_dict["parsed_name"]))
-                write_connector.execute_ex(INSERT_ALIAS_SOURCE, (identifier,))
-
-                write_connector.execute_ex(INSERT_PUBLICATION_AUTHORS, (identifier, author_id, author_index))
-
             # case more than 1 matching name blocks:  match by alias
             else:
                 # count possible matching name blocks by matching alias
@@ -92,18 +71,19 @@ def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME)
                 if alias_count_match == 1:
                     author_id = write_connector.fetch_one((name_block, author_dict["original_name"]),
                                                           MATCH_AUTHOR_BY_ALIAS)
-                    # insert both names as alias
-                    write_connector.execute_ex(INSERT_ALIAS, (author_id, author_dict["original_name"]))
-                    write_connector.execute_ex(SELECT_ALIAS, (author_id, author_dict["original_name"]))
-                    write_connector.execute_ex(INSERT_ALIAS_SOURCE, (identifier,))
-
-                    write_connector.execute_ex(INSERT_ALIAS, (author_id, author_dict["parsed_name"]))
-                    write_connector.execute_ex(SELECT_ALIAS, (author_id, author_dict["parsed_name"]))
-                    write_connector.execute_ex(INSERT_ALIAS_SOURCE, (identifier,))
-
-                    write_connector.execute_ex(INSERT_PUBLICATION_AUTHORS, (identifier, author_id, author_index))
                 else:
                     print("trolololo")
+                    # TODO rollback
+            # add original name as alias
+            write_connector.execute_ex(INSERT_ALIAS, (author_id, author_dict["original_name"]))
+            write_connector.execute_ex(SELECT_ALIAS, (author_id, author_dict["original_name"]))
+            write_connector.execute_ex(INSERT_ALIAS_SOURCE, (identifier,))
+            # add parsed name as alias, if it's = original name, skip
+            write_connector.execute_ex(INSERT_ALIAS, (author_id, author_dict["parsed_name"]))
+            write_connector.execute_ex(SELECT_ALIAS, (author_id, author_dict["parsed_name"]))
+            write_connector.execute_ex(INSERT_ALIAS_SOURCE, (identifier,))
+            # add to publication authors
+            write_connector.execute_ex(INSERT_PUBLICATION_AUTHORS, (identifier, author_id, author_index))
 
 
         # ------------------------- DEFAULT/DIFFERENCE TABLE -----------------------------------------------------------
