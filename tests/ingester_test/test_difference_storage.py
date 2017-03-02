@@ -60,9 +60,9 @@ class TestDifferenceStorage(TestCase):
 
     #TODO datetime
     def test_msg_pack(self):
-        result = generate_diff_store(get_pub_dict(url_id=5,title="Hello World",
+        result = generate_diff_store(get_pub_dict(url_id=5,title="Hello World (𝔹+)",
                                                   ))
-        added_values = get_pub_dict(url_id=2,title="Hello World",
+        added_values = get_pub_dict(url_id=2,title="Hello World(𝔹+)",
                                     abstract="Test Text")
         insert_diff_store(added_values,result)
 
@@ -73,21 +73,19 @@ class TestDifferenceStorage(TestCase):
     def test_pickle(self):
         result = generate_diff_store(get_pub_dict(url_id=5,title="Hello World",
                                                   ))
-        added_values = get_pub_dict(url_id=2,title="Hello World",
+        added_values = get_pub_dict(url_id=2,title="Hello World(𝔹+)",
                                     abstract="Test Text")
         insert_diff_store(added_values,result)
         tmp = pickle.dumps(result)
-        print(tmp)
         self.assertEqual(result, pickle.loads(tmp))
 
     def test_json(self):
-        result = generate_diff_store(get_pub_dict(url_id=5,title="Hello World",
+        result = generate_diff_store(get_pub_dict(url_id=5,title="Hello World (𝔹+)",
                                                   ))
-        added_values = get_pub_dict(url_id=2,title="Hello World",
+        added_values = get_pub_dict(url_id=2,title="Hello World(𝔹+)",
                                     abstract="Test Text")
         insert_diff_store(added_values,result)
         tmp = json.dumps(result)
-        print(tmp)
         self.assertEqual(result, json.loads(tmp))
 
 
