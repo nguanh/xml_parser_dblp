@@ -89,6 +89,7 @@ def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME)
         # ------------------------- DEFAULT/DIFFERENCE TABLE -----------------------------------------------------------
 
         mapping['publication']['url_id'] = identifier
+        print()
 
         # new cluster, insert into default table
         if len(cluster_matches) <= 1:

@@ -44,8 +44,8 @@ test_success = {
         (2, "kam kim kum")
     },
     "publication": {
-        (1, 1, 1, None, "Bla Bla Bla", 1, 5, None, "dummydoi", None, None, "2011", "1989", "1", "2"),
-        (2, 2, 2, None, "Kam? Kim! Kum.", 10, 11, None, "doidoi", None, None, "2014", "2014", "51", "8")
+        (1, 1, 1, None, "Bla Bla Bla", "1-5", None, "dummydoi", None, None, "2011", "1989", "1", "2"),
+        (2, 2, 2, None, "Kam? Kim! Kum.", "10-11", None, "doidoi", None, None, "2014", "2014", "51", "8")
     },
     "publication_authors": {
         (1, 1, 1, 0),
@@ -87,8 +87,8 @@ test_same_authors = {
         (2, "kam kim kum")
     },
     "publication": {
-        (1,1,1, None,"Bla Bla Bla",1,5,None,"dummydoi",None,None,"2011","1989","1","2"),
-        (2,2,2, None,"Kam? Kim! Kum.",10,11,None,"doidoi",None,None,"2014","2014","51","8")
+        (1,1,1, None,"Bla Bla Bla","1-5",None,"dummydoi",None,None,"2011","1989","1","2"),
+        (2,2,2, None,"Kam? Kim! Kum.","10-11",None,"doidoi",None,None,"2014","2014","51","8")
     },
     "publication_authors": {
         (1,1,1,0),
@@ -130,8 +130,8 @@ test_same_name_block = {
         (2, "kam kim kum")
     },
     "publication": {
-        (1, 1, 1, None, "Bla Bla Bla", 1, 5, None, "dummydoi", None, None, "2011", "1989", "1", "2"),
-        (2, 2, 2, None, "Kam? Kim! Kum.", 10, 11, None, "doidoi", None, None, "2014", "2014", "51", "8")
+        (1, 1, 1, None, "Bla Bla Bla", "1-5", None, "dummydoi", None, None, "2011", "1989", "1", "2"),
+        (2, 2, 2, None, "Kam? Kim! Kum.", "10-11", None, "doidoi", None, None, "2014", "2014", "51", "8")
     },
 
     "publication_authors": {

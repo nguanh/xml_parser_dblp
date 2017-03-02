@@ -10,8 +10,7 @@ def generate_empty_mapping():
             "cluster_id": None,
             "differences": None,
             "title": None,  # for title and cluster name
-            "pages_from": None,
-            "pages_to": None,
+            "pages": None,
             "note": None,
             "doi": None,
             "abstract": None,
@@ -73,8 +72,9 @@ def map_to_dict(query_tuple):
             "orcid_id": None,
         }
         mapping["authors"].append(author_dict)
+
     mapping["publication"]["title"] = query_tuple[3]
-    mapping["publication"]["pages_from"], mapping["publication"]["pages_to"] = parse_pages(query_tuple[4])
+    mapping["publication"]["pages"] = query_tuple[4]
     mapping["publication"]["date_published"] = query_tuple[5].year
     mapping["publication"]["volume"] = query_tuple[6]
     mapping["pub_release"]["journal"] = query_tuple[7]

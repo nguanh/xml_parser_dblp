@@ -1,6 +1,6 @@
 import msgpack
 
-URL_LIST_MAX =128
+URL_LIST_MAX =62
 
 
 #TODO pages erstmal überspringen, es macht vom schema her keinen sinn, beides getrennt zu speichern
@@ -11,7 +11,7 @@ def generate_node(value, index =0):
     return {
         "value": value,
         "votes": 0,
-        "bitvector": 1<< index,
+        "bitvector": 1 << index,
     }
 
 def append_node(value,index, store):
@@ -86,10 +86,9 @@ def insert_diff_store(pub_dict, diff_store):
     pass
 
 
-
 def serialize_diff_store(store):
-    pass
+    return msgpack.packb(store)
 
 
 def deserialize_diff_store(store):
-    pass
+    return msgpack.unpackb(store)
