@@ -34,12 +34,16 @@ class TestDifferenceStorage(TestCase):
     def test_generate_node3(self):
         self.assertEqual(generate_node("hello",4), {"value": "hello", "votes": 0, "bitvector": 16})
 
+    def test_generate_node4(self):
+        self.assertEqual(generate_node(datetime.datetime(1990,1,1,1,1,1), 4), {"value": "1990-01-01 01:01:01",
+                                                                               "votes": 0, "bitvector": 16})
+
     def test_generate_diff_store(self):
         result = generate_diff_store(get_pub_dict(url_id=5,title="Hello World",
                                                   date_published=datetime.datetime(1990,1,1,1,1,1)))
         self.assertEqual(result["url_id"],[5])
         self.assertEqual(result["title"],[ {"value": "Hello World","votes": 0, "bitvector": 1}])
-        self.assertEqual(result["date_published"], [{"value": datetime.datetime(1990,1,1,1,1,1), "votes": 0, "bitvector": 1}])
+        self.assertEqual(result["date_published"], [{"value": "1990-01-01 01:01:01", "votes": 0, "bitvector": 1}])
         self.assertEqual(result["abstract"],[])
 
     def test_insert_diff_store(self):
@@ -51,18 +55,48 @@ class TestDifferenceStorage(TestCase):
         self.assertEqual(result["url_id"], [5,2])
         self.assertEqual(result["title"], [{"value": "Hello World", "votes": 0, "bitvector": 3}])
         self.assertEqual(result["date_published"],
-                         [{"value": datetime.datetime(1990, 1, 1, 1, 1, 1), "votes": 0, "bitvector": 1},
-                          {"value": datetime.datetime(1990, 2, 2, 2, 2, 2), "votes": 0, "bitvector": 2}
+                         [{"value": "1990-01-01 01:01:01", "votes": 0, "bitvector": 1},
+                          {"value": "1990-02-02 02:02:02", "votes": 0, "bitvector": 2}
                           ])
         self.assertEqual(result["abstract"], [{"value": "Test Text", "votes": 0, "bitvector": 2}])
 
+    def test_default_values(self):
+        store = generate_diff_store(get_pub_dict(url_id=5,title="Hello World",
+                                                  date_published=datetime.datetime(1990,1,1,1,1,1)))
+        added_values = get_pub_dict(url_id=2,title="Hello World", date_published=datetime.datetime(1990,2,2,2,2,2),
+                                    abstract="Test Text")
+        insert_diff_store(added_values,store)
+        result = get_default_values(store)
+        self.assertDictEqual(result,{
+            "title": "Hello World",
+            "date_published":datetime.datetime(1990,1,1,1,1,1),
+            "abstract": "Test Text",
+            "note": None,
+            "pages": None,
+            "doi": None,
+            "copyright": None,
+            "volume": None,
+            "number": None,
+        })
+
+    def test_serialize(self):
+        store = generate_diff_store(get_pub_dict(url_id=5,title="Hello World (𝔹+)",
+                                                  ))
+        added_values = get_pub_dict(url_id=2,title="Hello World(𝔹+)", date_published=datetime.datetime(1990,2,2,2,2,2),
+                                    abstract="Test Text")
+        insert_diff_store(added_values,store)
+
+        packed = serialize_diff_store(store)
+        self.assertNotEqual(packed,store)
+        unpacked = deserialize_diff_store(packed)
+        self.assertEqual(unpacked,store)
 
 
-    #TODO datetime
+
     def test_msg_pack(self):
         result = generate_diff_store(get_pub_dict(url_id=5,title="Hello World (𝔹+)",
                                                   ))
-        added_values = get_pub_dict(url_id=2,title="Hello World(𝔹+)",
+        added_values = get_pub_dict(url_id=2,title="Hello World(𝔹+)", date_published=datetime.datetime(1990,2,2,2,2,2),
                                     abstract="Test Text")
         insert_diff_store(added_values,result)
 
