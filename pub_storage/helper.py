@@ -3,7 +3,7 @@ from unidecode import unidecode
 from nameparser import HumanName
 import re
 from datetime import datetime
-
+from enum import Enum
 punctuation_dict = str.maketrans({key: None for key in (string.punctuation)})
 whitespace_dict = str.maketrans({key: None for key in (string.whitespace.replace(" ", ""))})
 ascii_dict = str.maketrans({key: None for key in (string.printable)})
@@ -58,5 +58,19 @@ def parse_pages(pages, separator="-"):
         return [result[0], result[0]]
     if len(result) == 2:
         return [result[0], result[1]]
-    #TODO log invalid page
     return [None, None]
+
+
+class Status(Enum):
+    SAFE = 0
+    LIMBO = 1
+
+
+class Match(Enum):
+    NO_MATCH = 0
+    SINGLE_MATCH = 1,
+    MULTI_MATCH = 2,
+
+
+class Reason(Enum):
+    AMB_ALIAS = 0

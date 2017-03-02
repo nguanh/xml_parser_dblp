@@ -13,8 +13,8 @@ import datetime
 #TODO weitere tabellen hinzufügen
 test_success = {
     "local_url": {
-        (1, 1, None, None, None, 'journals/acta/AkyildizB89', datetime.datetime(1990, 1, 1, 1, 1, 1)),
-        (2, 1, None, None, None, 'journals/acta/VoglerS014', datetime.datetime(1990, 1, 1, 1, 1, 1)),
+        (1, 3, None, None, None, 'journals/acta/AkyildizB89', datetime.datetime(1990, 1, 1, 1, 1, 1)),
+        (2, 3, None, None, None, 'journals/acta/VoglerS014', datetime.datetime(1990, 1, 1, 1, 1, 1)),
     },
     "authors": {
         (1, "Ian F. Akyildiz", "akyildiz,i", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None),
@@ -44,11 +44,11 @@ test_success = {
         (2, "kam kim kum")
     },
     "publication": {
-        (1, 1, 1, None, "Bla Bla Bla", "1-5", None, "dummydoi", None, None, "2011", "1989", "1", "2"),
-        (2, 2, 2, None, "Kam? Kim! Kum.", "10-11", None, "doidoi", None, None, "2014", "2014", "51", "8")
+        (1, 2, 1, None, "Bla Bla Bla", "1-5", None, "dummydoi", None, None, "2011", "1989", "1", "2"),
+        (2, 4, 2, None, "Kam? Kim! Kum.", "10-11", None, "doidoi", None, None, "2014", "2014", "51", "8")
     },
     "publication_authors": {
-        (1, 1, 1, 0),
+        (1, w, 1, 0),
         (2, 1, 2, 1),
         (3, 2, 3, 0),
         (4, 2, 4, 1),
@@ -151,7 +151,7 @@ class TestIngsterDblp(TestCase):
     def test_success(self):
         setup_tables("dblp_test1.csv", DBLP_ARTICLE, ADD_DBLP_ARTICLE)
         dblp_data = init_dblp(TESTDB)
-        self.assertEqual(dblp_data["global_url"], 1)
+        self.assertEqual(dblp_data["global_url"], 3)
         ingest_data(dblp_data, INGESTION.format(TESTDB + ".dblp_article"), map_to_dict, TESTDB)
         compare_tables(self, test_success, ignore_id=True)
 
