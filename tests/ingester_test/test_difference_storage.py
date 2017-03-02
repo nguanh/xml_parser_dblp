@@ -3,6 +3,8 @@ from pub_storage.difference_storage import *
 
 import datetime
 
+import msgpack
+
 
 def get_pub_dict(url_id=None, title=None, pages=None, note=None, doi=None, abstract= None, copyright = None,
                  date_published=None, volume= None, number = None):
@@ -52,3 +54,19 @@ class TestDifferenceStorage(TestCase):
                           {"value": datetime.datetime(1990, 2, 2, 2, 2, 2), "votes": 0, "bitvector": 2}
                           ])
         self.assertEqual(result["abstract"], [{"value": "Test Text", "votes": 0, "bitvector": 2}])
+
+
+
+    def test_msg_pack(self):
+        result = generate_diff_store(get_pub_dict(url_id=5,title="Hello World",
+                                                  ))
+        added_values = get_pub_dict(url_id=2,title="Hello World",
+                                    abstract="Test Text")
+        insert_diff_store(added_values,result)
+
+        tmp = msgpack.packb(result)
+        unpack = msgpack.unpackb(tmp, encoding="utf-8")
+        self.assertEqual(result,unpack)
+
+
+

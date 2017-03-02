@@ -1,4 +1,7 @@
+import msgpack
+
 URL_LIST_MAX =128
+
 
 #TODO pages erstmal überspringen, es macht vom schema her keinen sinn, beides getrennt zu speichern
 # viel mehr sollten sie ein mal validiert und dann immer zusammen als string gespeichert werden
@@ -22,7 +25,14 @@ def append_node(value,index, store):
         store.append(generate_node(value, index))
 
 def get_default_values(store):
-    pass
+    result = {}
+    #TODO handle url_id
+    for key,value in store.items():
+        if len(value) > 0:
+            result[key] = value[0]["value"]
+        else:
+            result[key] = None
+    return result
 
 def vote(store,attribute,value,vote_count = 1):
     pass
