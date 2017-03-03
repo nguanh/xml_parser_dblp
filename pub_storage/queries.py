@@ -4,6 +4,8 @@ CHECK_LOCAL_URL = "SELECT id FROM local_url WHERE url = %s AND global_url_id = %
 INSERT_CLUSTER = "INSERT INTO cluster(cluster_name) VALUES (%s)"
 CHECK_CLUSTER = "SELECT id FROM cluster WHERE cluster_name = %s"
 
+COUNT_PUBLICATION = "SELECT COUNT(*) FROM publication WHERE cluster_id = %s "
+
 INSERT_AUTHORS = ("INSERT INTO authors(main_name, block_name, website, contact, about, orcid_id) "
                               "VALUES (%(parsed_name)s,%(block_name)s,%(website)s,%(contact)s,%(about)s,%(orcid_id)s)")
 COUNT_AUTHORS = "SELECT COUNT(*) FROM authors WHERE block_name = %s"

@@ -68,9 +68,11 @@ class Status(Enum):
 
 class Match(Enum):
     NO_MATCH = 0
-    SINGLE_MATCH = 1,
-    MULTI_MATCH = 2,
+    SINGLE_MATCH = 1
+    MULTI_MATCH = 2
 
 
 class Reason(Enum):
     AMB_ALIAS = 0
+    AMB_CLUSTER = 1
+    AMB_PUB = 2

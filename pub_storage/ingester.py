@@ -59,6 +59,53 @@ def match_author(authors, database= "storage"):
     return results
 
 
+def match_title(title, database= "storage"):
+    connector = MariaDb(dict(get_config("MARIADB")))
+    connector.connector.database = database
+    # iterate through all authors
+    cluster_name = normalize_title(title)
+    # check for matching cluster (so far ONLY COMPLETE MATCH) TODO levenshtein distance
+    connector.cursor.execute(CHECK_CLUSTER, (cluster_name,))
+    cluster_matches = []
+    for match in connector.cursor:
+        cluster_matches.append(match[0])
+
+    if len(cluster_matches) == 0:
+        result={
+            "status": Status.SAFE,
+            "match": Match.NO_MATCH,
+            "id": None,
+            "reason": None,
+        }
+    elif len(cluster_matches) == 1:
+        idx = connector.fetch_one((cluster_name,),CHECK_CLUSTER)
+        count_pub = connector.fetch_one((idx,),COUNT_PUBLICATION)
+        if count_pub== 1 :
+            result = {
+                "status": Status.SAFE,
+                "match": Match.SINGLE_MATCH,
+                "id": idx,
+                "reason": None,
+            }
+        else:
+            result = {
+                "status": Status.LIMBO,
+                "match": Match.SINGLE_MATCH,
+                "id": None,
+                "reason": Reason.AMB_PUB
+            }
+
+    else:
+        result ={
+            "status": Status.LIMBO,
+            "match": Match.MULTI_MATCH,
+            "id": None,
+            "reason": Reason.AMB_CLUSTER
+        }
+    connector.close_connection()
+    return result
+
+
 def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME):
     credentials = dict(get_config("MARIADB"))
     # establish mariadb connections, one for reading from harvester, one for writing in ingester
