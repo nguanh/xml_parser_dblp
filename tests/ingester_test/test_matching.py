@@ -1,12 +1,51 @@
 from unittest import TestCase
 
 from pub_storage.setup_database import setup_database
-from pub_storage.ingester import match_author,match_title,create_authors
+from pub_storage.ingester import match_author,match_title,create_authors,create_title
 
 
 from .ingester_tools import TESTDB,delete_database, insert_data,compare_tables
 from pub_storage.helper import *
 import datetime
+
+
+class TestCreateTitle(TestCase):
+    def test_single_match(self):
+        setup_database(TESTDB)
+        insert_data("INSERT INTO cluster (id,cluster_name) VALUES(1,'matching title')")
+        title = "matching title"
+        matching = {
+            "status": Status.SAFE,
+            "match": Match.SINGLE_MATCH,
+            "id": 1,
+            "reason": None,
+        }
+
+        result = create_title(matching,title, database=TESTDB)
+        self.assertEqual(result,1)
+
+    def test_no_match(self):
+        setup_database(TESTDB)
+        title = "matching title"
+        matching = {
+            "status": Status.SAFE,
+            "match": Match.NO_MATCH,
+            "id": None,
+            "reason": None,
+        }
+
+        test_success = {
+            "cluster": {
+                (1, "matching title"),
+            },
+        }
+        result = create_title(matching,title, database=TESTDB)
+        self.assertEqual(result, 1)
+        compare_tables(self,test_success, ignore_id=True)
+
+    def tearDown(self):
+        delete_database(TESTDB)
+        pass
 
 
 class TestCreateAuthors(TestCase):
@@ -91,7 +130,6 @@ class TestCreateAuthors(TestCase):
                 (1, 1, 4, 0),
                 (2, 1, 1, 1),
                 (3, 1, 2, 2),
-
             }
 
         }
@@ -101,7 +139,6 @@ class TestCreateAuthors(TestCase):
 
     def tearDown(self):
         delete_database(TESTDB)
-        pass
 
 class TestMatchTitle(TestCase):
 

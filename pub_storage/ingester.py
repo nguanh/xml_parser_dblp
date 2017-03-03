@@ -148,11 +148,19 @@ def create_authors(matching_list, author_list, local_url, database="storage"):
         # store author id for each author
         result.append(author_id)
         priority += 1
-
+    connector.close_connection()
     return result
 
-def create_title(matching):
-    pass
+
+def create_title(matching, cluster_name, database ="storage"):
+    connector = MariaDb(dict(get_config("MARIADB")))
+    connector.connector.database = database
+    if matching["match"] == Match.NO_MATCH:
+        cluster_id = connector.execute_ex(INSERT_CLUSTER, (cluster_name,))
+    else:
+        cluster_id = matching["id"]
+    connector.close_connection()
+    return cluster_id
 
 
 def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME):
@@ -192,7 +200,7 @@ def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME
             push_limbo(mapping)
             continue
         # ------------------------ CREATION ----------------------------------------------------------------------------
-
+        author_ids = create_authors(author_matches, mapping["authors"], local_url_id)
     write_connector.close_connection()
     read_connector.close_connection()
 
