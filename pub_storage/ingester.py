@@ -106,6 +106,97 @@ def match_title(title, database= "storage"):
     return result
 
 
+#TODO
+def match_keywords():
+    return None
+
+def match_pub_source():
+    return None
+
+def push_limbo(mapping):
+    pass
+
+
+def create_authors(matching_list, author_list, local_url, database="storage"):
+    connector = MariaDb(dict(get_config("MARIADB")))
+    connector.connector.database = database
+    result = []
+    priority = 0
+    for match, author in zip(matching_list,author_list):
+        name_block = get_name_block(author["parsed_name"])
+        # create author record first depending on matching status
+        if match["match"] == Match.NO_MATCH:
+            # NOMATCH: create new  publication author
+            author["block_name"] = name_block
+            author_id = connector.execute_ex(INSERT_AUTHORS, author)
+        else:
+            # SINGLE MATCH:
+            # MULTIMATCH:  author id is already included
+            author_id = match["id"]
+
+        # add ALIASES and alias SOURCES
+        # add original name as alias
+        connector.execute_ex(INSERT_ALIAS, (author_id, author["original_name"]))
+        connector.execute_ex(SELECT_ALIAS, (author_id, author["original_name"]))
+        connector.execute_ex(INSERT_ALIAS_SOURCE, (local_url,))
+        # add parsed name as alias, if it's = original name, skip
+        connector.execute_ex(INSERT_ALIAS, (author_id, author["parsed_name"]))
+        connector.execute_ex(SELECT_ALIAS, (author_id, author["parsed_name"]))
+        connector.execute_ex(INSERT_ALIAS_SOURCE, (local_url,))
+        # add to publication authors
+        connector.execute_ex(INSERT_PUBLICATION_AUTHORS, (local_url, author_id, priority))
+        # store author id for each author
+        result.append(author_id)
+        priority += 1
+
+    return result
+
+def create_title(matching):
+    pass
+
+
+def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME):
+    credentials = dict(get_config("MARIADB"))
+    # establish mariadb connections, one for reading from harvester, one for writing in ingester
+    read_connector = MariaDb(credentials)
+    write_connector = MariaDb(credentials)
+    write_connector.connector.database = database
+    read_connector.cursor.execute(query)
+
+    for query_dataset in read_connector.cursor:
+        # 1. get Harvester specific record and parse to common-form dict
+        mapping = mapping_function(query_dataset)
+        # ------------------------- LOCAL_URL --------------------------------------------------------------------------
+        # check for duplicates by looking up the local URL
+        duplicate_id = write_connector.fetch_one((mapping["local_url"], harvester_data['global_url']), CHECK_LOCAL_URL)
+        if duplicate_id is not None:
+            # TODO duplicate skip
+            continue
+        # 2. create local url entry for record
+        local_url_id = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"], harvester_data['global_url']))
+
+        # ------------------------- MATCHINGS --------------------------------------------------------------------------
+        # 3. find matching cluster for title and matching existing authors
+        title_match = match_title(mapping["publication"]["title"])
+        author_matches = match_author(mapping["authors"])
+
+        author_valid = True
+        for author in author_matches:
+            if author["status"] == Status.LIMBO:
+                author_valid = False
+                break
+
+        # 4. If title or author cannot be matched due to ambiguos matching, push into limbo and delete local url record
+        if title_match["status"] == Status.LIMBO or author_valid is False:
+            write_connector.execute_ex(DELETE_LOCAL_URL, (local_url_id,))
+            push_limbo(mapping)
+            continue
+        # ------------------------ CREATION ----------------------------------------------------------------------------
+
+    write_connector.close_connection()
+    read_connector.close_connection()
+
+
 def ingest_data(harvester_data, query, mapping_function, database=DATABASE_NAME):
     credentials = dict(get_config("MARIADB"))
     # establish mariadb connections, one for reading from harvester, one for writing in ingester

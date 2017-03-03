@@ -48,7 +48,7 @@ test_success = {
         (2, 4, 2, None, "Kam? Kim! Kum.", "10-11", None, "doidoi", None, None, "2014", "2014", "51", "8")
     },
     "publication_authors": {
-        (1, w, 1, 0),
+        (1, 1, 1, 0),
         (2, 1, 2, 1),
         (3, 2, 3, 0),
         (4, 2, 4, 1),
