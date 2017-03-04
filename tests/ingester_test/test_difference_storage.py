@@ -1,5 +1,6 @@
 from unittest import TestCase
 from pub_storage.difference_storage import *
+from .ingester_tools import get_pub_dict
 import datetime
 
 import pickle
@@ -7,20 +8,7 @@ import msgpack
 import json
 
 
-def get_pub_dict(url_id=None, title=None, pages=None, note=None, doi=None, abstract= None, copyright = None,
-                 date_published=None, volume= None, number = None):
-    return{
-        "url_id": url_id,
-        "title":title,
-        "pages": pages,
-        "note": note,
-        "doi": doi,
-        "abstract": abstract,
-        "copyright": copyright,
-        "date_published": date_published,
-        "volume": volume,
-        "number": number,
-    }
+
 
 
 class TestDifferenceStorage(TestCase):

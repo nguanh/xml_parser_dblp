@@ -6,7 +6,7 @@ from pub_storage.helper import *
 from .difference_storage import *
 
 
-def match_author(authors, database= "storage"):
+def match_author(authors, database= DATABASE_NAME):
     connector = MariaDb(dict(get_config("MARIADB")))
     connector.connector.database = database
     results = []
@@ -59,7 +59,7 @@ def match_author(authors, database= "storage"):
     return results
 
 
-def match_title(title, database= "storage"):
+def match_title(title, database=DATABASE_NAME):
     connector = MariaDb(dict(get_config("MARIADB")))
     connector.connector.database = database
     # iterate through all authors
@@ -80,7 +80,7 @@ def match_title(title, database= "storage"):
     elif len(cluster_matches) == 1:
         idx = connector.fetch_one((cluster_name,),CHECK_CLUSTER)
         count_pub = connector.fetch_one((idx,),COUNT_PUBLICATION)
-        if count_pub== 1 :
+        if count_pub == 1:
             result = {
                 "status": Status.SAFE,
                 "match": Match.SINGLE_MATCH,
@@ -117,7 +117,7 @@ def push_limbo(mapping):
     pass
 
 
-def create_authors(matching_list, author_list, local_url, database="storage"):
+def create_authors(matching_list, author_list, local_url, database=DATABASE_NAME):
     connector = MariaDb(dict(get_config("MARIADB")))
     connector.connector.database = database
     result = []
@@ -152,7 +152,7 @@ def create_authors(matching_list, author_list, local_url, database="storage"):
     return result
 
 
-def create_title(matching, cluster_name, database ="storage"):
+def create_title(matching, cluster_name, database=DATABASE_NAME):
     connector = MariaDb(dict(get_config("MARIADB")))
     connector.connector.database = database
     if matching["match"] == Match.NO_MATCH:
@@ -163,7 +163,7 @@ def create_title(matching, cluster_name, database ="storage"):
     return cluster_id
 
 
-def create_publication(cluster_id, author_ids, database="storage"):
+def create_publication(cluster_id, author_ids, database= DATABASE_NAME):
     connector = MariaDb(dict(get_config("MARIADB")))
     connector.connector.database = database
     # find publication associated with cluster_id
@@ -184,6 +184,30 @@ def create_publication(cluster_id, author_ids, database="storage"):
     # get return publication_id
     return pub_id
 
+
+def update_diff_tree(pub_id, pub_dict, author_ids, database=DATABASE_NAME):
+    connector = MariaDb(dict(get_config("MARIADB")))
+    connector.connector.database = database
+    diff_tree = connector.fetch_one((pub_id,), CHECK_DIFF_TREE)
+    if diff_tree is None:
+        # create diff tree
+        diff_tree = generate_diff_store(pub_dict)
+    else:
+        # de serialize first
+        diff_tree = deserialize_diff_store(diff_tree)
+        insert_diff_store(pub_dict, diff_tree)
+    # insert each author
+    for author in author_ids:
+        # create pub_dict for insertion
+        author_dict = {
+            "url_id": pub_dict["url_id"],
+            "author_ids": author
+        }
+        #TODO fehler hier
+        insert_diff_store(author_dict, diff_tree)
+
+    connector.close_connection()
+    return diff_tree
 
 
 def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME):
@@ -226,6 +250,10 @@ def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME
         cluster_name = normalize_title(mapping["publication"]["title"])
         author_ids = create_authors(author_matches, mapping["authors"], local_url_id)
         cluster_id = create_title(title_match, cluster_name)
+        # create default publication / or find existing one and link with authors and cluster
+        def_pub_id = create_publication(cluster_id, author_ids)
+        # get /create diff tree
+        mapping['publication']['url_id'] = local_url_id
     write_connector.close_connection()
     read_connector.close_connection()
 

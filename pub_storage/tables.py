@@ -78,7 +78,7 @@ PUBLICATION = (
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `url_id` INT NOT NULL ,"
     "  `cluster_id` INT NOT NULL ,"
-    "  `differences` BLOB,"
+    "  `differences` BLOB DEFAULT NULL,"
     "  `title` TEXT,"
     "  `pages` VARCHAR(20),"
     "  `note` TEXT,"

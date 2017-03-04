@@ -69,7 +69,7 @@ def setup_tables(filename, table_query, insert_query):
     connector.close_connection()
 
 
-def insert_data(query):
+def insert_data(query, tup = None):
     """
     execute insertion query
     :param query:
@@ -80,5 +80,29 @@ def insert_data(query):
     # setup database
     connector = MariaDb(credentials)
     connector.connector.database = TESTDB
-    connector.execute_ex(query)
+    if tup is None:
+        connector.execute_ex(query)
+    else:
+        connector.execute_ex(query,tup)
     connector.close_connection()
+
+def get_pub_dict(url_id=None, title=None, pages=None, note=None, doi=None, abstract= None, copyright = None,
+                 date_published=None, volume= None, number = None,
+                 author_ids = None, keyword_ids= None,type_ids = None, study_field_ids = None, pub_source_ids = None):
+    return{
+        "url_id": url_id,
+        "title":title,
+        "pages": pages,
+        "note": note,
+        "doi": doi,
+        "abstract": abstract,
+        "copyright": copyright,
+        "date_published": date_published,
+        "volume": volume,
+        "number": number,
+        "author_ids": author_ids,
+        "keyword_ids": keyword_ids,
+        "type_ids": type_ids,
+        "study_field_ids": study_field_ids,
+        "pub_source_ids": pub_source_ids
+    }

@@ -1,11 +1,51 @@
 from unittest import TestCase
 
 from pub_storage.setup_database import setup_database
-from pub_storage.ingester import create_authors, create_title, create_publication
-from .ingester_tools import TESTDB, delete_database, insert_data, compare_tables
+from pub_storage.ingester import create_authors, create_title, create_publication, update_diff_tree
+from .ingester_tools import TESTDB, delete_database, insert_data, compare_tables, get_pub_dict
 from pub_storage.helper import *
+from pub_storage.difference_storage import *
 import datetime
 
+class TestUpdateDiffTree(TestCase):
+
+    def test_no_diff_tree(self):
+        setup_database(TESTDB)
+        insert_data("INSERT INTO publication(id,url_id,cluster_id) VALUES (5,5,1)")
+        # every table is empty
+        pub_dict = get_pub_dict(url_id=1, title="Hello World", date_published=datetime.datetime(1990,1,1,1,1,1))
+        author_ids=[1,4,7]
+        result = update_diff_tree(5,pub_dict,author_ids,database=TESTDB)
+        self.assertEqual(result["author_ids"],[
+            {"value": 1, "votes": 0, "bitvector": 1},
+            {"value": 4, "votes": 0, "bitvector": 1},
+            {"value": 7, "votes": 0, "bitvector": 1}
+        ])
+
+    def test_existing_diff_tree(self):
+        setup_database(TESTDB)
+        pub_dict = get_pub_dict(url_id=1, title="Hello World Again", date_published=datetime.datetime(1990, 1, 1, 1, 1, 1), author_ids=5)
+        diff_tree = generate_diff_store(pub_dict)
+        serialized_tree = serialize_diff_store(diff_tree)
+        insert_data("INSERT INTO publication(id,url_id,cluster_id, differences) "
+                    "VALUES (5,5,1,%s)",(serialized_tree,))
+        author_ids=[1,4,7]
+        pub_dict = get_pub_dict(url_id=2, title="Hello World", date_published=datetime.datetime(1990, 1, 1, 1, 1, 1))
+        result = update_diff_tree(5,pub_dict,author_ids,database=TESTDB)
+
+        self.assertEqual(result["author_ids"],[
+            {"value": 5, "votes": 0, "bitvector": 1},
+            {"value": 1, "votes": 0, "bitvector": 2},
+            {"value": 4, "votes": 0, "bitvector": 2},
+            {"value": 7, "votes": 0, "bitvector": 2}
+        ])
+
+
+
+
+    def tearDown(self):
+        delete_database(TESTDB)
+        pass
 
 class TestCreatePublication(TestCase):
     def test_no_publication(self):

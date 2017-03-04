@@ -35,6 +35,7 @@ def append_node(value,index, store):
         store.append(generate_node(value, index))
 
 
+excluded_keys =["url_id","author_ids","keyword_ids","type_ids","pub_source_ids","study_field_ids"]
 def get_default_values(store):
     """
     get default values from diff tree by returning the values of the first node in every list
@@ -44,7 +45,7 @@ def get_default_values(store):
     result = {}
     for key,value in store.items():
         # skip url_id since its only relevant for bitvectors
-        if key == "url_id":
+        if key in excluded_keys:
             continue
         if len(value) > 0:
             # try parse to datetime, if possible
@@ -75,9 +76,9 @@ def generate_diff_store(pub_dict):
     :return: diff tree
     """
     obj = {
-        "url_id": [], # url list for bitvector
+        "url_id": [],  # url list for bitvector
         "title": [],
-        "pages": [], # pages from-to are always stored together
+        "pages": [],  # pages from-to are always stored together
         "note": [],
         "doi": [],
         "abstract": [],
@@ -85,6 +86,11 @@ def generate_diff_store(pub_dict):
         "date_published": [],
         "volume": [],
         "number": [],
+        "keyword_ids": [],
+        "author_ids": [],
+        "pub_source_ids": [],
+        "type_ids": [],
+        "study_field_ids": [],
     }
     for key in obj.keys():
         if key == "url_id":
@@ -111,7 +117,7 @@ def insert_diff_store(pub_dict, diff_store):
         # TODO check if limit is reached
         idx = len(diff_store["url_id"]) - 1
 
-    for key in diff_store.keys():
+    for key in pub_dict.keys():
         if key == "url_id":
             continue
         else:
