@@ -163,6 +163,29 @@ def create_title(matching, cluster_name, database ="storage"):
     return cluster_id
 
 
+def create_publication(cluster_id, author_ids, database="storage"):
+    connector = MariaDb(dict(get_config("MARIADB")))
+    connector.connector.database = database
+    # find publication associated with cluster_id
+    publication_data = connector.fetch_one((cluster_id,),CHECK_PUBLICATION,ret_tup=True)
+    # publication_data is tuple with (id,url_id)
+    if publication_data is None:
+        # create local url and default publication
+        url_id = connector.execute_ex(INSERT_LOCAL_URL, ("TODO PLATZHALTER", 1))
+        pub_id = connector.execute_ex(INSERT_DEFAULT_PUBLICATION, (url_id, cluster_id))
+    else:
+        url_id = publication_data[1]
+        pub_id = publication_data[0]
+
+    # add authors to default pub
+    for priority, idx in enumerate(author_ids):
+        connector.execute_ex(INSERT_PUBLICATION_AUTHORS, (url_id, idx, priority))
+    connector.close_connection()
+    # get return publication_id
+    return pub_id
+
+
+
 def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME):
     credentials = dict(get_config("MARIADB"))
     # establish mariadb connections, one for reading from harvester, one for writing in ingester
@@ -200,7 +223,9 @@ def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME
             push_limbo(mapping)
             continue
         # ------------------------ CREATION ----------------------------------------------------------------------------
+        cluster_name = normalize_title(mapping["publication"]["title"])
         author_ids = create_authors(author_matches, mapping["authors"], local_url_id)
+        cluster_id = create_title(title_match, cluster_name)
     write_connector.close_connection()
     read_connector.close_connection()
 

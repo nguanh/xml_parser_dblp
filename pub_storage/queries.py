@@ -6,6 +6,7 @@ INSERT_CLUSTER = "INSERT INTO cluster(cluster_name) VALUES (%s)"
 CHECK_CLUSTER = "SELECT id FROM cluster WHERE cluster_name = %s"
 
 COUNT_PUBLICATION = "SELECT COUNT(*) FROM publication WHERE cluster_id = %s "
+CHECK_PUBLICATION = "SELECT id,url_id FROM publication WHERE cluster_id = %s"
 
 INSERT_AUTHORS = ("INSERT INTO authors(main_name, block_name, website, contact, about, orcid_id) "
                               "VALUES (%(parsed_name)s,%(block_name)s,%(website)s,%(contact)s,%(about)s,%(orcid_id)s)")
@@ -60,6 +61,8 @@ INSERT_PUBLICATION=   ("INSERT INTO publication"
                        "        %(volume)s,"
                        "        %(number)s"
                        "       )")
+
+INSERT_DEFAULT_PUBLICATION = ("INSERT INTO publication(url_id,cluster_id) VALUES(%s,%s)")
 
 
 INSERT_DEFAULT_TABLE= ("INSERT INTO default_table"

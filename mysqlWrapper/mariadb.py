@@ -105,7 +105,7 @@ class MariaDb:
         except mysql.connector.Error as err:
             raise Exception("MariaDB query error: {} File not added".format(err))
 
-    def fetch_one(self, tup, query=None):
+    def fetch_one(self, tup, query=None,ret_tup = False):
         if query is None:
             query = self.query
         try:
@@ -116,7 +116,9 @@ class MariaDb:
         result = self.cursor.fetchone()
         #TODO clear rest of results from cursor
         if result is not None:
-            return result[0]
+            if ret_tup is False:
+                return result[0]
+            return result
         return None
 
 
