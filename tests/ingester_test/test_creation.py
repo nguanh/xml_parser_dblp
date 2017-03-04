@@ -7,6 +7,7 @@ from pub_storage.helper import *
 from pub_storage.difference_storage import *
 import datetime
 
+
 class TestUpdateDiffTree(TestCase):
 
     def test_no_diff_tree(self):

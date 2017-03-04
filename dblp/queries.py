@@ -1,11 +1,3 @@
-
-
-'''
-INSERT INTO upsert (id, updated_on, value) VALUES (1, CURRENT_TIMESTAMP, 'abc')
-ON DUPLICATE KEY UPDATE updated_on = VALUES(updated_on), value = VALUES(value);
-
-'''
-
 #dblp key is primary key
 # added fields for date of last update
 # and date of last harvest date
@@ -25,16 +17,24 @@ DBLP_ARTICLE = (
     "  `cite` varchar(200),"
     "  `crossref` varchar(200),"
     "  `booktitle` varchar(200),"
+
+    "  `school` varchar(200),"
+    "  `address` varchar(200),"
+    "  `publisher` varchar(200),"
+    "  `isbn` varchar(200),"
+    "  `series` varchar(200),"
+    "  `type` varchar(50),"
+
     "  `last_updated` TIMESTAMP,"
     "  `last_harvested` TIMESTAMP,"
     "  PRIMARY KEY (`dblp_key`)"
-    #") ENGINE=TokuDB CHARSET=utf8mb4")
-    ") ENGINE=InnoDB CHARSET=utf8mb4")
+    ") ENGINE={} CHARSET=utf8mb4")
 
 ADD_DBLP_ARTICLE = ("INSERT INTO dblp_article"
                     " (dblp_key,mdate, author,title,pages,pub_year,volume,journal,journal_number,"
-                    "ee,url,cite,crossref,booktitle,last_updated,last_harvested) "
-                    "VALUES ( %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, CURRENT_TIMESTAMP, 0 )"
+                    "ee,url,cite,crossref,booktitle,school,address,publisher,isbn,series,type,"
+                    "last_updated,last_harvested) "
+                    "VALUES ( %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, CURRENT_TIMESTAMP, 0 )"
                     "ON DUPLICATE KEY UPDATE last_updated= CURRENT_TIMESTAMP,"
                     "mdate =VALUES(mdate),"
                     "author =VALUES(author),"
@@ -48,7 +48,13 @@ ADD_DBLP_ARTICLE = ("INSERT INTO dblp_article"
                     "url =VALUES(url),"
                     "cite =VALUES(cite),"
                     "crossref =VALUES(crossref),"
-                    "booktitle =VALUES(booktitle)"
+                    "booktitle =VALUES(booktitle),"
+                    "school =VALUES(school),"
+                    "address =VALUES(address),"
+                    "publisher =VALUES(publisher),"
+                    "isbn =VALUES(isbn),"
+                    "series =VALUES(series),"
+                    "type =VALUES(type)"
                      )
 
 # TODO über joins an mehr informationen kommen und mehr Daten einbeziehen

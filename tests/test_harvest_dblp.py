@@ -8,6 +8,7 @@ import  logging
 class Test_Dblp_Harvester(TestCase):
     name = "DBLP_HARVESTER"
     logger = logging.getLogger("TEST")
+
     def test_invalid_xml_ini(self):
         self.assertRaises(IHarvest_Exception, DblpHarvester, self.logger, self.name, path="files/DH1.ini")
 

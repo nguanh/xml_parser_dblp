@@ -73,7 +73,8 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
             dataset = {
                 'key': element.get('key'),
                 'mdate': parse_mdate(element.get('mdate')),
-                'title': ''
+                'title': '',
+                'type': element.tag
             }
         except:
             logger.error("%s invalid mdate", overall_count)
@@ -92,6 +93,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
             for child in element:
                 if child.tag == 'author':
                     # stores authors as csv
+
                     author_csv_list += child.text + ";"
                 elif child.tag == 'year':
                     dataset[child.tag] = parse_year(child.text)
@@ -101,10 +103,17 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
                 else:
                     dataset[child.tag] = str(child.text).strip()
         except:
-            logger.error("%s invalid year", overall_count)
+            logger.error("%s invalid year", dataset['key'])
             continue
 
+        if author_csv_list == '':
+            logger.error("%s missing authors",dataset['key'])
+            continue
+        if dataset['title'] == '':
+            logger.error("%s missing title", dataset['key'])
+            continue
         dataset['author'] = author_csv_list
+
         tup = dict_to_tuple(dataset)
 
         try:

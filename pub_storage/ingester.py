@@ -203,7 +203,6 @@ def update_diff_tree(pub_id, pub_dict, author_ids, database=DATABASE_NAME):
             "url_id": pub_dict["url_id"],
             "author_ids": author
         }
-        #TODO fehler hier
         insert_diff_store(author_dict, diff_tree)
 
     connector.close_connection()
@@ -250,10 +249,18 @@ def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME
         cluster_name = normalize_title(mapping["publication"]["title"])
         author_ids = create_authors(author_matches, mapping["authors"], local_url_id)
         cluster_id = create_title(title_match, cluster_name)
-        # create default publication / or find existing one and link with authors and cluster
+        # 5.create default publication / or find existing one and link with authors and cluster
         def_pub_id = create_publication(cluster_id, author_ids)
-        # get /create diff tree
+        # 6.get /create diff tree
         mapping['publication']['url_id'] = local_url_id
+        diff_tree = update_diff_tree(def_pub_id, mapping['publication'], author_ids)
+        # 7.get default values from diff tree and re-serialize tree
+        publication_values = get_default_values(diff_tree)
+        serialized_tree = serialize_diff_store(diff_tree)
+        publication_values["differences"] = serialized_tree
+        # 8.store publication
+        write_connector.execute_ex(INSERT_PUBLICATION, publication_values)
+        # 9.set publication as harvested
     write_connector.close_connection()
     read_connector.close_connection()
 

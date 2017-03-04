@@ -61,8 +61,11 @@ def dict_to_tuple(obj):
     :param obj:
     :return:
     """
-    all_attributes ={'key','mdate','author','title','ee','url','journal','number','volume','pages','year',"cite", "crossref","booktitle"}
-    optional_attributes= ['ee','url','journal','number','volume','pages',"cite", "crossref","booktitle","year"]
+    all_attributes ={'key', 'mdate', 'author', 'title', 'ee', 'url', 'journal',
+                     'number', 'volume', 'pages', 'year', "cite", "crossref", "booktitle",
+                     "school", "address", "publisher", "isbn", "series", "type"}
+    optional_attributes= ['ee', 'url', 'journal', 'number', 'volume', 'pages', "cite", "crossref", "booktitle", "year",
+                          "school", "address", "publisher", "isbn", "series", "type"]
 
     # set missing attributes as None
     for attr in optional_attributes:
@@ -76,5 +79,6 @@ def dict_to_tuple(obj):
 
     result = (obj['key'],obj['mdate'], obj['author'], obj['title'], obj['pages'],
               obj['year'],obj['volume'], obj['journal'],obj['number'], obj['ee'],
-              obj['url'], obj['cite'],obj['crossref'], obj['booktitle'])
+              obj['url'], obj['cite'],obj['crossref'], obj['booktitle'],
+              obj['school'],obj['address'],obj['publisher'],obj['isbn'],obj['series'],obj['type'],)
     return result
