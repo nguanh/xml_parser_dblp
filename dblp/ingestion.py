@@ -35,7 +35,7 @@ def generate_empty_mapping():
         },
         "authors": [],
         "study_fields": [],
-        "types": [],
+        "types": None,
         "keywords": [],
     }
 
@@ -80,5 +80,7 @@ def map_to_dict(query_tuple):
     mapping["pub_release"]["journal"] = query_tuple[7]
     mapping["publication"]["number"] = query_tuple[8]
     mapping["publication"]["doi"] = query_tuple[9]
+
+
     return mapping
 

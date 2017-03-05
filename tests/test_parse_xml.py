@@ -65,7 +65,8 @@ class TestParse_xml(TestCase):
                                         ('journals/acta/Saxena96', datetime.datetime(2011, 1, 11, 0, 0), 'Sanjeev Saxena;',
                                          'Parallel Integer Sorting and Simulation Amongst CRCW Models.', '607-619',
                                          datetime.datetime(1996, 1, 1, 0, 0), '33', 'Acta Inf.', '7',
-                                         'http://dx.doi.org/10.1007/BF03036466', 'db/journals/acta/acta33.html#Saxena96', None, None, None)
+                                         'http://dx.doi.org/10.1007/BF03036466', 'db/journals/acta/acta33.html#Saxena96',
+                                         None, None, None,None,None,None,None,None,'article')
                                         )
         self.assertEqual(result, 1)
 
@@ -93,7 +94,8 @@ class TestParse_xml(TestCase):
                                          '607-619',
                                          datetime.datetime(1996, 1, 1, 0, 0), '33', 'Acta Inf.', '7',
                                          'http://dx.doi.org/10.1007/BF03036466',
-                                         'db/journals/acta/acta33.html#Saxena96', None, None, None)
+                                         'db/journals/acta/acta33.html#Saxena96', None, None, None,
+                                         None, None, None, None, None, 'article')
                                         )
     @mock.patch.object(Mariadb_test, 'execute')
     def test_tag_in_title_regression(self, mock_execute):
@@ -106,7 +108,7 @@ class TestParse_xml(TestCase):
                                          datetime.datetime(2003, 1, 1, 0, 0), '16', 'Knowl.-Based Syst.', '1',
                                          'http://dx.doi.org/10.1016/S0950-7051(02)00053-9',
                                          'db/journals/kbs/kbs16.html#FinnieS03', None, None,
-                                         None)
+                                         None,None,None,None,None,None,'article')
                                         )
     @mock.patch.object(Mariadb_test, 'execute')
     def test_tag_in_title_regression2(self, mock_execute):
@@ -118,7 +120,8 @@ class TestParse_xml(TestCase):
                                         ('journals/acs/GrandjeanL03', datetime.datetime(2006, 5, 29, 0, 0), 'A. R. Grandjeán;M. P. López;',
                                          'H2q(T, G, delta) and q-perfect Crossed Modules.', '171-184', datetime.datetime(2003, 1, 1, 0, 0), '11',
                                          'Applied Categorical Structures', '2', 'http://dx.doi.org/10.1023/A:1023507229607',
-                                         'db/journals/acs/acs11.html#GrandjeanL03', None, None, None)
+                                         'db/journals/acs/acs11.html#GrandjeanL03', None, None, None,
+                                         None,None,None,None,None,'article')
                                         )
 
     @mock.patch.object(Mariadb_test, 'execute')
@@ -133,7 +136,7 @@ class TestParse_xml(TestCase):
                  'Enhancing Access Privacy of Range Retrievals over B+)-Trees.', '1533-1547',
                  datetime.datetime(2013, 1, 1, 0, 0), '25', 'IEEE Trans. Knowl. Data Eng.',
                  '7', 'http://doi.ieeecomputersociety.org/10.1109/TKDE.2012.77',
-                 'db/journals/tkde/tkde25.html#PangZM13', None, None, None)
+                 'db/journals/tkde/tkde25.html#PangZM13', None, None, None,None,None,None,None,None,'article')
         )
 
 
@@ -151,7 +154,8 @@ class TestParse_xml(TestCase):
                                          'title of titles','607-619',
                                          datetime.datetime(1996, 1, 1, 0, 0), '33', 'Acta Inf.', '7',
                                          'http://dx.doi.org/10.1007/BF03036466',
-                                         'db/journals/acta/acta33.html#Saxena96', None, None, None)
+                                         'db/journals/acta/acta33.html#Saxena96', None, None, None,
+                                         None, None, None, None, None, 'article')
                                         )
 
     def test_article_valid_min(self):
