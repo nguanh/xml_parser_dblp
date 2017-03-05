@@ -34,7 +34,7 @@ INSERT_ALIAS_SOURCE = "INSERT IGNORE INTO alias_source(alias_id,url_id) VALUES (
 
 INSERT_PUBLICATION_AUTHORS = ("INSERT INTO publication_authors(url_id, author_id, priority) VALUES (%s, %s, %s)")
 
-INSERT_PUBLICATION=   ("INSERT INTO publication"
+UPDATE_PUBLICATION=   ("INSERT INTO publication"
                        "       (url_id,"
                        "        cluster_id,"
                        "        differences,"

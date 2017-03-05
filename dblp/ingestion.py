@@ -19,6 +19,11 @@ def generate_empty_mapping():
             "date_published": None,
             "volume": None,
             "number": None,
+            "study_field_ids": None,
+            "author_ids": None,
+            "type_ids": None,
+            "keyword_ids": None,
+            "pub_source_ids": None,
         },
         "pub_release": {
             "series": None,

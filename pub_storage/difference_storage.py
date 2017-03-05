@@ -93,13 +93,15 @@ def generate_diff_store(pub_dict):
         "study_field_ids": [],
     }
     for key in obj.keys():
-        if key == "url_id":
-            obj["url_id"].append((pub_dict["url_id"]))
-        else:
-            node = generate_node(pub_dict[key])
-            if node is not None:
-                obj[key].append(node)
+            if key == "url_id":
+                obj["url_id"].append((pub_dict["url_id"]))
+            else:
+                node = generate_node(pub_dict[key])
+                if node is not None:
+                    obj[key].append(node)
+
     return obj
+    # TODO testfall wenn pub_dict bestimmte schlüssel einfach noch nicht enthält
 
 
 def insert_diff_store(pub_dict, diff_store):
