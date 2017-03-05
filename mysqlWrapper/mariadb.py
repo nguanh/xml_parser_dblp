@@ -1,18 +1,19 @@
 import mysql.connector
 from mysql.connector import errorcode
+from conf.config import get_config
 
 
 
 class MariaDb:
     #TODO test
 
-    def __init__(self, credentials):
+    def __init__(self,credentials= None,db = None):
         self.query = None
-        self.storage_engine = "InnoDB"
-        if "pub_storage" in credentials:
-            self.current_database = credentials["database"]
+        if credentials is None:
+            credentials = dict(get_config("MARIADB"))
+            self.storage_engine = get_config("MISC")["storage_engine"]
         else:
-            self.current_database = None
+            self.storage_engine = "InnoDB"
 
         try:
             self.connector = mysql.connector.connect(**credentials)
@@ -21,6 +22,11 @@ class MariaDb:
 
         if self.connector is not None:
             self.cursor = self.connector.cursor()
+
+            if db is not None:
+                self.current_database = db
+                self.connector.database = db
+
 
     def create_database(self, name):
         try:
@@ -42,6 +48,7 @@ class MariaDb:
                 self.connector.database = name
             else:
                 print(err)
+
 
     #TODO remove name parameter and get name from query
     def createTable(self, name, query):

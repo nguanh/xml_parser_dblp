@@ -26,6 +26,7 @@ class DblpHarvester(IHarvest):
 
     def init(self):
         # create database if not available
+        # TODO
         if self.connector.createTable(self.table_name, DBLP_ARTICLE):
             self.logger.info("Table %s created", self.table_name)
             return True

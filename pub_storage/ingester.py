@@ -7,8 +7,7 @@ from .difference_storage import *
 
 
 def match_author(authors, database= DATABASE_NAME):
-    connector = MariaDb(dict(get_config("MARIADB")))
-    connector.connector.database = database
+    connector = MariaDb(db = database)
     results = []
     # iterate through all authors
     for author_index, author_dict in enumerate(authors):
@@ -60,8 +59,7 @@ def match_author(authors, database= DATABASE_NAME):
 
 
 def match_title(title, database=DATABASE_NAME):
-    connector = MariaDb(dict(get_config("MARIADB")))
-    connector.connector.database = database
+    connector = MariaDb(db=database)
     # iterate through all authors
     cluster_name = normalize_title(title)
     # check for matching cluster (so far ONLY COMPLETE MATCH) TODO levenshtein distance
@@ -118,8 +116,7 @@ def push_limbo(mapping):
 
 
 def create_authors(matching_list, author_list, local_url, database=DATABASE_NAME):
-    connector = MariaDb(dict(get_config("MARIADB")))
-    connector.connector.database = database
+    connector = MariaDb(db=database)
     result = []
     priority = 0
     for match, author in zip(matching_list,author_list):
@@ -153,8 +150,7 @@ def create_authors(matching_list, author_list, local_url, database=DATABASE_NAME
 
 
 def create_title(matching, cluster_name, database=DATABASE_NAME):
-    connector = MariaDb(dict(get_config("MARIADB")))
-    connector.connector.database = database
+    connector = MariaDb(db=database)
     if matching["match"] == Match.NO_MATCH:
         cluster_id = connector.execute_ex(INSERT_CLUSTER, (cluster_name,))
     else:
@@ -164,8 +160,7 @@ def create_title(matching, cluster_name, database=DATABASE_NAME):
 
 
 def create_publication(cluster_id, author_ids, database= DATABASE_NAME):
-    connector = MariaDb(dict(get_config("MARIADB")))
-    connector.connector.database = database
+    connector = MariaDb(db=database)
     # find publication associated with cluster_id
     publication_data = connector.fetch_one((cluster_id,),CHECK_PUBLICATION,ret_tup=True)
     # publication_data is tuple with (id,url_id)
@@ -186,8 +181,7 @@ def create_publication(cluster_id, author_ids, database= DATABASE_NAME):
 
 
 def update_diff_tree(pub_id, pub_dict, author_ids, database=DATABASE_NAME):
-    connector = MariaDb(dict(get_config("MARIADB")))
-    connector.connector.database = database
+    connector = MariaDb(db=database)
     diff_tree = connector.fetch_one((pub_id,), CHECK_DIFF_TREE)
     if diff_tree is None:
         # create diff tree
@@ -210,11 +204,9 @@ def update_diff_tree(pub_id, pub_dict, author_ids, database=DATABASE_NAME):
 
 
 def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME):
-    credentials = dict(get_config("MARIADB"))
     # establish mariadb connections, one for reading from harvester, one for writing in ingester
-    read_connector = MariaDb(credentials)
-    write_connector = MariaDb(credentials)
-    write_connector.connector.database = database
+    read_connector = MariaDb()
+    write_connector = MariaDb(db = database)
     read_connector.cursor.execute(query)
 
     for query_dataset in read_connector.cursor:
