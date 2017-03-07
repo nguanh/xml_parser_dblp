@@ -34,7 +34,6 @@ def setup_database(db_name):
     connector.add_foreign_key(PUBLICATION_FK)
 
     # insert default
-    #TODO handle duplicate
     global_url =("INSERT INTO global_url(id,domain,url) "
                  "VALUES (1,'http://localhost/publications','http://localhost/publications'),"
                  "       (2,'http://localhost/users','http://localhost/users')"
