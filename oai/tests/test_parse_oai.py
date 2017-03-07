@@ -2,7 +2,7 @@ from unittest import TestCase, mock
 
 from oai.oaimph_parser import  harvestOAI
 from oai.queries import ADD_OAI_DEFAULT
-from .tools.Mariadb_stub import Mariadb_test
+from mysqlWrapper.tests.Mariadb_stub import Mariadb_test
 from oai.exception import Oai_Parsing_Exception
 from harvester.exception import IHarvest_Exception
 import datetime

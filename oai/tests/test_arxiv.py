@@ -14,7 +14,7 @@ def get_record(path):
 class Test_Arxiv(TestCase):
 
     def test_valid(self):
-        record = get_record("files/arxiv_file_valid.xml")
+        record = get_record("arxiv_file_valid.xml")
         result = ArXivRecord(record)
         self.assertEqual(result.metadata, {'authors': 'Balázs,C.;Berger,E. L.;Nadolsky,P. M.;Yuan,C. -P.;',
                                           'doi': '10.1103/PhysRevD.76.013009',
@@ -33,7 +33,7 @@ class Test_Arxiv(TestCase):
                         )
 
     def test_deleted(self):
-        record = get_record("files/arxiv_file_deleted.xml")
+        record = get_record("arxiv_file_deleted.xml")
         result = ArXivRecord(record)
         self.assertEqual(result.deleted, True)
 

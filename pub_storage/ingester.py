@@ -255,8 +255,7 @@ def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME
         publication_values["date_added"] = None
         publication_values["id"] = def_pub_id
         # 8.store publication
-        #TODO error bei 949
         write_connector.execute_ex(UPDATE_PUBLICATION, publication_values)
-        # 9.set publication as harvested
+        #TODO 9.set publication as harvested
     write_connector.close_connection()
     read_connector.close_connection()

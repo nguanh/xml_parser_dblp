@@ -14,7 +14,7 @@ class H1 (IHarvest):
 
 class H2 (IHarvest):
     def __init__(self):
-        self.HARVESTER_PATH= "files/h1.ini"
+        self.HARVESTER_PATH= "h1.ini"
         IHarvest.__init__(self, logging.getLogger("TEST"), "h2")
     def init(self):
         pass
@@ -23,7 +23,7 @@ class H2 (IHarvest):
 
 class H3 (IHarvest):
     def __init__(self):
-        self.HARVESTER_PATH= "files/h1.ini"
+        self.HARVESTER_PATH= "h1.ini"
         IHarvest.__init__(self, logging.getLogger("TEST"), "h1")
     def init(self):
         pass
@@ -32,7 +32,7 @@ class H3 (IHarvest):
 
 class H4 (IHarvest):
     def __init__(self):
-        self.HARVESTER_PATH= "files/h2.ini"
+        self.HARVESTER_PATH= "h2.ini"
         IHarvest.__init__(self, logging.getLogger("TEST"), "h1")
     def init(self):
         pass
@@ -41,7 +41,7 @@ class H4 (IHarvest):
 
 class H5 (IHarvest):
     def __init__(self):
-        self.HARVESTER_PATH= "files/h3.ini"
+        self.HARVESTER_PATH= "h3.ini"
         IHarvest.__init__(self, logging.getLogger("TEST"), "h1")
     def init(self):
         pass
@@ -50,7 +50,7 @@ class H5 (IHarvest):
 
 class H6 (IHarvest):
     def __init__(self):
-        self.HARVESTER_PATH= "files/h4.ini"
+        self.HARVESTER_PATH= "h4.ini"
         IHarvest.__init__(self, logging.getLogger("TEST"), "h1")
     def init(self):
         pass
@@ -59,7 +59,7 @@ class H6 (IHarvest):
 
 class H7 (IHarvest):
     def __init__(self):
-        self.HARVESTER_PATH= "files/h5.ini"
+        self.HARVESTER_PATH= "h5.ini"
         IHarvest.__init__(self, logging.getLogger("TEST"), "h1")
     def init(self):
         pass
@@ -67,7 +67,7 @@ class H7 (IHarvest):
         pass
 class H8 (IHarvest):
     def __init__(self):
-        self.HARVESTER_PATH= "files/h6.ini"
+        self.HARVESTER_PATH= "h6.ini"
         IHarvest.__init__(self, logging.getLogger("TEST"), "h1")
     def init(self):
         pass
@@ -75,7 +75,7 @@ class H8 (IHarvest):
         pass
 class H9 (IHarvest):
     def __init__(self):
-        self.HARVESTER_PATH= "files/h7.ini"
+        self.HARVESTER_PATH= "h7.ini"
         IHarvest.__init__(self, logging.getLogger("TEST"), "h1")
     def init(self):
         pass
@@ -83,7 +83,7 @@ class H9 (IHarvest):
         pass
 class H10 (IHarvest):
     def __init__(self):
-        self.HARVESTER_PATH= "files/h8.ini"
+        self.HARVESTER_PATH= "h8.ini"
         IHarvest.__init__(self, logging.getLogger("TEST"), "h1")
     def init(self):
         pass
