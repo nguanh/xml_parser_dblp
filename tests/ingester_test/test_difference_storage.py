@@ -53,11 +53,13 @@ class TestDifferenceStorage(TestCase):
                                                   date_published=datetime.datetime(1990,1,1,1,1,1)))
         added_values = get_pub_dict(url_id=2,title="Hello World", date_published=datetime.datetime(1990,2,2,2,2,2),
                                     abstract="Test Text")
-        insert_diff_store(added_values,store)
+        insert_diff_store(added_values, store)
+
         result = get_default_values(store)
         self.assertDictEqual(result,{
             "title": "Hello World",
             "date_published":datetime.datetime(1990,1,1,1,1,1),
+            "date_added": None,
             "abstract": "Test Text",
             "note": None,
             "pages": None,
@@ -65,6 +67,7 @@ class TestDifferenceStorage(TestCase):
             "copyright": None,
             "volume": None,
             "number": None,
+
         })
 
     def test_serialize(self):

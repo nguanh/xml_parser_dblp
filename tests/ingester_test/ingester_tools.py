@@ -88,7 +88,7 @@ def insert_data(query, tup = None):
     connector.close_connection()
 
 def get_pub_dict(url_id=None, title=None, pages=None, note=None, doi=None, abstract= None, copyright = None,
-                 date_published=None, volume= None, number = None,
+                 date_published=None, volume= None, number = None, date_added = None,
                  author_ids = None, keyword_ids= None,type_ids = None, study_field_ids = None, pub_source_ids = None):
     return{
         "url_id": url_id,
@@ -105,5 +105,6 @@ def get_pub_dict(url_id=None, title=None, pages=None, note=None, doi=None, abstr
         "keyword_ids": keyword_ids,
         "type_ids": type_ids,
         "study_field_ids": study_field_ids,
-        "pub_source_ids": pub_source_ids
+        "pub_source_ids": pub_source_ids,
+        "date_added": date_added
     }

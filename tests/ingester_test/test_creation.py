@@ -68,7 +68,7 @@ class TestCreatePublication(TestCase):
             }
         }
         result = create_publication(1,[1,2],database=TESTDB)
-        self.assertEqual(result,1)
+        self.assertEqual(result[0],1)
         compare_tables(self,test_success,ignore_id=True)
 
     def test_existing_publication(self):
@@ -89,7 +89,7 @@ class TestCreatePublication(TestCase):
 
             }
         }
-        self.assertEqual(result, 5)
+        self.assertEqual(result[0], 5)
         compare_tables(self, test_success, ignore_id=True)
 
     def tearDown(self):
