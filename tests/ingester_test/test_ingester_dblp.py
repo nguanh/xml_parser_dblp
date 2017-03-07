@@ -6,7 +6,7 @@ from pub_storage.ingester import ingest_data2
 from dblp.queries import INGESTION
 from dblp.ingestion import map_to_dict
 from pub_storage.setup_database import setup_database
-from .ingester_tools import compare_tables, delete_database,setup_tables,TESTDB,insert_data
+from .ingester_tools import compare_tables, delete_database,setup_tables,TESTDB,get_table_data
 import datetime
 
 
@@ -83,6 +83,21 @@ class TestIngsterDblp(TestCase):
     def test_setup_database(self):
         setup_database(TESTDB)
         setup_database(TESTDB)
+
+    def test_complete_publication(self):
+        # for this test a dataset with ALL ROWS filled, will be created to check if all values are
+        # successfully transferred
+        setup_tables("dblp_test2.csv", DBLP_ARTICLE, ADD_DBLP_ARTICLE)
+        dblp_data = init_dblp(TESTDB)
+        ingest_data2(dblp_data, INGESTION.format(TESTDB + ".dblp_article"), map_to_dict, TESTDB)
+        publication = list(get_table_data("publication", TESTDB))[0]
+        # remove diff tree for easier comparision
+        filtered_pub = [publication[x] for x in range(len(publication)) if x != 3]
+
+        # list of values that should be included in publication
+        included_values= [1,2,1,"title","1-5",None,"doi",None,None,None, "1990",'1','2']
+        self.assertEqual(filtered_pub,included_values)
+
 
     def tearDown(self):
         delete_database(TESTDB)
