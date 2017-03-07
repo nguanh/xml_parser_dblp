@@ -151,8 +151,7 @@ def push_limbo(mapping,author_matching,title_reason, connector):
                                                     pub_id, author["original_name"], index))
 
 
-def create_authors(matching_list, author_list, local_url, database=DATABASE_NAME):
-    connector = MariaDb(db=database)
+def create_authors(matching_list, author_list, local_url,connector):
     result = []
     priority = 0
     for match, author in zip(matching_list,author_list):
@@ -181,22 +180,18 @@ def create_authors(matching_list, author_list, local_url, database=DATABASE_NAME
         # store author id for each author
         result.append(author_id)
         priority += 1
-    connector.close_connection()
     return result
 
 
-def create_title(matching, cluster_name, database=DATABASE_NAME):
-    connector = MariaDb(db=database)
+def create_title(matching, cluster_name, connector):
     if matching["match"] == Match.NO_MATCH:
         cluster_id = connector.execute_ex(INSERT_CLUSTER, (cluster_name,))
     else:
         cluster_id = matching["id"]
-    connector.close_connection()
     return cluster_id
 
 
-def create_publication(cluster_id, author_ids,type_id, database= DATABASE_NAME):
-    connector = MariaDb(db=database)
+def create_publication(cluster_id, author_ids,type_id,connector):
     # find publication associated with cluster_id
     publication_data = connector.fetch_one((cluster_id,),CHECK_PUBLICATION,ret_tup=True)
     # publication_data is tuple with (id,url_id)
@@ -211,13 +206,11 @@ def create_publication(cluster_id, author_ids,type_id, database= DATABASE_NAME):
     # add authors to default pub
     for priority, idx in enumerate(author_ids):
         connector.execute_ex(INSERT_PUBLICATION_AUTHORS, (url_id, idx, priority))
-    connector.close_connection()
     # get return publication_id
     return [pub_id,url_id]
 
 
-def update_diff_tree(pub_id, pub_dict, author_ids, database=DATABASE_NAME):
-    connector = MariaDb(db=database)
+def update_diff_tree(pub_id, pub_dict, author_ids, connector):
     diff_tree = connector.fetch_one((pub_id,), CHECK_DIFF_TREE)
     if diff_tree is None:
         # create diff tree
@@ -235,7 +228,6 @@ def update_diff_tree(pub_id, pub_dict, author_ids, database=DATABASE_NAME):
         }
         insert_diff_store(author_dict, diff_tree)
 
-    connector.close_connection()
     return diff_tree
 
 
@@ -256,8 +248,7 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
         # check for duplicates by looking up the local URL
         duplicate_id = write_connector.fetch_one((mapping["local_url"], ingester_obj.get_global_url()), CHECK_LOCAL_URL)
         if duplicate_id is not None:
-            logger.debug("%s: skip duplicate", mapping["local_url"])
-            # TODO duplicate skip
+            logger.info("%s: skip duplicate", mapping["local_url"])
             continue
         # 2. create local url entry for record
         type_id = match_type(mapping["publication"]["type_ids"], write_connector)
@@ -278,19 +269,18 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
         if title_match["status"] == Status.LIMBO or author_valid is False:
             logger.info("%s: Ambiguous title/authors", mapping["local_url"])
             write_connector.execute_ex(DELETE_LOCAL_URL, (local_url_id,))
-            print(title_match["reason"])
             push_limbo(mapping, author_matches, str(title_match["reason"]), write_connector)
             continue
 
         # ------------------------ CREATION ----------------------------------------------------------------------------
         cluster_name = normalize_title(mapping["publication"]["title"])
-        author_ids = create_authors(author_matches, mapping["authors"], local_url_id, database=database)
-        cluster_id = create_title(title_match, cluster_name, database=database)
+        author_ids = create_authors(author_matches, mapping["authors"], local_url_id, write_connector)
+        cluster_id = create_title(title_match, cluster_name, write_connector)
         # 5.create default publication / or find existing one and link with authors and cluster
-        def_pub_id, def_url_id = create_publication(cluster_id, author_ids,type_id, database=database)
+        def_pub_id, def_url_id = create_publication(cluster_id, author_ids,type_id, write_connector)
         # 6.get /create diff tree
         mapping['publication']['url_id'] = def_url_id
-        diff_tree = update_diff_tree(def_pub_id, mapping['publication'], author_ids, database=database)
+        diff_tree = update_diff_tree(def_pub_id, mapping['publication'], author_ids, write_connector)
         #TODO store type_id in diff tree
         # 7.get default values from diff tree and re-serialize tree
         publication_values = get_default_values(diff_tree)
@@ -303,7 +293,7 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
         publication_values["id"] = def_pub_id
         # 8.store publication
         write_connector.execute_ex(UPDATE_PUBLICATION, publication_values)
-        logger.debug("%s: Publication added %s", mapping["local_url"],def_pub_id)
+        logger.debug("%s: Publication added %s", mapping["local_url"], def_pub_id)
         #TODO 9.set publication as harvested
     logger.debug("Terminate ingester %s", ingester_obj.get_name())
     write_connector.close_connection()

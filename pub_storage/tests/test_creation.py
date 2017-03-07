@@ -5,18 +5,21 @@ from pub_storage.ingester import create_authors, create_title, create_publicatio
 from .ingester_tools import TESTDB, delete_database, insert_data, compare_tables, get_pub_dict
 from pub_storage.helper import *
 from pub_storage.difference_storage import *
+from mysqlWrapper.mariadb import MariaDb
 import datetime
 
 
 class TestUpdateDiffTree(TestCase):
+    def setUp(self):
+        setup_database(TESTDB)
+        self.connector = MariaDb(db=TESTDB)
 
     def test_no_diff_tree(self):
-        setup_database(TESTDB)
         insert_data("INSERT INTO publication(id,url_id,cluster_id) VALUES (5,5,1)")
         # every table is empty
         pub_dict = get_pub_dict(url_id=1, title="Hello World", date_published=datetime.datetime(1990,1,1,1,1,1))
         author_ids=[1,4,7]
-        result = update_diff_tree(5,pub_dict,author_ids,database=TESTDB)
+        result = update_diff_tree(5,pub_dict,author_ids,self.connector)
         self.assertEqual(result["author_ids"],[
             {"value": 1, "votes": 0, "bitvector": 1},
             {"value": 4, "votes": 0, "bitvector": 1},
@@ -24,7 +27,6 @@ class TestUpdateDiffTree(TestCase):
         ])
 
     def test_existing_diff_tree(self):
-        setup_database(TESTDB)
         pub_dict = get_pub_dict(url_id=1, title="Hello World Again", date_published=datetime.datetime(1990, 1, 1, 1, 1, 1), author_ids=5)
         diff_tree = generate_diff_store(pub_dict)
         serialized_tree = serialize_diff_store(diff_tree)
@@ -32,7 +34,7 @@ class TestUpdateDiffTree(TestCase):
                     "VALUES (5,5,1,%s)",(serialized_tree,))
         author_ids=[1,4,7]
         pub_dict = get_pub_dict(url_id=2, title="Hello World", date_published=datetime.datetime(1990, 1, 1, 1, 1, 1))
-        result = update_diff_tree(5,pub_dict,author_ids,database=TESTDB)
+        result = update_diff_tree(5,pub_dict,author_ids,self.connector)
 
         self.assertEqual(result["author_ids"],[
             {"value": 5, "votes": 0, "bitvector": 1},
@@ -42,7 +44,6 @@ class TestUpdateDiffTree(TestCase):
         ])
 
     def test_full_dataset(self):
-        setup_database(TESTDB)
         pub_dict = get_pub_dict(url_id=1, title="Hello World Again",
                                 date_published=datetime.datetime(1990, 1, 1, 1, 1, 1),
                                 type_ids=5,
@@ -64,7 +65,7 @@ class TestUpdateDiffTree(TestCase):
                     "VALUES (5,5,1,%s)",(serialized_tree,))
         author_ids=[1,4,7]
         pub_dict = get_pub_dict(url_id=2, title="Hello World", date_published=datetime.datetime(1990, 1, 1, 1, 1, 1))
-        result = update_diff_tree(5,pub_dict,author_ids,database=TESTDB)
+        result = update_diff_tree(5,pub_dict,author_ids,self.connector)
 
         self.assertEqual(result["type_ids"][0]["value"],5)
         self.assertEqual(result["pub_source_ids"][0]["value"], 1)
@@ -80,12 +81,16 @@ class TestUpdateDiffTree(TestCase):
         self.assertEqual(result["volume"][0]["value"], "5")
 
     def tearDown(self):
+        self.connector.close_connection()
         delete_database(TESTDB)
 
 
 class TestCreatePublication(TestCase):
-    def test_no_publication(self):
+    def setUp(self):
         setup_database(TESTDB)
+        self.connector = MariaDb(db=TESTDB)
+
+    def test_no_publication(self):
         insert_data("INSERT INTO cluster (id,cluster_name) VALUES(1,'random Title')")
         insert_data("INSERT into authors (id,main_name,block_name)"
                     "VALUES(1,'Nina Nonsense','nonsense,n'),(2,'Otto Otter','otter,o')")
@@ -102,12 +107,11 @@ class TestCreatePublication(TestCase):
 
             }
         }
-        result = create_publication(1,[1,2],3,database=TESTDB)
+        result = create_publication(1,[1,2],3,self.connector)
         self.assertEqual(result[0],1)
         compare_tables(self,test_success,ignore_id=True)
 
     def test_existing_publication(self):
-        setup_database(TESTDB)
         insert_data("INSERT INTO cluster (id,cluster_name) VALUES(1,'random Title')")
         insert_data("INSERT into authors (id,main_name,block_name)"
                     "VALUES(1,'Nina Nonsense','nonsense,n'),(2,'Otto Otter','otter,o')")
@@ -116,7 +120,7 @@ class TestCreatePublication(TestCase):
         insert_data("INSERT INTO local_url(id,global_url_id,url) VALUES(5,5,'bla')")
 
         insert_data("INSERT INTO publication(id,url_id,cluster_id) VALUES (5,5,1)")
-        result = create_publication(1, [1, 2],1, database=TESTDB)
+        result = create_publication(1, [1, 2],1, self.connector)
         test_success = {
             "publication_authors": {
                 (1, 5, 1, 0),
@@ -128,12 +132,16 @@ class TestCreatePublication(TestCase):
         compare_tables(self, test_success, ignore_id=True)
 
     def tearDown(self):
+        self.connector.close_connection()
         delete_database(TESTDB)
-        pass
+
 
 class TestCreateTitle(TestCase):
-    def test_single_match(self):
+    def setUp(self):
         setup_database(TESTDB)
+        self.connector = MariaDb(db=TESTDB)
+
+    def test_single_match(self):
         insert_data("INSERT INTO cluster (id,cluster_name) VALUES(1,'matching title')")
         title = "matching title"
         matching = {
@@ -143,11 +151,10 @@ class TestCreateTitle(TestCase):
             "reason": None,
         }
 
-        result = create_title(matching,title, database=TESTDB)
+        result = create_title(matching,title, self.connector)
         self.assertEqual(result,1)
 
     def test_no_match(self):
-        setup_database(TESTDB)
         title = "matching title"
         matching = {
             "status": Status.SAFE,
@@ -161,19 +168,21 @@ class TestCreateTitle(TestCase):
                 (1, "matching title"),
             },
         }
-        result = create_title(matching,title, database=TESTDB)
+        result = create_title(matching,title, self.connector)
         self.assertEqual(result, 1)
         compare_tables(self,test_success, ignore_id=True)
 
     def tearDown(self):
+        self.connector.close_connection()
         delete_database(TESTDB)
-        pass
 
 
 class TestCreateAuthors(TestCase):
-    def test_success(self):
+    def setUp(self):
         setup_database(TESTDB)
-        #setup test data in db
+        self.connector = MariaDb(db=TESTDB)
+
+    def test_success(self):
         insert_data("INSERT into global_url (id,domain,url) VALUES(5,'a','a')")
         insert_data("INSERT into local_url (id,url,global_url_id) VALUES(1,'a',5)")
         insert_data("INSERT into authors (id,main_name,block_name)"
@@ -255,9 +264,10 @@ class TestCreateAuthors(TestCase):
             }
 
         }
-        result = create_authors(matching_list, authors_list,1, TESTDB)
+        result = create_authors(matching_list, authors_list,1, self.connector)
         self.assertEqual(result,[4,1,2])
         compare_tables(self, test_success, ignore_id=True)
 
     def tearDown(self):
+        self.connector.close_connection()
         delete_database(TESTDB)
