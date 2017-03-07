@@ -20,6 +20,10 @@ class TestMatchType(TestCase):
         identifier = match_type('blubb', self.connector)
         self.assertEqual(identifier, 2)
 
+    def test_no_matching_type2(self):
+        identifier = match_type(None, self.connector)
+        self.assertEqual(identifier, 2)
+
     def tearDown(self):
         self.connector.close_connection()
         delete_database(TESTDB)

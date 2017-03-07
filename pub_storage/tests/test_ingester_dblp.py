@@ -12,10 +12,10 @@ import datetime
 #TODO weitere tabellen hinzufügen
 test_success = {
     "local_url": {
-        (1, 3, None, None, None, 'journals/acta/AkyildizB89', datetime.datetime(1990, 1, 1, 1, 1, 1)),
-        (2, 1, None, None, None, 'TODO PLATZHALTER', datetime.datetime(1990, 1, 1, 1, 1, 1)),
-        (3, 3, None, None, None, 'journals/acta/VoglerS014', datetime.datetime(1990, 1, 1, 1, 1, 1)),
-        (4, 1, None, None, None, 'TODO PLATZHALTER', datetime.datetime(1990, 1, 1, 1, 1, 1)),
+        (1, 3, 1, None, None, 'journals/acta/AkyildizB89', datetime.datetime(1990, 1, 1, 1, 1, 1)),
+        (2, 1, 1, None, None, 'TODO PLATZHALTER', datetime.datetime(1990, 1, 1, 1, 1, 1)),
+        (3, 3, 1, None, None, 'journals/acta/VoglerS014', datetime.datetime(1990, 1, 1, 1, 1, 1)),
+        (4, 1, 1, None, None, 'TODO PLATZHALTER', datetime.datetime(1990, 1, 1, 1, 1, 1)),
     },
     "authors": {
         (1, "Ian F. Akyildiz", "akyildiz,i", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None),

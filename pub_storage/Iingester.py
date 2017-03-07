@@ -40,6 +40,7 @@ class Iingester(ABC):
                 "type_ids": None,
                 "keyword_ids": None,
                 "pub_source_ids": None,
+
             },
             "pub_release": {
                 "key": None,

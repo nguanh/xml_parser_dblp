@@ -41,6 +41,44 @@ class TestUpdateDiffTree(TestCase):
             {"value": 7, "votes": 0, "bitvector": 2}
         ])
 
+    def test_full_dataset(self):
+        setup_database(TESTDB)
+        pub_dict = get_pub_dict(url_id=1, title="Hello World Again",
+                                date_published=datetime.datetime(1990, 1, 1, 1, 1, 1),
+                                type_ids=5,
+                                keyword_ids=1,
+                                study_field_ids=1,
+                                pub_source_ids=1,
+                                volume="5",
+                                number="5",
+                                pages="1-3",
+                                note="note",
+                                doi="doi",
+                                abstract="abstract",
+                                copyright="copyright",
+                                date_added=datetime.datetime(1990, 1, 1, 1, 1, 1),
+                                author_ids=5)
+        diff_tree = generate_diff_store(pub_dict)
+        serialized_tree = serialize_diff_store(diff_tree)
+        insert_data("INSERT INTO publication(id,url_id,cluster_id, differences) "
+                    "VALUES (5,5,1,%s)",(serialized_tree,))
+        author_ids=[1,4,7]
+        pub_dict = get_pub_dict(url_id=2, title="Hello World", date_published=datetime.datetime(1990, 1, 1, 1, 1, 1))
+        result = update_diff_tree(5,pub_dict,author_ids,database=TESTDB)
+
+        self.assertEqual(result["type_ids"][0]["value"],5)
+        self.assertEqual(result["pub_source_ids"][0]["value"], 1)
+        self.assertEqual(result["keyword_ids"][0]["value"], 1)
+        self.assertEqual(result["study_field_ids"][0]["value"], 1)
+        self.assertEqual(result["abstract"][0]["value"], "abstract")
+        self.assertEqual(result["copyright"][0]["value"], "copyright")
+        self.assertEqual(result["note"][0]["value"], "note")
+        self.assertEqual(result["doi"][0]["value"], "doi")
+        self.assertEqual(result["date_added"][0]["value"], "1990-01-01 01:01:01")
+        self.assertEqual(result["pages"][0]["value"], "1-3")
+        self.assertEqual(result["number"][0]["value"], "5")
+        self.assertEqual(result["volume"][0]["value"], "5")
+
     def tearDown(self):
         delete_database(TESTDB)
 
@@ -53,7 +91,7 @@ class TestCreatePublication(TestCase):
                     "VALUES(1,'Nina Nonsense','nonsense,n'),(2,'Otto Otter','otter,o')")
         test_success = {
             "local_url": {
-                (1,1,None,None,None, "TODO PLATZHALTER",datetime.datetime(1990,1,1,1,1,1)),
+                (1,1,3,None,None, "TODO PLATZHALTER",datetime.datetime(1990,1,1,1,1,1)),
             },
             "publication":{
                 (1,1,1,None,None,None,None,None,None,None,None,None,None,None)
@@ -64,7 +102,7 @@ class TestCreatePublication(TestCase):
 
             }
         }
-        result = create_publication(1,[1,2],database=TESTDB)
+        result = create_publication(1,[1,2],3,database=TESTDB)
         self.assertEqual(result[0],1)
         compare_tables(self,test_success,ignore_id=True)
 
@@ -78,7 +116,7 @@ class TestCreatePublication(TestCase):
         insert_data("INSERT INTO local_url(id,global_url_id,url) VALUES(5,5,'bla')")
 
         insert_data("INSERT INTO publication(id,url_id,cluster_id) VALUES (5,5,1)")
-        result = create_publication(1, [1, 2], database=TESTDB)
+        result = create_publication(1, [1, 2],1, database=TESTDB)
         test_success = {
             "publication_authors": {
                 (1, 5, 1, 0),

@@ -8,9 +8,6 @@ import msgpack
 import json
 
 
-
-
-
 class TestDifferenceStorage(TestCase):
 
     def test_generate_node1(self):

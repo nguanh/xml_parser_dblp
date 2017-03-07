@@ -167,14 +167,14 @@ def create_title(matching, cluster_name, database=DATABASE_NAME):
     return cluster_id
 
 
-def create_publication(cluster_id, author_ids, database= DATABASE_NAME):
+def create_publication(cluster_id, author_ids,type_id, database= DATABASE_NAME):
     connector = MariaDb(db=database)
     # find publication associated with cluster_id
     publication_data = connector.fetch_one((cluster_id,),CHECK_PUBLICATION,ret_tup=True)
     # publication_data is tuple with (id,url_id)
     if publication_data is None:
         # create local url and default publication
-        url_id = connector.execute_ex(INSERT_LOCAL_URL, ("TODO PLATZHALTER", 1))
+        url_id = connector.execute_ex(INSERT_LOCAL_URL, ("TODO PLATZHALTER", 1,type_id))
         pub_id = connector.execute_ex(INSERT_DEFAULT_PUBLICATION, (url_id, cluster_id))
     else:
         url_id = publication_data[1]
@@ -230,7 +230,8 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
             # TODO duplicate skip
             continue
         # 2. create local url entry for record
-        local_url_id = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"], ingester_obj.get_global_url()))
+        type_id = match_type(mapping["publication"]["type_ids"], write_connector)
+        local_url_id = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"], ingester_obj.get_global_url(),type_id))
 
         # ------------------------- MATCHINGS --------------------------------------------------------------------------
         # 3. find matching cluster for title and matching existing authors
@@ -248,15 +249,17 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
             write_connector.execute_ex(DELETE_LOCAL_URL, (local_url_id,))
             push_limbo(mapping)
             continue
+
         # ------------------------ CREATION ----------------------------------------------------------------------------
         cluster_name = normalize_title(mapping["publication"]["title"])
         author_ids = create_authors(author_matches, mapping["authors"], local_url_id, database=database)
         cluster_id = create_title(title_match, cluster_name, database=database)
         # 5.create default publication / or find existing one and link with authors and cluster
-        def_pub_id, def_url_id = create_publication(cluster_id, author_ids, database=database)
+        def_pub_id, def_url_id = create_publication(cluster_id, author_ids,type_id, database=database)
         # 6.get /create diff tree
         mapping['publication']['url_id'] = def_url_id
         diff_tree = update_diff_tree(def_pub_id, mapping['publication'], author_ids, database=database)
+        #TODO store type_id in diff tree
         # 7.get default values from diff tree and re-serialize tree
         publication_values = get_default_values(diff_tree)
         serialized_tree = serialize_diff_store(diff_tree)
