@@ -25,6 +25,7 @@ def setup_database(db_name):
 
     connector.createTable("cluster", CLUSTER.format(storage_engine))
     connector.createTable("publication", PUBLICATION.format(storage_engine))
+    connector.createTable("types", TYPES.format(storage_engine))
 
     # create foreign keys
     connector.add_foreign_key(LOCAL_URL_FK)
@@ -40,7 +41,11 @@ def setup_database(db_name):
                  "ON DUPLICATE KEY UPDATE domain= VALUES(domain),"
                  "                        url   = VALUES(url)")
 
+    # insert values for types table
+    types = ("INSERT INTO types(id,name) VALUES(1,'article'),(2,'misc'), (3,'inproceedings'),(4,'mastersthesis'),(5,'phdthesis')"
+             "ON DUPLICATE KEY UPDATE  name = VALUES(name)")
     connector.execute_ex(global_url)
+    connector.execute_ex(types)
     connector.close_connection()
 
 

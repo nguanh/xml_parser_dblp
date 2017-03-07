@@ -3,7 +3,12 @@
 LOCAL_URL_FK = ("ALTER TABLE `local_url` "
                  "ADD CONSTRAINT `FK_global_url` "
                  "FOREIGN KEY (`global_url_id`) REFERENCES "
-                 "global_url(id) ON UPDATE CASCADE ON DELETE CASCADE")
+                 "global_url(id) ON UPDATE CASCADE ON DELETE CASCADE,"
+                 "ADD CONSTRAINT `FK_type` "
+                 "FOREIGN KEY (`type_id`) REFERENCES "
+                 "types(id) ON UPDATE CASCADE"
+
+                )
 # ===========================================AUTHORS====================================================================
 
 PUBLICATIONS_AUTHORS_FK = ("ALTER TABLE `publication_authors` "

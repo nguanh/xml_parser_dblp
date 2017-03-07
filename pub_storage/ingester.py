@@ -109,6 +109,13 @@ def match_title(title, database=DATABASE_NAME):
 def match_keywords():
     return None
 
+def match_type(type, connector):
+    type_id = connector.fetch_one((type,), CHECK_TYPE)
+    if type_id is None:
+        # if type is not available, set type is miscellaneous,
+        return connector.fetch_one(('misc',), CHECK_TYPE)
+    return type_id
+
 def match_pub_source():
     return None
 

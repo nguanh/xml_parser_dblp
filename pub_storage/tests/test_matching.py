@@ -1,11 +1,28 @@
 from unittest import TestCase
 
 from pub_storage.setup_database import setup_database
-from pub_storage.ingester import match_author, match_title
-
+from pub_storage.ingester import match_author, match_title,match_type
+from mysqlWrapper.mariadb import MariaDb
 
 from .ingester_tools import TESTDB, delete_database, insert_data
 from pub_storage.helper import *
+
+class TestMatchType(TestCase):
+    def setUp(self):
+        setup_database(TESTDB)
+        self.connector = MariaDb(db=TESTDB)
+
+    def test_success(self):
+        identifier = match_type('article', self.connector)
+        self.assertEqual(identifier, 1)
+
+    def test_no_matching_type(self):
+        identifier = match_type('blubb', self.connector)
+        self.assertEqual(identifier, 2)
+
+    def tearDown(self):
+        self.connector.close_connection()
+        delete_database(TESTDB)
 
 
 class TestMatchTitle(TestCase):

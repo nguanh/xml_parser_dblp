@@ -31,6 +31,7 @@ INSERT_ALIAS = "INSERT IGNORE INTO name_alias(authors_id, alias) VALUES (%s, %s)
 SELECT_ALIAS = "SELECT id FROM name_alias WHERE authors_id = %s AND alias = %s INTO @id"
 INSERT_ALIAS_SOURCE = "INSERT IGNORE INTO alias_source(alias_id,url_id) VALUES (@id,%s)"
 
+CHECK_TYPE = "SELECT id FROM types WHERE name = %s"
 
 INSERT_PUBLICATION_AUTHORS = ("INSERT INTO publication_authors(url_id, author_id, priority) VALUES (%s, %s, %s)")
 
