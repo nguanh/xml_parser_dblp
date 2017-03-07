@@ -109,6 +109,7 @@ def match_title(title, database=DATABASE_NAME):
 def match_keywords():
     return None
 
+
 def match_type(type, connector):
     type_id = connector.fetch_one((type,), CHECK_TYPE)
     if type_id is None:
@@ -119,8 +120,35 @@ def match_type(type, connector):
 def match_pub_source():
     return None
 
-def push_limbo(mapping):
-    pass
+
+def push_limbo(mapping, connector):
+    pub_dict = {
+        "title": mapping["publication"]["title"],
+        "pages": mapping["publication"]["pages"],
+        "note": mapping["publication"]["note"],
+        "doi": mapping["publication"]["doi"],
+        "abstract": mapping["publication"]["abstract"],
+        "copyright": mapping["publication"]["copyright"],
+        "date_added": mapping["publication"]["date_added"],
+        "date_published": mapping["publication"]["date_published"],
+        "volume": mapping["publication"]["volume"],
+        "number": mapping["publication"]["number"],
+        "series": mapping["pub_release"]["series"],
+        "edition": mapping["pub_release"]["edition"],
+        "location": mapping["pub_release"]["location"],
+        "publisher": mapping["pub_release"]["publisher"],
+        "institution": mapping["pub_release"]["institution"],
+        "school": mapping["pub_release"]["school"],
+        "address": mapping["pub_release"]["address"],
+        "isbn": mapping["pub_release"]["isbn"],
+        "howpublished": mapping["pub_release"]["howpublished"],
+        "book_title": mapping["pub_release"]["book_title"],
+        "journal": mapping["pub_release"]["journal"],
+    }
+    pub_id = connector.execute_ex(INSERT_LIMBO_PUB, pub_dict)
+    for index, author in enumerate(mapping["authors"]):
+        connector.execute_ex(INSERT_LIMBO_AUTHORS, (pub_id, author["original_name"], index))
+
 
 
 def create_authors(matching_list, author_list, local_url, database=DATABASE_NAME):
@@ -247,7 +275,7 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
         # 4. If title or author cannot be matched due to ambiguos matching, push into limbo and delete local url record
         if title_match["status"] == Status.LIMBO or author_valid is False:
             write_connector.execute_ex(DELETE_LOCAL_URL, (local_url_id,))
-            push_limbo(mapping)
+            push_limbo(mapping, write_connector)
             continue
 
         # ------------------------ CREATION ----------------------------------------------------------------------------

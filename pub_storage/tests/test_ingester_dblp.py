@@ -5,7 +5,7 @@ from dblp.dblpingester import DblpIngester
 from pub_storage.ingester import ingest_data2
 from pub_storage.setup_database import setup_database
 from pub_storage.exception import IIngester_Exception
-from .ingester_tools import compare_tables, delete_database,setup_tables,TESTDB,get_table_data
+from .ingester_tools import compare_tables, delete_database,setup_tables,TESTDB,get_table_data,insert_data
 import datetime
 
 
@@ -58,6 +58,21 @@ test_success = {
         (9, 4, 4, 1),
         (10, 4, 5, 2),
     },
+    "limbo_publication":set(),
+    "limbo_authors":set(),
+
+}
+
+test_limbo={
+    "limbo_publication":{
+        (1,"title","1-5",None,"doi",None,None,'2011','1990',"1","2","series",None,None,"publisher",None,"school","address",
+         "isbn",None,"booktitle","journal")
+    },
+    "limbo_authors":{
+        (1,1,"An Author",0),
+        (2,1,"Another Author",1),
+    },
+    "publication_authors": set(),
 
 }
 """
@@ -99,6 +114,24 @@ class TestIngsterDblp(TestCase):
         # list of values that should be included in publication
         included_values= [1,2,1,"title","1-5",None,"doi",None,None,None, "1990",'1','2']
         self.assertEqual(filtered_pub,included_values)
+
+    def test_limbo_multi_cluster(self):
+        setup_tables("dblp_test2.csv", DBLP_ARTICLE, ADD_DBLP_ARTICLE)
+        insert_data("INSERT into cluster (id,cluster_name) VALUES(1,'title'),(2,'title')")
+        ingester = DblpIngester(TESTDB, TESTDB)
+        ingest_data2(ingester, TESTDB)
+        compare_tables(self,test_limbo,ignore_id=True)
+
+    def test_limbo_multi_pubs(self):
+        setup_tables("dblp_test2.csv", DBLP_ARTICLE, ADD_DBLP_ARTICLE)
+        insert_data("INSERT into cluster (id,cluster_name) VALUES(1,'title')")
+        insert_data("INSERT into global_url (id,domain,url) VALUES(5,'a','a')")
+        insert_data("INSERT into local_url (id,url,global_url_id) VALUES(1,'a',5)")
+        insert_data("INSERT into publication(id,url_id,cluster_id, title)VALUES (1,1,1,'title')")
+        insert_data("INSERT into publication(id,url_id,cluster_id, title)VALUES (2,1,1,'title')")
+        ingester = DblpIngester(TESTDB, TESTDB)
+        ingest_data2(ingester, TESTDB)
+        compare_tables(self, test_limbo, ignore_id=True)
 
     def tearDown(self):
         delete_database(TESTDB)

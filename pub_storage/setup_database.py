@@ -27,12 +27,17 @@ def setup_database(db_name):
     connector.createTable("publication", PUBLICATION.format(storage_engine))
     connector.createTable("types", TYPES.format(storage_engine))
 
+    #limbo tables
+    connector.createTable("limbo publication", LIMBO_PUBLICATION)
+    connector.createTable("limbo authors", LIMBO_AUTHORS)
+
     # create foreign keys
     connector.add_foreign_key(LOCAL_URL_FK)
     connector.add_foreign_key(PUBLICATIONS_AUTHORS_FK)
     connector.add_foreign_key(NAME_ALIAS_FK)
     connector.add_foreign_key(ALIAS_SOURCE_FK)
     connector.add_foreign_key(PUBLICATION_FK)
+    connector.add_foreign_key(LIMBO_AUTHORS_FK)
 
     # insert default
     global_url =("INSERT INTO global_url(id,domain,url) "

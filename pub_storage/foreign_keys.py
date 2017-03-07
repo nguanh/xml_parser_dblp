@@ -7,7 +7,6 @@ LOCAL_URL_FK = ("ALTER TABLE `local_url` "
                  "ADD CONSTRAINT `FK_type` "
                  "FOREIGN KEY (`type_id`) REFERENCES "
                  "types(id) ON UPDATE CASCADE"
-
                 )
 # ===========================================AUTHORS====================================================================
 
@@ -41,4 +40,9 @@ PUBLICATION_FK = ("ALTER TABLE `publication` "
                            "     FOREIGN KEY (`cluster_id`) REFERENCES "
                            "     cluster(id) ON UPDATE CASCADE ON DELETE CASCADE"
                   )
-
+# ===========================================LIMBO===============================================================
+LIMBO_AUTHORS_FK = ("ALTER TABLE `limbo_authors` "
+                 "ADD CONSTRAINT `FK_limbo_pub` "
+                 "FOREIGN KEY (`pub_id`) REFERENCES "
+                 "limbo_publication(id) ON UPDATE CASCADE ON DELETE CASCADE"
+                )

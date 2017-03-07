@@ -180,5 +180,39 @@ REFERENCE = (
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 
+# ============================================LIMBO=====================================================================
+LIMBO_PUBLICATION = (
+    "CREATE TABLE `limbo_publication` ("
+    "  `id` INT NOT NULL AUTO_INCREMENT,"
+    "  `title` TEXT,"
+    "  `pages` VARCHAR(20),"
+    "  `note` TEXT,"
+    "  `doi` VARCHAR(100),"
+    "  `abstract` TEXT,"
+    "  `copyright` TEXT,"
+    "  `date_added` VARCHAR(100),"
+    "  `date_published` VARCHAR(5),"
+    "  `volume` VARCHAR(20),"
+    "  `number` VARCHAR(20),"
+    "  `series` VARCHAR(100),"
+    "  `edition` VARCHAR(100),"
+    "  `location` VARCHAR(100),"
+    "  `publisher` VARCHAR(100),"
+    "  `institution` VARCHAR(100),"
+    "  `school` VARCHAR(100),"
+    "  `address` VARCHAR(100),"
+    "  `isbn` VARCHAR(100),"
+    "  `howpublished` VARCHAR(100),"
+    "  `book_title` VARCHAR(100),"
+    "  `journal` VARCHAR(100),"
+    "  PRIMARY KEY (`id`)"
+    ") ENGINE={} CHARSET=utf8mb4")
 
-
+LIMBO_AUTHORS = (
+    "CREATE TABLE `limbo_authors` ("
+    "  `id` INT NOT NULL AUTO_INCREMENT,"
+    "  `pub_id` INT NOT NULL ,"
+    "  `name` VARCHAR(100) NOT NULL ,"
+    "  `priority` INT NOT NULL ,"
+    "  PRIMARY KEY (`id`)"
+    ") ENGINE={} CHARSET=utf8mb4")
