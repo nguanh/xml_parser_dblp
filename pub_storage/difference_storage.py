@@ -130,6 +130,7 @@ def insert_diff_store(pub_dict, diff_store):
                 continue
             append_node(pub_dict[key], idx ,diff_store[key])
 
+
 def serialize_diff_store(store):
     """
     wrapper for serialising

@@ -1,10 +1,8 @@
 from unittest import TestCase
 
 from dblp.queries import DBLP_ARTICLE, ADD_DBLP_ARTICLE
-from pub_storage.init_dblp import init_dblp
+from dblp.dblpingester import DblpIngester
 from pub_storage.ingester import ingest_data2
-from dblp.queries import INGESTION
-from dblp.ingestion import map_to_dict
 from pub_storage.setup_database import setup_database
 from .ingester_tools import compare_tables, delete_database,setup_tables,TESTDB,get_table_data
 import datetime
@@ -75,9 +73,9 @@ class TestIngsterDblp(TestCase):
 
     def test_success(self):
         setup_tables("dblp_test1.csv", DBLP_ARTICLE, ADD_DBLP_ARTICLE)
-        dblp_data = init_dblp(TESTDB)
-        self.assertEqual(dblp_data["global_url"], 3)
-        ingest_data2(dblp_data, INGESTION.format(TESTDB + ".dblp_article"), map_to_dict, TESTDB)
+        ingester = DblpIngester(TESTDB, TESTDB)
+        self.assertEqual(ingester.get_global_url(), 3)
+        ingest_data2(ingester, TESTDB)
         compare_tables(self, test_success, ignore_id=True)
 
     def test_setup_database(self):
@@ -88,8 +86,8 @@ class TestIngsterDblp(TestCase):
         # for this test a dataset with ALL ROWS filled, will be created to check if all values are
         # successfully transferred
         setup_tables("dblp_test2.csv", DBLP_ARTICLE, ADD_DBLP_ARTICLE)
-        dblp_data = init_dblp(TESTDB)
-        ingest_data2(dblp_data, INGESTION.format(TESTDB + ".dblp_article"), map_to_dict, TESTDB)
+        ingester = DblpIngester(TESTDB, TESTDB)
+        ingest_data2(ingester, TESTDB)
         publication = list(get_table_data("publication", TESTDB))[0]
         # remove diff tree for easier comparision
         filtered_pub = [publication[x] for x in range(len(publication)) if x != 3]

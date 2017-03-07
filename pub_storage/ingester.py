@@ -1,8 +1,10 @@
 from mysqlWrapper.mariadb import MariaDb
-from pub_storage.constants import *
-from pub_storage.queries import *
-from pub_storage.helper import *
+from .constants import *
+from .queries import *
+from .helper import *
 from .difference_storage import *
+from .Iingester import Iingester
+from .exception import IIngester_Exception
 
 
 def match_author(authors, database= DATABASE_NAME):
@@ -202,23 +204,26 @@ def update_diff_tree(pub_id, pub_dict, author_ids, database=DATABASE_NAME):
     return diff_tree
 
 
-def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME, harvest_database=DATABASE_NAME):
+def ingest_data2(ingester_obj, database=DATABASE_NAME):
+    if isinstance(ingester_obj, Iingester) is False:
+        raise IIngester_Exception("Object is not of type IIngester")
+
     # establish mariadb connections, one for reading from harvester, one for writing in ingester
-    read_connector = MariaDb(db=harvest_database)
+    read_connector = MariaDb()
     write_connector = MariaDb(db=database)
-    read_connector.cursor.execute(query)
+    read_connector.cursor.execute(ingester_obj.get_query())
 
     for query_dataset in read_connector.cursor:
         # 1. get Harvester specific record and parse to common-form dict
-        mapping = mapping_function(query_dataset)
+        mapping = ingester_obj.mapping_function(query_dataset)
         # ------------------------- LOCAL_URL --------------------------------------------------------------------------
         # check for duplicates by looking up the local URL
-        duplicate_id = write_connector.fetch_one((mapping["local_url"], harvester_data['global_url']), CHECK_LOCAL_URL)
+        duplicate_id = write_connector.fetch_one((mapping["local_url"], ingester_obj.get_global_url()), CHECK_LOCAL_URL)
         if duplicate_id is not None:
             # TODO duplicate skip
             continue
         # 2. create local url entry for record
-        local_url_id = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"], harvester_data['global_url']))
+        local_url_id = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"], ingester_obj.get_global_url()))
 
         # ------------------------- MATCHINGS --------------------------------------------------------------------------
         # 3. find matching cluster for title and matching existing authors

@@ -24,9 +24,9 @@ class DblpIngester(Iingester):
         pass
 
     def get_query(self):
-        return "SELECT * FROM {}.dblp_article WHERE last_harvested = 0".format(self.harvester_db)
+        return ("SELECT * FROM {}.dblp_article WHERE last_harvested = 0").format(self.harvester_db)
 
-    def global_url(self):
+    def get_global_url(self):
         return self.global_url
 
     def update_harvested(self):

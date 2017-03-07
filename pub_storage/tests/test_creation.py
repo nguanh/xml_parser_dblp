@@ -41,12 +41,9 @@ class TestUpdateDiffTree(TestCase):
             {"value": 7, "votes": 0, "bitvector": 2}
         ])
 
-
-
-
     def tearDown(self):
         delete_database(TESTDB)
-        pass
+
 
 class TestCreatePublication(TestCase):
     def test_no_publication(self):
