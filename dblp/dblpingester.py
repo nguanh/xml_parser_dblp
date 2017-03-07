@@ -32,6 +32,9 @@ class DblpIngester(Iingester):
     def update_harvested(self):
         pass
 
+    def get_name(self):
+        return "ingester.dblp"
+
     def mapping_function(self, query_tuple):
         mapping = self.generate_empty_mapping()
         # is set later

@@ -63,14 +63,27 @@ test_success = {
 
 }
 
+
 test_limbo={
     "limbo_publication":{
-        (1,"title","1-5",None,"doi",None,None,'2011','1990',"1","2","series",None,None,"publisher",None,"school","address",
+        (1,'Reason.AMB_CLUSTER','key',"title","1-5",None,"doi",None,None,'2011','1990',"1","2","series",None,None,"publisher",None,"school","address",
          "isbn",None,"booktitle","journal")
     },
     "limbo_authors":{
-        (1,1,"An Author",0),
-        (2,1,"Another Author",1),
+        (1,1,'None',"An Author",0),
+        (2,1,'None',"Another Author",1),
+    },
+    "publication_authors": set(),
+
+}
+test_limbo2={
+    "limbo_publication":{
+        (1,'Reason.AMB_PUB','key',"title","1-5",None,"doi",None,None,'2011','1990',"1","2","series",None,None,"publisher",None,"school","address",
+         "isbn",None,"booktitle","journal")
+    },
+    "limbo_authors":{
+        (1,1,'None',"An Author",0),
+        (2,1,'None',"Another Author",1),
     },
     "publication_authors": set(),
 
@@ -131,7 +144,7 @@ class TestIngsterDblp(TestCase):
         insert_data("INSERT into publication(id,url_id,cluster_id, title)VALUES (2,1,1,'title')")
         ingester = DblpIngester(TESTDB, TESTDB)
         ingest_data2(ingester, TESTDB)
-        compare_tables(self, test_limbo, ignore_id=True)
+        compare_tables(self, test_limbo2, ignore_id=True)
 
     def tearDown(self):
         delete_database(TESTDB)

@@ -5,10 +5,10 @@ from .helper import *
 from .difference_storage import *
 from .Iingester import Iingester
 from .exception import IIngester_Exception
+import logging
 
 
-def match_author(authors, database= DATABASE_NAME):
-    connector = MariaDb(db = database)
+def match_author(authors, connector):
     results = []
     # iterate through all authors
     for author_index, author_dict in enumerate(authors):
@@ -50,17 +50,16 @@ def match_author(authors, database= DATABASE_NAME):
                 })
             else:
                 results.append({
+
                     "status": Status.LIMBO,
                     "match": Match.MULTI_MATCH,
                     "id": None,
                     "reason": Reason.AMB_ALIAS
                 })
-    connector.close_connection()
     return results
 
 
-def match_title(title, database=DATABASE_NAME):
-    connector = MariaDb(db=database)
+def match_title(title, connector):
     # iterate through all authors
     cluster_name = normalize_title(title)
     # check for matching cluster (so far ONLY COMPLETE MATCH) TODO levenshtein distance
@@ -89,7 +88,7 @@ def match_title(title, database=DATABASE_NAME):
         else:
             result = {
                 "status": Status.LIMBO,
-                "match": Match.SINGLE_MATCH,
+                "match": Match.MULTI_MATCH,
                 "id": None,
                 "reason": Reason.AMB_PUB
             }
@@ -101,7 +100,6 @@ def match_title(title, database=DATABASE_NAME):
             "id": None,
             "reason": Reason.AMB_CLUSTER
         }
-    connector.close_connection()
     return result
 
 
@@ -121,8 +119,10 @@ def match_pub_source():
     return None
 
 
-def push_limbo(mapping, connector):
+def push_limbo(mapping,author_matching,title_reason, connector):
     pub_dict = {
+        "title_reason": title_reason,
+        "local_url": mapping["local_url"],
         "title": mapping["publication"]["title"],
         "pages": mapping["publication"]["pages"],
         "note": mapping["publication"]["note"],
@@ -147,8 +147,8 @@ def push_limbo(mapping, connector):
     }
     pub_id = connector.execute_ex(INSERT_LIMBO_PUB, pub_dict)
     for index, author in enumerate(mapping["authors"]):
-        connector.execute_ex(INSERT_LIMBO_AUTHORS, (pub_id, author["original_name"], index))
-
+        connector.execute_ex(INSERT_LIMBO_AUTHORS, (str(author_matching[index]["reason"]),
+                                                    pub_id, author["original_name"], index))
 
 
 def create_authors(matching_list, author_list, local_url, database=DATABASE_NAME):
@@ -243,6 +243,7 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
     if isinstance(ingester_obj, Iingester) is False:
         raise IIngester_Exception("Object is not of type IIngester")
 
+    logger = logging.getLogger(ingester_obj.get_name())
     # establish mariadb connections, one for reading from harvester, one for writing in ingester
     read_connector = MariaDb()
     write_connector = MariaDb(db=database)
@@ -255,6 +256,7 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
         # check for duplicates by looking up the local URL
         duplicate_id = write_connector.fetch_one((mapping["local_url"], ingester_obj.get_global_url()), CHECK_LOCAL_URL)
         if duplicate_id is not None:
+            logger.debug("%s: skip duplicate", mapping["local_url"])
             # TODO duplicate skip
             continue
         # 2. create local url entry for record
@@ -263,8 +265,8 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
 
         # ------------------------- MATCHINGS --------------------------------------------------------------------------
         # 3. find matching cluster for title and matching existing authors
-        title_match = match_title(mapping["publication"]["title"], database=database)
-        author_matches = match_author(mapping["authors"], database=database)
+        title_match = match_title(mapping["publication"]["title"], write_connector)
+        author_matches = match_author(mapping["authors"], write_connector)
 
         author_valid = True
         for author in author_matches:
@@ -274,8 +276,10 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
 
         # 4. If title or author cannot be matched due to ambiguos matching, push into limbo and delete local url record
         if title_match["status"] == Status.LIMBO or author_valid is False:
+            logger.info("%s: Ambiguous title/authors", mapping["local_url"])
             write_connector.execute_ex(DELETE_LOCAL_URL, (local_url_id,))
-            push_limbo(mapping, write_connector)
+            print(title_match["reason"])
+            push_limbo(mapping, author_matches, str(title_match["reason"]), write_connector)
             continue
 
         # ------------------------ CREATION ----------------------------------------------------------------------------
@@ -299,6 +303,8 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
         publication_values["id"] = def_pub_id
         # 8.store publication
         write_connector.execute_ex(UPDATE_PUBLICATION, publication_values)
+        logger.debug("%s: Publication added %s", mapping["local_url"],def_pub_id)
         #TODO 9.set publication as harvested
+    logger.debug("Terminate ingester %s", ingester_obj.get_name())
     write_connector.close_connection()
     read_connector.close_connection()

@@ -184,6 +184,8 @@ REFERENCE = (
 LIMBO_PUBLICATION = (
     "CREATE TABLE `limbo_publication` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
+    "  `title_reason` VARCHAR(100),"
+    "  `local_url` VARCHAR(150),"
     "  `title` TEXT,"
     "  `pages` VARCHAR(20),"
     "  `note` TEXT,"
@@ -212,6 +214,7 @@ LIMBO_AUTHORS = (
     "CREATE TABLE `limbo_authors` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
     "  `pub_id` INT NOT NULL ,"
+    "  `author_reason` VARCHAR(100),"
     "  `name` VARCHAR(100) NOT NULL ,"
     "  `priority` INT NOT NULL ,"
     "  PRIMARY KEY (`id`)"

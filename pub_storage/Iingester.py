@@ -17,6 +17,10 @@ class Iingester(ABC):
     def update_harvested(self):
         pass
 
+    @abstractmethod
+    def get_name(self):
+        pass
+
     @staticmethod
     def generate_empty_mapping():
         return {
