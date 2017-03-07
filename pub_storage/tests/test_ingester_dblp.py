@@ -4,6 +4,7 @@ from dblp.queries import DBLP_ARTICLE, ADD_DBLP_ARTICLE
 from dblp.dblpingester import DblpIngester
 from pub_storage.ingester import ingest_data2
 from pub_storage.setup_database import setup_database
+from pub_storage.exception import IIngester_Exception
 from .ingester_tools import compare_tables, delete_database,setup_tables,TESTDB,get_table_data
 import datetime
 
@@ -68,8 +69,11 @@ test_success = {
 """
 
 
-
 class TestIngsterDblp(TestCase):
+
+    def test_invalid_ingester(self):
+        setup_tables("dblp_test1.csv", DBLP_ARTICLE, ADD_DBLP_ARTICLE)
+        self.assertRaises(IIngester_Exception,ingest_data2,datetime.datetime(1990,1,1,1,1,1),TESTDB)
 
     def test_success(self):
         setup_tables("dblp_test1.csv", DBLP_ARTICLE, ADD_DBLP_ARTICLE)
@@ -95,7 +99,6 @@ class TestIngsterDblp(TestCase):
         # list of values that should be included in publication
         included_values= [1,2,1,"title","1-5",None,"doi",None,None,None, "1990",'1','2']
         self.assertEqual(filtered_pub,included_values)
-
 
     def tearDown(self):
         delete_database(TESTDB)
