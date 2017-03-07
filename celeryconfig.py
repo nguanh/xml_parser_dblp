@@ -18,7 +18,7 @@ imports = ('tasks.tasks',)
 beat_schedule = {
     'dblp-harvester': {
         'task': 'tasks.tasks.harvest_source',
-        'schedule': crontab(minute=10, hour=2),
+        'schedule': crontab(minute=45, hour=23),
         'args': ("dblp.dblpharvester", "DblpHarvester", "DBLP_HARVESTER")
     },
     'oai-harvester': {
