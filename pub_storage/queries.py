@@ -48,7 +48,7 @@ UPDATE_PUBLICATION=   ("UPDATE publication "
                        "      date_published=  %(date_published)s,"
                        "      volume=  %(volume)s,"
                        "      number=  %(number)s"
-                       "WHERE id = %(id)s"
+                       " WHERE id = %(id)s"
                        "      ")
 
 INSERT_DEFAULT_PUBLICATION = ("INSERT INTO publication(url_id,cluster_id) VALUES(%s,%s)")

@@ -202,10 +202,10 @@ def update_diff_tree(pub_id, pub_dict, author_ids, database=DATABASE_NAME):
     return diff_tree
 
 
-def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME):
+def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME, harvest_database=DATABASE_NAME):
     # establish mariadb connections, one for reading from harvester, one for writing in ingester
-    read_connector = MariaDb()
-    write_connector = MariaDb(db = database)
+    read_connector = MariaDb(db=harvest_database)
+    write_connector = MariaDb(db=database)
     read_connector.cursor.execute(query)
 
     for query_dataset in read_connector.cursor:
@@ -255,6 +255,7 @@ def ingest_data2(harvester_data, query, mapping_function, database=DATABASE_NAME
         publication_values["date_added"] = None
         publication_values["id"] = def_pub_id
         # 8.store publication
+        #TODO error bei 949
         write_connector.execute_ex(UPDATE_PUBLICATION, publication_values)
         # 9.set publication as harvested
     write_connector.close_connection()

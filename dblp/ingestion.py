@@ -26,6 +26,7 @@ def generate_empty_mapping():
             "pub_source_ids": None,
         },
         "pub_release": {
+            "key": None,
             "series": None,
             "edition": None,
             "location": None,
@@ -59,6 +60,7 @@ SAMPLE AUTHORS
 """
 
 
+#TODO test
 def map_to_dict(query_tuple):
     mapping = generate_empty_mapping()
     # is set later
@@ -85,7 +87,14 @@ def map_to_dict(query_tuple):
     mapping["pub_release"]["journal"] = query_tuple[7]
     mapping["publication"]["number"] = query_tuple[8]
     mapping["publication"]["doi"] = query_tuple[9]
-
+    mapping["pub_release"]["booktitle"] = query_tuple[13]
+    mapping["pub_release"]["school"] = query_tuple[14]
+    mapping["pub_release"]["address"] = query_tuple[15]
+    mapping["pub_release"]["publisher"] = query_tuple[16]
+    mapping["pub_release"]["isbn"] = query_tuple[17]
+    mapping["pub_release"]["series"] = query_tuple[18]
+    # no mapping required
+    mapping["type"] = query_tuple[19]
 
     return mapping
 

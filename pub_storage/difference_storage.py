@@ -91,6 +91,7 @@ def generate_diff_store(pub_dict):
         "pub_source_ids": [],
         "type_ids": [],
         "study_field_ids": [],
+        "date_added":[],
     }
     for key in obj.keys():
             if key == "url_id":
@@ -128,7 +129,6 @@ def insert_diff_store(pub_dict, diff_store):
             if pub_dict[key] is None:
                 continue
             append_node(pub_dict[key], idx ,diff_store[key])
-
 
 def serialize_diff_store(store):
     """

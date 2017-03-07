@@ -30,7 +30,8 @@ def get_table_data(table, null_dates = True):
 def compare_tables(self, comp_object, ignore_id = True):
     # TODO ignore
     for key,value in comp_object.items():
-        self.assertEqual(get_table_data(key, TESTDB), value)
+        data = get_table_data(key, TESTDB)
+        self.assertEqual(data, value)
 
 
 def delete_database(database):
