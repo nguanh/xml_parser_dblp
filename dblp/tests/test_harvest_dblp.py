@@ -29,10 +29,6 @@ class Test_Dblp_Harvester(TestCase):
         x = DblpHarvester(self.logger, self.name, path="DH5.ini")
         self.assertEqual(x.init(), True)
 
-    def test_invalid_init(self):
-        x = DblpHarvester(self.logger, self.name, path="DH6.ini")
-        self.assertEqual(x.init(), False)
-
     def test_invalid_run(self):
         x = DblpHarvester(self.logger, self.name, path="DH6.ini")
         x.init()

@@ -119,7 +119,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
         try:
             sql_connector.execute(tup)
         except Exception as e:
-            logger.error("%s MariaDB error: %s",overall_count, e)
+            logger.error("%s MariaDB error: %s",dataset['key'], e)
         else:
             success_count += 1
             logger.debug("%s: %s", success_count,element.get('key'))

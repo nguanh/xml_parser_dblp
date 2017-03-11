@@ -3,14 +3,15 @@ from .exception import IHarvest_Exception, IHarvest_Disabled
 import configparser
 from mysqlWrapper.mariadb import MariaDb
 
+
 class IHarvest(ABC):
     HARVESTER_PATH = "harvester.ini"
 
-    def __init__(self, logger, name, config_path= None):
+    def __init__(self, logger, name, config_path=None):
         self.name = name
         self.logger = logger
 
-        # mainy for testing
+        # mainly for testing
         if config_path is None:
             config_path = self.HARVESTER_PATH
 
@@ -19,18 +20,16 @@ class IHarvest(ABC):
         self.config.read(config_path)
         if name not in self.config:
             raise IHarvest_Exception("Error: Config could not be loaded")
-        if "MARIADB" not in self.config:
-            raise IHarvest_Exception("MARIADB ERROR: Missing Credentials in Config")
 
         # connect to database
-        credentials = dict(self.config["MARIADB"])
         try:
-            self.connector = MariaDb(credentials)
+            self.connector = MariaDb(db="harvester")
             self.logger.debug("MariaDB connection successful")
         except Exception as err:
             raise IHarvest_Exception("MARIADB ERROR: {}".format(err))
         # check certain parameters in specific config
         self.configValues = dict(self.config[name])
+
 
         #check enabled
         try:
