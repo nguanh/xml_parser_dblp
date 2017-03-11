@@ -17,14 +17,12 @@ DBLP_ARTICLE = (
     "  `cite` varchar(200),"
     "  `crossref` varchar(200),"
     "  `booktitle` varchar(200),"
-
     "  `school` varchar(200),"
     "  `address` varchar(200),"
     "  `publisher` varchar(200),"
     "  `isbn` varchar(200),"
     "  `series` varchar(200),"
     "  `type` varchar(50),"
-
     "  `last_updated` TIMESTAMP,"
     "  `last_harvested` TIMESTAMP,"
     "  PRIMARY KEY (`dblp_key`)"
