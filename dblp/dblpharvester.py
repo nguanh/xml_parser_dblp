@@ -46,7 +46,7 @@ class DblpHarvester(IHarvest):
             return False
 
         if xml_result and dtd_result:
-            tar = tarfile.open(self.extraction_path + xml_result)
+            tar = tarfile.open(xml_result)
             tar.extractall()
             tar.close()
             return True
