@@ -44,7 +44,7 @@ class DblpHarvester(IHarvest):
         except:
             self.logger.critical("files could not be downloaded")
             return False
-
+        '''
         if xml_result and dtd_result:
             print(xml_result)
             tar = tarfile.open(xml_result, mode='r:gz')
@@ -52,6 +52,7 @@ class DblpHarvester(IHarvest):
             tar.close()
             return True
         self.logger.critical("Unknown Error")
+        '''
         return False
 
 
