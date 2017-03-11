@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from .exception import IHarvest_Exception, IHarvest_Disabled
 import configparser
 from mysqlWrapper.mariadb import MariaDb
+import datetime
 
 
 class IHarvest(ABC):
@@ -53,10 +54,34 @@ class IHarvest(ABC):
         else:
             self.limit = None
 
+        # check dates
+        # set start date
+        if "start" not in self.configValues or self.configValues["start"] == '':
+            # if empty or not defined
+            self.start_date = None
+        else:
+            try:
+                self.start_date = datetime.datetime.strptime(self.configValues["start"], "%Y-%m-%d")
+            except:
+                raise IHarvest_Exception("Error: Invalid Start Date")
+
+        if "end" not in self.configValues or self.configValues["end"] == '':
+            self.end_date = None
+        else:
+            try:
+                self.end_date = datetime.datetime.strptime(self.configValues["end"], "%Y-%m-%d")
+            except:
+                raise IHarvest_Exception("Error: Invalid End Date")
+
+        if( isinstance(self.start_date,datetime.datetime) and isinstance(self.end_date,datetime.date) and
+            self.end_date < self.start_date):
+            raise IHarvest_Exception("Error: End Date is before Start Date")
+
+
     @abstractmethod
     def init(self):
         pass
 
     @abstractmethod
-    def run(self, time_begin=None, time_end=None):
+    def run(self):
         pass

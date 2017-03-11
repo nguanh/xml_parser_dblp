@@ -21,6 +21,9 @@ class OaiHarvester(IHarvest):
         except KeyError as e:
             raise IHarvest_Exception("Error: config value {} not found".format(e))
 
+
+
+
     def init(self):
         # create database if not available
         if self.connector.createTable(self.table_name, OAI_DATASET):
@@ -31,9 +34,11 @@ class OaiHarvester(IHarvest):
             return False
 
     # time_begin and time_end are always valid datetime objects
-    def run(self, time_begin=None, time_end=None):
+    def run(self):
         return harvestOAI(self.link, self.connector, self.logger,
-                          startDate=time_begin, endDate=time_end, limit=self.limit)
+                          startDate=self.start_date.strftime("%Y-%m-%d"),
+                          endDate=self.end_date.strftime("%Y-%m-%d"),
+                          limit=self.limit)
 
 
 

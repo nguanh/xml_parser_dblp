@@ -13,7 +13,7 @@ COMPLETE_TAG_LIST = ("article", "inproceedings", "proceedings", "book", "incolle
 
 
 def parse_xml(xmlPath, dtdPath, sql_connector, logger,
-              tagList=COMPLETE_TAG_LIST, startDate=None, endDate=None, limit=None):
+              tagList=COMPLETE_TAG_LIST, startDate=datetime.datetime.min, endDate=datetime.datetime.max, limit=None):
     """
 
     :param xmlPath: path to dblp.xml file
@@ -27,24 +27,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
     # validate parameters
     if isinstance(tagList, (str, tuple)) is False:
         raise IHarvest_Exception("Invalid tagList")
-    if startDate is not None:
-        try:
-            datetime.datetime.strptime(startDate, '%Y-%m-%d')
-            start = parse_mdate(startDate)
-        except:
-            if isinstance(startDate, datetime.datetime) is False:
-                raise IHarvest_Exception("Invalid start Date")
-            else:
-                start = startDate
-    if endDate is not None:
-        try:
-            datetime.datetime.strptime(endDate, '%Y-%m-%d')
-            end = parse_mdate(endDate)
-        except:
-            if isinstance(endDate, datetime.datetime) is False:
-                raise IHarvest_Exception("Invalid end Date")
-            else:
-                end = endDate
 
     if os.path.isfile(xmlPath) is False:
         raise IHarvest_Exception("Invalid XML path")
@@ -58,7 +40,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
     overall_count = 0
     etree.DTD(file=dtdPath)
 
-    time_range = startDate is not None and endDate is not None
     sql_connector.set_query(ADD_DBLP_ARTICLE)
 
     # iterate through XML
@@ -67,7 +48,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
         if limit is not None and overall_count >= limit:
             break
 
-        overall_count += 1
+
 
         try:
             dataset = {
@@ -82,9 +63,9 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
             continue
 
         # check date range
-        if time_range:
-            if (start <= dataset["mdate"] <= end) is False:
+        if (startDate <= dataset["mdate"] <= endDate) is False:
                 continue
+        overall_count += 1
 
         author_csv_list = ''
 

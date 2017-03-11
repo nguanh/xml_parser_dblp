@@ -2,6 +2,7 @@ from harvester.IHarvester import IHarvest
 from dblp.queries import DBLP_ARTICLE
 from harvester.exception import IHarvest_Exception
 from dblp.xml_parser import parse_xml
+import datetime
 
 
 class DblpHarvester(IHarvest):
@@ -35,9 +36,9 @@ class DblpHarvester(IHarvest):
             return False
 
     # time_begin and time_end are always valid datetime objects
-    def run(self, time_begin=None, time_end=None):
+    def run(self):
         return parse_xml(self.xml_path, self.dtd_path, self.connector, self.logger,
-                         self.tags, time_begin, time_end, self.limit)
+                         self.tags, self.start_date, self.end_date, self.limit)
 
 
 

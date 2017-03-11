@@ -73,13 +73,13 @@ class TestParse_xml(TestCase):
     def test_time_range_0(self):
         test_db = Mariadb_test()
         result =parse_xml("valid-timerange-n.xml", self.valid_dtd, test_db, self.valid_logger,
-                                          self.valid_tag_list,"2013-02-01", "2013-02-28")
+                                          self.valid_tag_list,datetime.datetime(2013,2,1,0,0), datetime.datetime(2013,2,28))
         self.assertEqual(result,0)
 
     def test_time_range_n(self):
         test_db = Mariadb_test()
         result =parse_xml("valid-timerange-n.xml", self.valid_dtd, test_db, self.valid_logger,
-                                          self.valid_tag_list,"2012-02-01", "2012-02-28")
+                                          self.valid_tag_list,datetime.datetime(2012,2,1,0,0),datetime.datetime(2012,2,28))
         self.assertEqual(result,2)
         self.assertListEqual(["a/b/c", "d/e/f"], test_db.getList())
         pass
