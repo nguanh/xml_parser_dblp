@@ -1,6 +1,7 @@
 import urllib.request
 import os
-
+from urllib.parse import urlparse
+from os.path import basename
 
 url1 = 'http://dblp.uni-trier.de/xml/dblp.xml.gz'
 url2 = 'http://dblp.uni-trier.de/xml/dblp.dtd'
@@ -23,8 +24,7 @@ def progress_bar(blocks_transferred, block_size, total_size):
     # only print progress if percentage value has changed
     if currentPercentage-previousPercentage > 0:
         print("{}% downloaded".format(currentPercentage))
-#TODO proper path check
-# get file name from download
+
 
 def download_file(file_url, storage_path):
     """
@@ -32,29 +32,23 @@ def download_file(file_url, storage_path):
     :param storage_path:
     :return:
     """
-    dir_name = os.path.dirname(storage_path)
-    if os.path.isdir(dir_name) is False:
-        print("Invalid path")
-        return None
+    # check path
+    if os.path.isdir(storage_path) is False:
+        raise Exception("Invalid Path")
+
+    disassembled = urlparse(file_url)
+    filename = basename(disassembled.path)
+    # get files name from url
+    file_path = storage_path + filename
+
 
     try:
-        local_filename, headers = urllib.request.urlretrieve(file_url, storage_path, reporthook=progress_bar)
+        local_filename, headers = urllib.request.urlretrieve(file_url, file_path, reporthook=progress_bar)
     except ValueError:
-        print("Invalid URL")
+        raise Exception("Invalid URL")
+
     else:
-        print(local_filename)
-        print(headers)
+        return local_filename
 
-'''
-TODO
-user agent
-exception handling
-return values
-Check content type
-'''
-url = url2
-storagePath = 'dblp.dtd'
-
-download_file(url, storagePath)
 
 
