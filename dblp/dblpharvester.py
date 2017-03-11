@@ -4,7 +4,7 @@ from harvester.exception import IHarvest_Exception
 from dblp.xml_parser import parse_xml
 from fileDownloader.fileDownloader import download_file
 import tarfile
-
+import subprocess
 
 class DblpHarvester(IHarvest):
 
@@ -44,15 +44,15 @@ class DblpHarvester(IHarvest):
         except:
             self.logger.critical("files could not be downloaded")
             return False
-        '''
+
         if xml_result and dtd_result:
-            print(xml_result)
-            tar = tarfile.open(xml_result, mode='r:gz')
-            tar.extractall()
-            tar.close()
+            self.logger.info("Files were created")
+            result = subprocess.call(["gunzip",xml_result])
+            print(result)
+            self.logger.info("Files were extracted")
             return True
         self.logger.critical("Unknown Error")
-        '''
+
         return False
 
 
