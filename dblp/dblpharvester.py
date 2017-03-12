@@ -6,8 +6,8 @@ from fileDownloader.fileDownloader import download_file
 import tarfile
 import subprocess
 
-class DblpHarvester(IHarvest):
 
+class DblpHarvester(IHarvest):
     def __init__(self, logger, name, path=None):
         # call constructor of base class for initiating values
         IHarvest.__init__(self, logger, name, path)
@@ -47,15 +47,12 @@ class DblpHarvester(IHarvest):
 
         if xml_result and dtd_result:
             self.logger.info("Files were created")
-            result = subprocess.call(["gunzip",xml_result])
-            print(result)
+            result = subprocess.call(["gunzip", xml_result])
             if result == 0:
                 self.logger.info("Files were extracted")
                 return True
         self.logger.critical("Unknown Error")
-
         return False
-
 
     # time_begin and time_end are always valid datetime objects
     def run(self):
