@@ -49,8 +49,9 @@ class DblpHarvester(IHarvest):
             self.logger.info("Files were created")
             result = subprocess.call(["gunzip",xml_result])
             print(result)
-            self.logger.info("Files were extracted")
-            return True
+            if result == 0:
+                self.logger.info("Files were extracted")
+                return True
         self.logger.critical("Unknown Error")
 
         return False

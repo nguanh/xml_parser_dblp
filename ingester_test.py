@@ -19,5 +19,4 @@ setup_database(DATABASE_NAME)
 ingester = DblpIngester(DATABASE_NAME,"harvester")
 
 
-
 ingest_data2(ingester, DATABASE_NAME)

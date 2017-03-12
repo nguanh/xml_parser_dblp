@@ -4,6 +4,8 @@ from conf.config import get_config
 from pub_storage.helper import split_authors
 import re
 
+def is_not_empty(var):
+    return var is not None and len(var) > 0
 
 class DblpIngester(Iingester):
     def __init__(self, ingester_db, harvester_db):
@@ -59,5 +61,14 @@ class DblpIngester(Iingester):
         mapping["pub_release"]["publisher"] = query_tuple[16]
         mapping["pub_release"]["isbn"] = query_tuple[17]
         mapping["pub_release"]["series"] = query_tuple[18]
+
+        #find key for publication
+        pub_type = mapping["publication"]["type_ids"]
+        if (pub_type == "phdthesis" or pub_type == "mastersthesis") and is_not_empty(mapping["pub_release"]["school"]):
+            mapping["pub_release"]["key"] = mapping["pub_release"]["school"]
+        elif pub_type == "inproceedings"and is_not_empty(mapping["pub_release"]["book_title"]):
+            mapping["pub_release"]["key"] = mapping["pub_release"]["book_title"]
+        elif pub_type == "article"and is_not_empty(mapping["pub_release"]["journal"]):
+            mapping["pub_release"]["key"] = mapping["pub_release"]["journal"]
 
         return mapping
