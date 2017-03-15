@@ -115,7 +115,10 @@ def match_type(type, connector):
         return connector.fetch_one(('misc',), CHECK_TYPE)
     return type_id
 
-def match_pub_source():
+
+def match_pub_source(mapping):
+    normalized_key = normalize_title(mapping["key"])
+
     return None
 
 
@@ -273,6 +276,7 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
             continue
 
         # ------------------------ CREATION ----------------------------------------------------------------------------
+        pub_source_id = match_pub_source(mapping["pub_release"])
         cluster_name = normalize_title(mapping["publication"]["title"])
         author_ids = create_authors(author_matches, mapping["authors"], local_url_id, write_connector)
         cluster_id = create_title(title_match, cluster_name, write_connector)

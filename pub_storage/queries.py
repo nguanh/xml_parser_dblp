@@ -26,6 +26,9 @@ MATCH_AUTHOR_BY_ALIAS = ("SELECT authors.id "
                          "AND authors.block_name = %s "
                          "AND alias= %s")
 
+CHECK_PUB_SOURCE = "SELECT id FROM authors WHERE block_name = %s"
+
+
 
 INSERT_ALIAS = "INSERT IGNORE INTO name_alias(authors_id, alias) VALUES (%s, %s)"
 SELECT_ALIAS = "SELECT id FROM name_alias WHERE authors_id = %s AND alias = %s INTO @id"

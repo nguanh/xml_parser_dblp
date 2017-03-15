@@ -91,10 +91,12 @@ PUBLICATION = (
     "  `number` VARCHAR(20),"
     "  PRIMARY KEY (`id`)"
     ") ENGINE={} CHARSET=utf8mb4")
-
-RELEASE = (
-    "CREATE TABLE `pub_release` ("
+# ===========================================PUBLICATION SOURCE================================================================
+PUB_SOURCE = (
+    "CREATE TABLE `pub_source` ("
     "  `id` INT NOT NULL AUTO_INCREMENT,"
+    "  `main_name` VARCHAR(100)NOT NULL ,"
+    "  `block_name` VARCHAR(100) NOT NULL ,"
     "  `series` VARCHAR(100),"
     "  `edition` VARCHAR(100),"
     "  `location` VARCHAR(100),"
@@ -107,6 +109,25 @@ RELEASE = (
     "  `book_title` VARCHAR(100),"
     "  `journal` VARCHAR(100),"
     "  PRIMARY KEY (`id`)"
+    ") ENGINE={} CHARSET=utf8mb4")
+
+PUB_SOURCE_ALIAS = (
+    "CREATE TABLE `pub_source_alias` ("
+    "  `id` INT NOT NULL AUTO_INCREMENT,"
+    "  `pub_source_id` INT NOT NULL,"
+    "  `alias` VARCHAR(100) NOT NULL ,"
+    "  PRIMARY KEY (`id`),"
+    "  UNIQUE KEY (`pub_source_id`,`alias`)"
+    ") ENGINE={} CHARSET=utf8mb4")
+
+# stores which alias belongs to which source
+PUB_SOURCE_SOURCE = (
+    "CREATE TABLE `pub_source_source` ("
+    "  `id` INT NOT NULL AUTO_INCREMENT,"
+    "  `url_id` INT NOT NULL,"
+    "  `alias_id` INT  NOT NULL,"
+    "  PRIMARY KEY (`id`),"
+    "  UNIQUE KEY (`url_id`,`alias_id`)"
     ") ENGINE={} CHARSET=utf8mb4")
 
 

@@ -23,6 +23,10 @@ def setup_database(db_name):
     connector.createTable("name_alias", NAMEALIAS.format(storage_engine))
     connector.createTable("alias_source", ALIASSOURCE.format(storage_engine))
 
+    connector.createTable("pub_source", PUB_SOURCE.format(storage_engine))
+    connector.createTable("pub_source_alias", PUB_SOURCE_ALIAS.format(storage_engine))
+    connector.createTable("pub_source_source", PUB_SOURCE_SOURCE.format(storage_engine))
+
     connector.createTable("cluster", CLUSTER.format(storage_engine))
     connector.createTable("publication", PUBLICATION.format(storage_engine))
     connector.createTable("types", TYPES.format(storage_engine))
@@ -38,6 +42,8 @@ def setup_database(db_name):
     connector.add_foreign_key(ALIAS_SOURCE_FK)
     connector.add_foreign_key(PUBLICATION_FK)
     connector.add_foreign_key(LIMBO_AUTHORS_FK)
+    connector.add_foreign_key(PS_ALIAS_FK)
+    connector.add_foreign_key(PS_SOURCE_FK)
 
     # insert default
     global_url =("INSERT INTO global_url(id,domain,url) "

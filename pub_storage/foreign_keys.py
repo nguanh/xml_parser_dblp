@@ -40,6 +40,22 @@ PUBLICATION_FK = ("ALTER TABLE `publication` "
                            "     FOREIGN KEY (`cluster_id`) REFERENCES "
                            "     cluster(id) ON UPDATE CASCADE ON DELETE CASCADE"
                   )
+
+
+# ===========================================PUB SOURCE===============================================================
+PS_ALIAS_FK = ("ALTER TABLE `pub_source_alias` "
+                 "   ADD CONSTRAINT `FK_pub_source` "
+                 "     FOREIGN KEY (`pub_source_id`) REFERENCES "
+                 "     pub_source(id) ON UPDATE CASCADE ON DELETE CASCADE")
+
+PS_SOURCE_FK = ("ALTER TABLE `pub_source_source` "
+                   "   ADD CONSTRAINT `FK_local_url` "
+                   "     FOREIGN KEY (`url_id`) REFERENCES "
+                   "     local_url(id) ON UPDATE CASCADE ON DELETE CASCADE,"
+                   "   ADD CONSTRAINT `FK_alias` "
+                   "     FOREIGN KEY (`alias_id`) REFERENCES "
+                   "     pub_source_alias(id) ON UPDATE CASCADE ON DELETE CASCADE"
+                   )
 # ===========================================LIMBO===============================================================
 LIMBO_AUTHORS_FK = ("ALTER TABLE `limbo_authors` "
                  "ADD CONSTRAINT `FK_limbo_pub` "
