@@ -88,7 +88,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
             continue
 
         if author_csv_list == '':
-            logger.error("%s missing authors",dataset['key'])
+            logger.debug("%s missing authors",dataset['key'])
             continue
         if dataset['title'] == '':
             logger.error("%s missing title", dataset['key'])

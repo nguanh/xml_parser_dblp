@@ -36,7 +36,7 @@ class DblpHarvester(IHarvest):
         else:
             self.logger.critical("Table could not be created")
             return False
-
+        return True
         # download files
         try:
             xml_result = download_file(self.xml_url,self.extraction_path)
