@@ -82,7 +82,7 @@ PUBLICATION = (
     "  `title` TEXT,"
     "  `pages` VARCHAR(20),"
     "  `note` TEXT,"
-    "  `doi` VARCHAR(100),"
+    "  `doi` TEXT,"
     "  `abstract` TEXT,"
     "  `copyright` TEXT,"
     "  `date_added` VARCHAR(100),"

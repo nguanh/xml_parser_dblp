@@ -44,7 +44,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
 
     # iterate through XML
     for event, element in etree.iterparse(xmlPath, tag=tagList, load_dtd=True):
-
+        continue
         if limit is not None and overall_count >= limit:
             break
 

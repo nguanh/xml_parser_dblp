@@ -12,7 +12,7 @@ DBLP_ARTICLE = (
     "  `volume` varchar(20),"
     "  `journal` varchar(100),"
     "  `journal_number` varchar(20),"
-    "  `ee` varchar(200),"
+    "  `ee` TEXT,"
     "  `url` varchar(200),"
     "  `cite` varchar(200),"
     "  `crossref` varchar(200),"
