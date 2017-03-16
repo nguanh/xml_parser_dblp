@@ -40,6 +40,10 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
     overall_count = 0
     etree.DTD(file=dtdPath)
     sql_connector.set_query(ADD_DBLP_ARTICLE)
+    if endDate is None:
+        endDate = datetime.datetime.max
+    if startDate is None:
+        startDate = datetime.datetime.min
 
     # iterate through XML
     for event, element in etree.iterparse(xmlPath, tag=tagList, load_dtd=True):
