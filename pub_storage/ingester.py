@@ -116,10 +116,35 @@ def match_type(type, connector):
     return type_id
 
 
-def match_pub_source(mapping):
+def match_pub_source(mapping,local_url,connector):
     normalized_key = normalize_title(mapping["key"])
+    mapping["block_name"] = normalized_key
+    mapping["main_name"] = mapping["key"]
+    del mapping["key"]
 
-    return None
+    count_match = connector.fetch_one((normalized_key,), COUNT_PUB_SOURCE)
+    if count_match == 0:
+        pub_source_id = connector.execute_ex(INSERT_PUB_SOURCE, mapping)
+
+    elif count_match == 1:
+        pub_source_id = connector.fetch_one((normalized_key,), CHECK_PS)
+    else:
+        # count possible matching name blocks by matching alias
+        alias_count_match = connector.fetch_one((mapping["block_name"], mapping["main_name"] ),
+                                                COUNT_MATCH_PS_BY_ALIAS)
+        if alias_count_match == 1:
+            pub_source_id = connector.fetch_one((normalized_key, mapping["main_name"] ),
+                                                MATCH_PS_BY_ALIAS)
+        else:
+            # create pub source
+            pub_source_id = connector.execute_ex(INSERT_PUB_SOURCE, mapping)
+    # create alias
+    # create alias source
+    connector.execute_ex(INSERT_PS_ALIAS, (pub_source_id, mapping["main_name"]))
+    connector.execute_ex(SELECT_PS_ALIAS, (pub_source_id, mapping["main_name"]))
+    connector.execute_ex(INSERT_PS_ALIAS_SOURCE, (local_url,))
+
+    return pub_source_id
 
 
 def push_limbo(mapping,author_matching,title_reason, connector):
@@ -276,7 +301,7 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
             continue
 
         # ------------------------ CREATION ----------------------------------------------------------------------------
-        pub_source_id = match_pub_source(mapping["pub_release"])
+        pub_source_id = match_pub_source(mapping["pub_release",local_url_id, write_connector])
         cluster_name = normalize_title(mapping["publication"]["title"])
         author_ids = create_authors(author_matches, mapping["authors"], local_url_id, write_connector)
         cluster_id = create_title(title_match, cluster_name, write_connector)
