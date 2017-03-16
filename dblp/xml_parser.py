@@ -39,12 +39,11 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
     success_count = 0
     overall_count = 0
     etree.DTD(file=dtdPath)
-
+    print("TEST")
     sql_connector.set_query(ADD_DBLP_ARTICLE)
 
     # iterate through XML
     for event, element in etree.iterparse(xmlPath, tag=tagList, load_dtd=True):
-        continue
         if limit is not None and overall_count >= limit:
             break
 
