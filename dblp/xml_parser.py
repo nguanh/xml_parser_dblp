@@ -50,8 +50,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
         if limit is not None and overall_count >= limit:
             break
 
-
-
         try:
             dataset = {
                 'key': element.get('key'),
@@ -65,9 +63,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
             continue
 
         # check date range
-        print( startDate)
-        print(dataset["mdate"])
-        print(endDate)
         if (startDate <= dataset["mdate"] <= endDate) is False:
                 element.clear()
                 continue
