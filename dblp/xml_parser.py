@@ -39,7 +39,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
     success_count = 0
     overall_count = 0
     etree.DTD(file=dtdPath)
-    print("TEST")
     sql_connector.set_query(ADD_DBLP_ARTICLE)
 
     # iterate through XML
@@ -62,6 +61,9 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
             continue
 
         # check date range
+        print( startDate)
+        print(dataset["mdate"])
+        print(endDate)
         if (startDate <= dataset["mdate"] <= endDate) is False:
                 element.clear()
                 continue
