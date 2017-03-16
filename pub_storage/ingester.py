@@ -314,6 +314,7 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
         # 6.get /create diff tree
         mapping['publication']['url_id'] = def_url_id
         mapping['publication']['pub_source_ids'] = pub_source_id
+        mapping['publication']['type_ids'] = type_id
         diff_tree = update_diff_tree(def_pub_id, mapping['publication'], author_ids, write_connector)
         #TODO store type_id in diff tree
         # 7.get default values from diff tree and re-serialize tree
