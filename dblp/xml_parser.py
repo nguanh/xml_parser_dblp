@@ -63,6 +63,7 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
 
         # check date range
         if (startDate <= dataset["mdate"] <= endDate) is False:
+                element.clear()
                 continue
         overall_count += 1
 
@@ -88,13 +89,16 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
 
         if author_csv_list == '':
             logger.debug("%s missing authors",dataset['key'])
+            element.clear()
             continue
         if dataset['title'] == '':
             logger.error("%s missing title", dataset['key'])
+            element.clear()
             continue
         dataset['author'] = author_csv_list
 
         tup = dict_to_tuple(dataset)
+        element.clear()
 
         try:
             sql_connector.execute(tup)
@@ -103,7 +107,6 @@ def parse_xml(xmlPath, dtdPath, sql_connector, logger,
         else:
             success_count += 1
             logger.debug("%s: %s", success_count,element.get('key'))
-        element.clear()
 
     logger.info("Final Count %s/%s", success_count, overall_count)
     sql_connector.close_connection()
