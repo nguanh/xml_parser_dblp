@@ -15,6 +15,11 @@ class TestMatchPubSource(TestCase):
         insert_data("INSERT into global_url (id,domain,url) VALUES(5,'a','a')")
         insert_data("INSERT into local_url (id,url,global_url_id) VALUES(1,'a',5)")
 
+    def test_none(self):
+        data = get_pub_source()
+        identifier = match_pub_source(data,1, self.connector)
+        self.assertEqual(identifier, None)
+
     def test_no_match(self):
         data = get_pub_source(key="myJournal", journal="myJournal")
         identifier = match_pub_source(data,1, self.connector)

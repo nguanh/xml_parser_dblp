@@ -117,6 +117,8 @@ def match_type(type, connector):
 
 
 def match_pub_source(mapping,local_url,connector):
+    if mapping["key"] is None:
+        return None
     normalized_key = normalize_title(mapping["key"])
     mapping["block_name"] = normalized_key
     mapping["main_name"] = mapping["key"]
@@ -147,7 +149,7 @@ def match_pub_source(mapping,local_url,connector):
     return pub_source_id
 
 
-def push_limbo(mapping,author_matching,title_reason, connector):
+def push_limbo(mapping, author_matching, title_reason, connector):
     pub_dict = {
         "title_reason": title_reason,
         "local_url": mapping["local_url"],
@@ -219,13 +221,13 @@ def create_title(matching, cluster_name, connector):
     return cluster_id
 
 
-def create_publication(cluster_id, author_ids,type_id,connector):
+def create_publication(connector, cluster_id, author_ids, type_id=None, pub_source_id=None):
     # find publication associated with cluster_id
     publication_data = connector.fetch_one((cluster_id,),CHECK_PUBLICATION,ret_tup=True)
     # publication_data is tuple with (id,url_id)
     if publication_data is None:
         # create local url and default publication
-        url_id = connector.execute_ex(INSERT_LOCAL_URL, ("TODO PLATZHALTER", 1,type_id))
+        url_id = connector.execute_ex(INSERT_LOCAL_URL, ("TODO PLATZHALTER", 1,type_id,pub_source_id))
         pub_id = connector.execute_ex(INSERT_DEFAULT_PUBLICATION, (url_id, cluster_id))
     else:
         url_id = publication_data[1]
@@ -280,7 +282,7 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
             continue
         # 2. create local url entry for record
         type_id = match_type(mapping["publication"]["type_ids"], write_connector)
-        local_url_id = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"], ingester_obj.get_global_url(),type_id))
+        local_url_id = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"], ingester_obj.get_global_url(),type_id,None))
 
         # ------------------------- MATCHINGS --------------------------------------------------------------------------
         # 3. find matching cluster for title and matching existing authors
@@ -301,14 +303,17 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
             continue
 
         # ------------------------ CREATION ----------------------------------------------------------------------------
-        pub_source_id = match_pub_source(mapping["pub_release",local_url_id, write_connector])
+        pub_source_id = match_pub_source(mapping["pub_release"],local_url_id, write_connector)
         cluster_name = normalize_title(mapping["publication"]["title"])
         author_ids = create_authors(author_matches, mapping["authors"], local_url_id, write_connector)
         cluster_id = create_title(title_match, cluster_name, write_connector)
         # 5.create default publication / or find existing one and link with authors and cluster
-        def_pub_id, def_url_id = create_publication(cluster_id, author_ids,type_id, write_connector)
+        def_pub_id, def_url_id = create_publication(write_connector,cluster_id, author_ids, type_id,pub_source_id)
+        # update local url with pub_source_id and study field
+        write_connector.execute_ex(UPDATE_LOCAL_URL, (pub_source_id,None, local_url_id))
         # 6.get /create diff tree
         mapping['publication']['url_id'] = def_url_id
+        mapping['publication']['pub_source_ids'] = pub_source_id
         diff_tree = update_diff_tree(def_pub_id, mapping['publication'], author_ids, write_connector)
         #TODO store type_id in diff tree
         # 7.get default values from diff tree and re-serialize tree

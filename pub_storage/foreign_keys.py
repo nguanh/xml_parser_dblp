@@ -6,7 +6,10 @@ LOCAL_URL_FK = ("ALTER TABLE `local_url` "
                  "global_url(id) ON UPDATE CASCADE ON DELETE CASCADE,"
                  "ADD CONSTRAINT `FK_type` "
                  "FOREIGN KEY (`type_id`) REFERENCES "
-                 "types(id) ON UPDATE CASCADE"
+                 "types(id) ON UPDATE CASCADE,"
+                 "ADD CONSTRAINT `FK_pub_source` "
+                 "FOREIGN KEY (`pub_source_id`) REFERENCES "
+                 "pub_source(id) ON UPDATE CASCADE"
                 )
 # ===========================================AUTHORS====================================================================
 

@@ -94,9 +94,11 @@ class TestCreatePublication(TestCase):
         insert_data("INSERT INTO cluster (id,cluster_name) VALUES(1,'random Title')")
         insert_data("INSERT into authors (id,main_name,block_name)"
                     "VALUES(1,'Nina Nonsense','nonsense,n'),(2,'Otto Otter','otter,o')")
+        insert_data("INSERT into pub_source (id,main_name,block_name,journal) "
+                    "VALUES(1,'myJournal','myjournal','myJournal'),(2,'myJournal','myjournal','myJournal')")
         test_success = {
             "local_url": {
-                (1,1,3,None,None, "TODO PLATZHALTER",datetime.datetime(1990,1,1,1,1,1)),
+                (1,1,3,None,1, "TODO PLATZHALTER",datetime.datetime(1990,1,1,1,1,1)),
             },
             "publication":{
                 (1,1,1,None,None,None,None,None,None,None,None,None,None,None)
@@ -107,7 +109,7 @@ class TestCreatePublication(TestCase):
 
             }
         }
-        result = create_publication(1,[1,2],3,self.connector)
+        result = create_publication(self.connector,1,[1,2],3,1)
         self.assertEqual(result[0],1)
         compare_tables(self,test_success,ignore_id=True)
 
@@ -120,7 +122,9 @@ class TestCreatePublication(TestCase):
         insert_data("INSERT INTO local_url(id,global_url_id,url) VALUES(5,5,'bla')")
 
         insert_data("INSERT INTO publication(id,url_id,cluster_id) VALUES (5,5,1)")
-        result = create_publication(1, [1, 2],1, self.connector)
+        insert_data("INSERT into pub_source (id,main_name,block_name,journal) "
+                    "VALUES(1,'myJournal','myjournal','myJournal'),(2,'myJournal','myjournal','myJournal')")
+        result = create_publication( self.connector,1, [1, 2],1,2)
         test_success = {
             "publication_authors": {
                 (1, 5, 1, 0),

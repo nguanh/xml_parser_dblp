@@ -12,10 +12,10 @@ import datetime
 #TODO weitere tabellen hinzufügen
 test_success = {
     "local_url": {
-        (1, 3, 1, None, None, 'journals/acta/AkyildizB89', datetime.datetime(1990, 1, 1, 1, 1, 1)),
-        (2, 1, 1, None, None, 'TODO PLATZHALTER', datetime.datetime(1990, 1, 1, 1, 1, 1)),
-        (3, 3, 1, None, None, 'journals/acta/VoglerS014', datetime.datetime(1990, 1, 1, 1, 1, 1)),
-        (4, 1, 1, None, None, 'TODO PLATZHALTER', datetime.datetime(1990, 1, 1, 1, 1, 1)),
+        (1, 3, 1, None, 1, 'journals/acta/AkyildizB89', datetime.datetime(1990, 1, 1, 1, 1, 1)),
+        (2, 1, 1, None, 1, 'TODO PLATZHALTER', datetime.datetime(1990, 1, 1, 1, 1, 1)),
+        (3, 3, 1, None, 1, 'journals/acta/VoglerS014', datetime.datetime(1990, 1, 1, 1, 1, 1)),
+        (4, 1, 1, None, 1, 'TODO PLATZHALTER', datetime.datetime(1990, 1, 1, 1, 1, 1)),
     },
     "authors": {
         (1, "Ian F. Akyildiz", "akyildiz,i", None, None, None, datetime.datetime(1990, 1, 1, 1, 1, 1), None),
@@ -108,6 +108,7 @@ class TestIngsterDblp(TestCase):
         ingester = DblpIngester(TESTDB, TESTDB)
         self.assertEqual(ingester.get_global_url(), 3)
         ingest_data2(ingester, TESTDB)
+        print("hkj")
         compare_tables(self, test_success, ignore_id=True)
 
     def test_setup_database(self):

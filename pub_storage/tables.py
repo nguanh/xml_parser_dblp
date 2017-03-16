@@ -13,7 +13,7 @@ LOCAL_URL = (
     "  `global_url_id` INT NOT NULL ,"
     "  `type_id` INT ,"
     "  `study_field_id` INT,"
-    "  `pub_release_id` INT,"
+    "  `pub_source_id` INT,"
     "  `url` TEXT NOT NULL ,"
     "  `last_updated` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
     "  PRIMARY KEY (`id`)"
