@@ -275,7 +275,6 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
     try:
         read_connector.cursor.execute(ingester_obj.get_query())
 
-
         for query_dataset in read_connector.cursor:
             # 1. get Harvester specific record and parse to common-form dict
             mapping = ingester_obj.mapping_function(query_dataset)
@@ -341,7 +340,7 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
         logger.debug("Terminate ingester %s", ingester_obj.get_name())
         logger.info("publications added %s / limbo %s / skipped %s", pub_added,pub_limbo,pub_duplicate)
     except Exception as e:
-        print(e)
+        raise IIngester_Exception(e)
     finally:
         write_connector.close_connection()
         read_connector.close_connection()
