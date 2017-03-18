@@ -1,4 +1,5 @@
-from unittest import TestCase
+from unittest import TestCase, mock
+from unittest.mock import MagicMock
 from harvester.exception import IHarvest_Exception
 
 from dblp.dblpharvester import DblpHarvester
@@ -25,7 +26,10 @@ class Test_Dblp_Harvester(TestCase):
         x = DblpHarvester(self.logger, self.name, path="DH5.ini")
         self.assertEqual(x.tags, ('article', 'inproceedings'))
 
-    def test_valid_init(self):
+    @mock.patch("dblp.dblpharvester.download_file", return_value = True)
+    @mock.patch("dblp.dblpharvester.subprocess.call", return_value=0)
+    def test_valid_init(self,func,func2):
+
         x = DblpHarvester(self.logger, self.name, path="DH5.ini")
         self.assertEqual(x.init(), True)
 
