@@ -1,12 +1,27 @@
 from abc import ABC, abstractmethod
+from .exception import IIngester_Exception
 
 
 class Iingester(ABC):
-    def __init__(self, database):
-        pass
-    @abstractmethod
+    def __init__(self):
+        self.query = ""
+        self.limit = None
+
+    def set_limit(self, limit):
+        if isinstance(limit, int):
+            self.limit = limit
+        else:
+            raise IIngester_Exception("Invalid limit value")
+
+        if limit < 1:
+            raise IIngester_Exception("Invalid limit value")
+        self.limit = limit
+
     def get_query(self):
-        pass
+        if self.query != "" and self.limit is not None:
+            return self.query + " LIMIT "+str(self.limit)
+        return self.query
+
     @abstractmethod
     def get_global_url(self):
         pass

@@ -265,71 +265,84 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
     if isinstance(ingester_obj, Iingester) is False:
         raise IIngester_Exception("Object is not of type IIngester")
 
+    pub_added = 0
+    pub_limbo = 0
+    pub_duplicate = 0
     logger = logging.getLogger(ingester_obj.get_name())
     # establish mariadb connections, one for reading from harvester, one for writing in ingester
     read_connector = MariaDb()
     write_connector = MariaDb(db=database)
-    read_connector.cursor.execute(ingester_obj.get_query())
+    try:
+        read_connector.cursor.execute(ingester_obj.get_query())
 
-    for query_dataset in read_connector.cursor:
-        # 1. get Harvester specific record and parse to common-form dict
-        mapping = ingester_obj.mapping_function(query_dataset)
-        # ------------------------- LOCAL_URL --------------------------------------------------------------------------
-        # check for duplicates by looking up the local URL
-        duplicate_id = write_connector.fetch_one((mapping["local_url"], ingester_obj.get_global_url()), CHECK_LOCAL_URL)
-        if duplicate_id is not None:
-            logger.info("%s: skip duplicate", mapping["local_url"])
-            continue
-        # 2. create local url entry for record
-        type_id = match_type(mapping["publication"]["type_ids"], write_connector)
-        local_url_id = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"], ingester_obj.get_global_url(),type_id,None))
 
-        # ------------------------- MATCHINGS --------------------------------------------------------------------------
-        # 3. find matching cluster for title and matching existing authors
-        title_match = match_title(mapping["publication"]["title"], write_connector)
-        author_matches = match_author(mapping["authors"], write_connector)
+        for query_dataset in read_connector.cursor:
+            # 1. get Harvester specific record and parse to common-form dict
+            mapping = ingester_obj.mapping_function(query_dataset)
+            # ------------------------- LOCAL_URL --------------------------------------------------------------------------
+            # check for duplicates by looking up the local URL
+            duplicate_id = write_connector.fetch_one((mapping["local_url"], ingester_obj.get_global_url()), CHECK_LOCAL_URL)
+            if duplicate_id is not None:
+                logger.info("%s: skip duplicate", mapping["local_url"])
+                pub_duplicate += 1
+                continue
+            # 2. create local url entry for record
+            type_id = match_type(mapping["publication"]["type_ids"], write_connector)
+            local_url_id = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"], ingester_obj.get_global_url(),type_id,None))
 
-        author_valid = True
-        for author in author_matches:
-            if author["status"] == Status.LIMBO:
-                author_valid = False
-                break
+            # ------------------------- MATCHINGS --------------------------------------------------------------------------
+            # 3. find matching cluster for title and matching existing authors
+            title_match = match_title(mapping["publication"]["title"], write_connector)
+            author_matches = match_author(mapping["authors"], write_connector)
 
-        # 4. If title or author cannot be matched due to ambiguos matching, push into limbo and delete local url record
-        if title_match["status"] == Status.LIMBO or author_valid is False:
-            logger.info("%s: Ambiguous title/authors", mapping["local_url"])
-            write_connector.execute_ex(DELETE_LOCAL_URL, (local_url_id,))
-            push_limbo(mapping, author_matches, str(title_match["reason"]), write_connector)
-            continue
+            author_valid = True
+            for author in author_matches:
+                if author["status"] == Status.LIMBO:
+                    author_valid = False
+                    break
 
-        # ------------------------ CREATION ----------------------------------------------------------------------------
-        pub_source_id = match_pub_source(mapping["pub_release"],local_url_id, write_connector)
-        cluster_name = normalize_title(mapping["publication"]["title"])
-        author_ids = create_authors(author_matches, mapping["authors"], local_url_id, write_connector)
-        cluster_id = create_title(title_match, cluster_name, write_connector)
-        # 5.create default publication / or find existing one and link with authors and cluster
-        def_pub_id, def_url_id = create_publication(write_connector,cluster_id, author_ids, type_id,pub_source_id)
-        # update local url with pub_source_id and study field
-        write_connector.execute_ex(UPDATE_LOCAL_URL, (pub_source_id,None, local_url_id))
-        # 6.get /create diff tree
-        mapping['publication']['url_id'] = def_url_id
-        mapping['publication']['pub_source_ids'] = pub_source_id
-        mapping['publication']['type_ids'] = type_id
-        diff_tree = update_diff_tree(def_pub_id, mapping['publication'], author_ids, write_connector)
-        #TODO store type_id in diff tree
-        # 7.get default values from diff tree and re-serialize tree
-        publication_values = get_default_values(diff_tree)
-        serialized_tree = serialize_diff_store(diff_tree)
-        # set missing values that are not default
-        publication_values["differences"] = serialized_tree
-        publication_values["cluster_id"] = cluster_id
-        publication_values["url_id"] = def_url_id
-        publication_values["date_added"] = None
-        publication_values["id"] = def_pub_id
-        # 8.store publication
-        write_connector.execute_ex(UPDATE_PUBLICATION, publication_values)
-        logger.debug("%s: Publication added %s", mapping["local_url"], def_pub_id)
-        #TODO 9.set publication as harvested
-    logger.debug("Terminate ingester %s", ingester_obj.get_name())
-    write_connector.close_connection()
-    read_connector.close_connection()
+            # 4. If title or author cannot be matched due to ambiguos matching, push into limbo and delete local url record
+            if title_match["status"] == Status.LIMBO or author_valid is False:
+                logger.info("%s: Ambiguous title/authors", mapping["local_url"])
+                write_connector.execute_ex(DELETE_LOCAL_URL, (local_url_id,))
+                push_limbo(mapping, author_matches, str(title_match["reason"]), write_connector)
+                pub_limbo += 1
+                continue
+
+            # ------------------------ CREATION ----------------------------------------------------------------------------
+            pub_source_id = match_pub_source(mapping["pub_release"],local_url_id, write_connector)
+            cluster_name = normalize_title(mapping["publication"]["title"])
+            author_ids = create_authors(author_matches, mapping["authors"], local_url_id, write_connector)
+            cluster_id = create_title(title_match, cluster_name, write_connector)
+            # 5.create default publication / or find existing one and link with authors and cluster
+            def_pub_id, def_url_id = create_publication(write_connector,cluster_id, author_ids, type_id,pub_source_id)
+            # update local url with pub_source_id and study field
+            write_connector.execute_ex(UPDATE_LOCAL_URL, (pub_source_id,None, local_url_id))
+            # 6.get /create diff tree
+            mapping['publication']['url_id'] = def_url_id
+            mapping['publication']['pub_source_ids'] = pub_source_id
+            mapping['publication']['type_ids'] = type_id
+            diff_tree = update_diff_tree(def_pub_id, mapping['publication'], author_ids, write_connector)
+            # 7.get default values from diff tree and re-serialize tree
+            publication_values = get_default_values(diff_tree)
+            serialized_tree = serialize_diff_store(diff_tree)
+            # set missing values that are not default
+            publication_values["differences"] = serialized_tree
+            publication_values["cluster_id"] = cluster_id
+            publication_values["url_id"] = def_url_id
+            publication_values["date_added"] = None
+            publication_values["id"] = def_pub_id
+            # 8.store publication
+            write_connector.execute_ex(UPDATE_PUBLICATION, publication_values)
+            logger.debug("%s: Publication added %s", mapping["local_url"], def_pub_id)
+            # 9.set publication as harvested
+            write_connector.execute_ex(ingester_obj.update_harvested(), (mapping["local_url"],))
+            pub_added += 1
+        logger.debug("Terminate ingester %s", ingester_obj.get_name())
+        logger.info("publications added %s / limbo %s / skipped %s", pub_added,pub_limbo,pub_duplicate)
+    except Exception as e:
+        print(e)
+    finally:
+        write_connector.close_connection()
+        read_connector.close_connection()
+    return pub_added

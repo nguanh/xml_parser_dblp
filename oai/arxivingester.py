@@ -7,8 +7,10 @@ import re
 def is_not_empty(var):
     return var is not None and len(var) > 0
 
-class DblpIngester(Iingester):
+class ArxivIngester(Iingester):
+
     def __init__(self, ingester_db, harvester_db):
+        Iingester.__init__()
         credentials = dict(get_config("MARIADB"))
         connector = MariaDb(credentials)
         connector.connector.database = ingester_db
@@ -23,16 +25,14 @@ class DblpIngester(Iingester):
         connector.close_connection()
         self.global_url = result
         self.harvester_db = harvester_db
-        pass
-
-    def get_query(self):
-        return "SELECT * FROM {}.arxiv_articles WHERE last_harvested = 0".format(self.harvester_db)
+        self.query = "SELECT * FROM {}.arxiv_articles WHERE last_harvested = 0".format(self.harvester_db)
 
     def get_global_url(self):
         return self.global_url
 
     def update_harvested(self):
-        pass
+        return "UPDATE {}.arxiv_articles SET last_harvested = CURRENT_TIMESTAMP  WHERE identifier = %s"\
+                .format(self.harvester_db)
 
     def get_name(self):
         return "ingester.arxiv"
@@ -52,10 +52,6 @@ class DblpIngester(Iingester):
         mapping["publication"]["abstract"] = query_tuple[10]
         mapping["publication"]["doi"] = query_tuple[12]
         mapping["study_fields"] = query_tuple[11]
-        mapping["publication"]["volume"] = query_tuple[6]
-        mapping["pub_release"]["journal"] = query_tuple[7]
-        mapping["publication"]["number"] = query_tuple[8]
-        mapping["publication"]["doi"] = query_tuple[9]
         mapping["publication"]["type_ids"] = 1
 
         #TODO try to extract some information from journalref

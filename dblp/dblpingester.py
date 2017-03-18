@@ -9,6 +9,7 @@ def is_not_empty(var):
 
 class DblpIngester(Iingester):
     def __init__(self, ingester_db, harvester_db):
+        Iingester.__init__(self)
         credentials = dict(get_config("MARIADB"))
         connector = MariaDb(credentials)
         connector.connector.database = ingester_db
@@ -23,16 +24,14 @@ class DblpIngester(Iingester):
         connector.close_connection()
         self.global_url = result
         self.harvester_db = harvester_db
-        pass
-
-    def get_query(self):
-        return ("SELECT * FROM {}.dblp_article WHERE last_harvested = 0").format(self.harvester_db)
+        self.query = ("SELECT * FROM {}.dblp_article WHERE last_harvested = 0").format(self.harvester_db)
 
     def get_global_url(self):
         return self.global_url
 
     def update_harvested(self):
-        pass
+        return "UPDATE {}.dblp_article SET last_harvested = CURRENT_TIMESTAMP  WHERE dblp_key = %s"\
+                .format(self.harvester_db)
 
     def get_name(self):
         return "ingester.dblp"

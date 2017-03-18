@@ -107,9 +107,12 @@ class TestIngsterDblp(TestCase):
         setup_tables("dblp_test1.csv", DBLP_ARTICLE, ADD_DBLP_ARTICLE)
         ingester = DblpIngester(TESTDB, TESTDB)
         self.assertEqual(ingester.get_global_url(), 3)
-        ingest_data2(ingester, TESTDB)
-        print("hkj")
+        result = ingest_data2(ingester, TESTDB)
+        self.assertEqual(result,2)
         compare_tables(self, test_success, ignore_id=True)
+        tmp = list(get_table_data("dblp_article", null_dates=False))
+        # check if last harvested is set
+        self.assertEqual(tmp[0][-1].strftime("%Y-%m-%d"), datetime.datetime.now().strftime("%Y-%m-%d"))
 
     def test_setup_database(self):
         setup_database(TESTDB)
