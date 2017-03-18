@@ -114,6 +114,14 @@ class TestIngsterDblp(TestCase):
         # check if last harvested is set
         self.assertEqual(tmp[0][-1].strftime("%Y-%m-%d"), datetime.datetime.now().strftime("%Y-%m-%d"))
 
+    def test_success_limit(self):
+        setup_tables("dblp_test1.csv", DBLP_ARTICLE, ADD_DBLP_ARTICLE)
+        ingester = DblpIngester(TESTDB, TESTDB)
+        ingester.set_limit(1)
+        result = ingest_data2(ingester, TESTDB)
+        self.assertEqual(result, 1)
+
+
     def test_setup_database(self):
         setup_database(TESTDB)
         setup_database(TESTDB)
