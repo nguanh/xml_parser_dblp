@@ -79,8 +79,6 @@ class TestDifferenceStorage(TestCase):
         unpacked = deserialize_diff_store(packed)
         self.assertEqual(unpacked,store)
 
-
-
     def test_msg_pack(self):
         result = generate_diff_store(get_pub_dict(url_id=5,title="Hello World (𝔹+)",
                                                   ))

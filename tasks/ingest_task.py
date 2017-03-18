@@ -48,7 +48,7 @@ def ingest_task(package, class_name, config_path=CONFIG_PATH, **parameters):
             if isinstance(source, Iingester) is False:
                 raise IIngester_Exception(class_name + " is not an instance of IIngest")
             name = source.get_name()
-            print("Starting ingestion of %s", name)
+            print("Starting ingestion of ", name)
             # get config
             config = configparser.ConfigParser()
             config.read(config_path)
@@ -62,11 +62,14 @@ def ingest_task(package, class_name, config_path=CONFIG_PATH, **parameters):
             config[name].getboolean("enabled")
             # set limit in Iingester
             if "limit" in config[name]:
-                limit = config[name]["limit"]
+                limit = int(config[name]["limit"])
                 source.set_limit(limit)
             logger.info("Initialize custom ingester %s", name)
-            ingest_data2(source, DATABASE_NAME)
+            result = ingest_data2(source, DATABASE_NAME)
+            print(result)
+            logger.info("Included %s", result)
             logger.info("Ingestion finished %s", name)
+            return True
         except IIngester_Exception as e:
             logger.critical(e)
             raise

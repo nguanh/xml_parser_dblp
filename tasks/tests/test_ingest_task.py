@@ -1,6 +1,10 @@
-from unittest import TestCase
+from unittest import TestCase, mock
 from tasks.ingest_task import ingest_task
 from pub_storage.exception import IIngester_Exception, IIngester_Disabled
+
+def ingest_mock(source,db):
+
+    return 5
 
 
 class TestIngestTask(TestCase):
@@ -24,9 +28,9 @@ class TestIngestTask(TestCase):
         self.assertRaises(IIngester_Disabled, ingest_task,"dblp.dblpingester","DblpIngester",
                           config_path="ingest_task3.ini")
 
-    def test_valid_limit(self):
-        # TODO
-        # self.assertTrue(ingest_task("dblp.dblpingester", "DblpIngester", config_path="ingest_task.ini"))
+    @mock.patch("tasks.ingest_task.ingest_data2", side_effect=ingest_mock)
+    def test_valid_limit(self,ingest_data2_function):
+        self.assertTrue(ingest_task("dblp.dblpingester", "DblpIngester", config_path="ingest_task.ini"))
         pass
 
 

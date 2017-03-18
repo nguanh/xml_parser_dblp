@@ -1,7 +1,7 @@
 import datetime
 from unittest import TestCase, mock
 
-from dblp.xml_parser import  parse_xml
+from dblp.xml_parser import parse_xml
 from mysqlWrapper.tests.Mariadb_stub import Mariadb_test
 from harvester.exception import IHarvest_Exception
 import logging
