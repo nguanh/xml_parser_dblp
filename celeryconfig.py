@@ -30,6 +30,11 @@ beat_schedule = {
         'task': 'tasks.tasks.harvest_source',
         'schedule': crontab(minute=58, hour=2),
         'args': ("oai.arxivharvester", "ArXivHarvester", "ARXIV_HARVESTER")
+    },
+    'dblp-ingester': {
+        'task': 'tasks.tasks.ingest_source',
+        'schedule': crontab(minute=1, hour=17),
+        'args': ("dblp.dblpingester", "DblpIngester")
     }
 }
 # start with tasks worker -A tasks -l info --beat
