@@ -1,7 +1,7 @@
 from mysqlWrapper.mariadb import MariaDb
 from conf.config import get_config
 import datetime
-from pub_storage.setup_database import setup_database
+from ingester.setup_database import setup_database
 import csv
 TESTDB = "ingester_test"
 

@@ -1,7 +1,7 @@
-from pub_storage.Iingester import Iingester
+from ingester.Iingester import Iingester
 from mysqlWrapper.mariadb import MariaDb
 from conf.config import get_config
-from pub_storage.helper import split_authors
+from ingester.helper import split_authors
 import re
 
 def is_not_empty(var):

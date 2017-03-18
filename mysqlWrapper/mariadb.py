@@ -33,7 +33,7 @@ class MariaDb:
             self.cursor.execute(
             "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(name))
         except mysql.connector.Error as err:
-            print("Failed creating pub_storage: {}".format(err))
+            print("Failed creating ingester: {}".format(err))
 
     def create_db(self, name):
 

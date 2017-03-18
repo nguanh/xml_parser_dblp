@@ -1,11 +1,11 @@
 from unittest import TestCase
 
-from pub_storage.setup_database import setup_database
-from pub_storage.Iingester import Iingester
-from pub_storage.exception import IIngester_Exception
-from pub_storage.ingester import create_authors, create_title, create_publication, update_diff_tree
+from ingester.setup_database import setup_database
+from ingester.Iingester import Iingester
+from ingester.exception import IIngester_Exception
+from ingester.ingester import create_authors, create_title, create_publication, update_diff_tree
 from .ingester_tools import TESTDB, delete_database, insert_data, compare_tables, get_pub_dict
-from pub_storage.helper import *
+from ingester.helper import *
 from mysqlWrapper.mariadb import MariaDb
 import datetime
 

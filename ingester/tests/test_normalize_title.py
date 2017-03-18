@@ -1,5 +1,5 @@
 from unittest import TestCase
-from pub_storage.helper import normalize_title
+from ingester.helper import normalize_title
 import string
 
 class TestNormalize_title(TestCase):

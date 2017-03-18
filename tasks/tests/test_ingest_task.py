@@ -1,6 +1,6 @@
 from unittest import TestCase, mock
 from tasks.ingest_task import ingest_task
-from pub_storage.exception import IIngester_Exception, IIngester_Disabled
+from ingester.exception import IIngester_Exception, IIngester_Disabled
 
 def ingest_mock(source,db):
 

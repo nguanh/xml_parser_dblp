@@ -1,7 +1,7 @@
-from pub_storage.Iingester import Iingester
-from pub_storage.exception import IIngester_Exception, IIngester_Disabled
-from pub_storage.constants import DATABASE_NAME, CONFIG_PATH
-from pub_storage.ingester import ingest_data2
+from ingester.Iingester import Iingester
+from ingester.exception import IIngester_Exception, IIngester_Disabled
+from ingester.constants import DATABASE_NAME, CONFIG_PATH
+from ingester.ingester import ingest_data2
 import configparser
 import logging
 import sys

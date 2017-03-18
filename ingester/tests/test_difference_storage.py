@@ -1,5 +1,5 @@
 from unittest import TestCase
-from pub_storage.difference_storage import *
+from ingester.difference_storage import *
 from .ingester_tools import get_pub_dict
 import datetime
 

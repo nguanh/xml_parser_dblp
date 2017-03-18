@@ -1,7 +1,7 @@
 
-from pub_storage.setup_database import setup_database
-from pub_storage.constants import DATABASE_NAME
-from pub_storage.ingester import ingest_data2
+from ingester.setup_database import setup_database
+from ingester.constants import DATABASE_NAME
+from ingester.ingester import ingest_data2
 from dblp.dblpingester import DblpIngester
 from oai.arxivingester import ArxivIngester
 import logging

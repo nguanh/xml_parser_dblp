@@ -1,6 +1,6 @@
 from mysqlWrapper.mariadb import MariaDb
-from pub_storage.tables import *
-from pub_storage.foreign_keys import *
+from ingester.tables import *
+from ingester.foreign_keys import *
 from conf.config import get_config
 
 

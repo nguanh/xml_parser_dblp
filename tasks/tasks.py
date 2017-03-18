@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 from .celery import app
 from harvester.exception import IHarvest_Exception, IHarvest_Disabled
-from pub_storage.exception import IIngester_Exception,IIngester_Disabled
+from ingester.exception import IIngester_Exception,IIngester_Disabled
 from celery.exceptions import Ignore
 from celery import states
 from .harvest_task import harvest_task

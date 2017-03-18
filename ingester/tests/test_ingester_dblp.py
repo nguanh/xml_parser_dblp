@@ -2,9 +2,9 @@ from unittest import TestCase
 
 from dblp.queries import DBLP_ARTICLE, ADD_DBLP_ARTICLE
 from dblp.dblpingester import DblpIngester
-from pub_storage.ingester import ingest_data2
-from pub_storage.setup_database import setup_database
-from pub_storage.exception import IIngester_Exception
+from ingester.ingester import ingest_data2
+from ingester.setup_database import setup_database
+from ingester.exception import IIngester_Exception
 from .ingester_tools import compare_tables, delete_database,setup_tables,TESTDB,get_table_data,insert_data
 import datetime
 
