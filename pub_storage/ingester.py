@@ -274,22 +274,30 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
     write_connector = MariaDb(db=database)
     try:
         read_connector.cursor.execute(ingester_obj.get_query())
+    except Exception as e:
+        raise IIngester_Exception(e)
 
-        for query_dataset in read_connector.cursor:
+    for query_dataset in read_connector.cursor:
+        mapping = ingester_obj.mapping_function(query_dataset)
+        try:
             # 1. get Harvester specific record and parse to common-form dict
-            mapping = ingester_obj.mapping_function(query_dataset)
-            # ------------------------- LOCAL_URL --------------------------------------------------------------------------
+            # ------------------------- LOCAL_URL ----------------------------------------------------------------------
             # check for duplicates by looking up the local URL
-            duplicate_id = write_connector.fetch_one((mapping["local_url"], ingester_obj.get_global_url()), CHECK_LOCAL_URL)
+            duplicate_id = write_connector.fetch_one((mapping["local_url"],
+                                                     ingester_obj.get_global_url()),
+                                                     CHECK_LOCAL_URL)
             if duplicate_id is not None:
                 logger.info("%s: skip duplicate", mapping["local_url"])
                 pub_duplicate += 1
                 continue
             # 2. create local url entry for record
             type_id = match_type(mapping["publication"]["type_ids"], write_connector)
-            local_url_id = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"], ingester_obj.get_global_url(),type_id,None))
+            local_url_id = write_connector.execute_ex(INSERT_LOCAL_URL, (mapping["local_url"],
+                                                                         ingester_obj.get_global_url(),
+                                                                         type_id,
+                                                                         None))
 
-            # ------------------------- MATCHINGS --------------------------------------------------------------------------
+            # ------------------------- MATCHINGS ----------------------------------------------------------------------
             # 3. find matching cluster for title and matching existing authors
             title_match = match_title(mapping["publication"]["title"], write_connector)
             author_matches = match_author(mapping["authors"], write_connector)
@@ -300,7 +308,7 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
                     author_valid = False
                     break
 
-            # 4. If title or author cannot be matched due to ambiguos matching, push into limbo and delete local url record
+            # 4. ambiguous matching, push into limbo and delete local url record
             if title_match["status"] == Status.LIMBO or author_valid is False:
                 logger.info("%s: Ambiguous title/authors", mapping["local_url"])
                 write_connector.execute_ex(DELETE_LOCAL_URL, (local_url_id,))
@@ -308,7 +316,7 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
                 pub_limbo += 1
                 continue
 
-            # ------------------------ CREATION ----------------------------------------------------------------------------
+            # ------------------------ CREATION ------------------------------------------------------------------------
             pub_source_id = match_pub_source(mapping["pub_release"],local_url_id, write_connector)
             cluster_name = normalize_title(mapping["publication"]["title"])
             author_ids = create_authors(author_matches, mapping["authors"], local_url_id, write_connector)
@@ -337,11 +345,12 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
             # 9.set publication as harvested
             write_connector.execute_ex(ingester_obj.update_harvested(), (mapping["local_url"],))
             pub_added += 1
-        logger.debug("Terminate ingester %s", ingester_obj.get_name())
-        logger.info("publications added %s / limbo %s / skipped %s", pub_added,pub_limbo,pub_duplicate)
-    except Exception as e:
-        raise IIngester_Exception(e)
-    finally:
-        write_connector.close_connection()
-        read_connector.close_connection()
+            logger.debug("Terminate ingester %s", ingester_obj.get_name())
+            logger.info("publications added %s / limbo %s / skipped %s", pub_added,pub_limbo,pub_duplicate)
+        except Exception as e:
+            logger.error("%s: %s", mapping["local_url"], e)
+            continue
+
+    write_connector.close_connection()
+    read_connector.close_connection()
     return pub_added
