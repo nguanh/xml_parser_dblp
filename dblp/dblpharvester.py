@@ -43,7 +43,6 @@ class DblpHarvester(IHarvest):
         except:
             self.logger.critical("files could not be downloaded")
             return False
-        return True
         if xml_result and dtd_result:
             self.logger.info("Files were created")
             result = subprocess.call(["gunzip", xml_result])
