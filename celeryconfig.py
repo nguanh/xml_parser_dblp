@@ -33,7 +33,7 @@ beat_schedule = {
     },
     'dblp-ingester': {
         'task': 'tasks.tasks.ingest_source',
-        'schedule': crontab(minute=1, hour=17),
+        'schedule': crontab(minute=11, hour=17),
         'args': ("dblp.dblpingester", "DblpIngester")
     }
 }

@@ -6,7 +6,7 @@ from celery.exceptions import Ignore
 from celery import states
 from .harvest_task import harvest_task
 from .ingest_task import ingest_task
-
+from ingester.constants import CONFIG_PATH
 @app.task
 def harvest_source(package, class_name, name, **parameters):
     """
@@ -40,7 +40,7 @@ def harvest_source(package, class_name, name, **parameters):
 @app.task
 def ingest_source(package, class_name, **parameters):
     try:
-        ingest_task(package, class_name, None)
+        ingest_task(package, class_name,config_path= CONFIG_PATH)
     except ImportError as e:
         ingest_source.update_state(
             state=states.FAILURE,
