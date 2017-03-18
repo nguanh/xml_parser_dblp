@@ -1,6 +1,6 @@
 from tasks.harvest_task import harvest_task
 from harvester.exception import *
-mode = 0
+mode = 1
 if mode == 0:
     package = "dblp.dblpharvester"
     class_name = "DblpHarvester"

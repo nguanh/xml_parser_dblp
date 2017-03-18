@@ -1,27 +1,23 @@
 
-from ingester.setup_database import setup_database
-from ingester.constants import DATABASE_NAME
-from ingester.ingester import ingest_data2
-from dblp.dblpingester import DblpIngester
-from oai.arxivingester import ArxivIngester
-import logging
+from tasks.ingest_task import ingest_task
+from ingester.exception import IIngester_Disabled,IIngester_Exception
 
-# init logger, generate logger for every tasks
-logger = logging.getLogger("ingester")
-logger.setLevel(logging.DEBUG)
-# create the logging file handler
-fh = logging.FileHandler("{}.log".format("ingester"))
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh.setFormatter(formatter)
-# add handler to logger object
-logger.addHandler(fh)
-
-setup_database(DATABASE_NAME)
-mode = 1
+mode = 2
 if mode == 0:
-    ingester = DblpIngester(DATABASE_NAME,"harvester")
+    package = "dblp.dblpingester"
+    class_name = "DblpIngester"
+elif mode == 1:
+    package = "oai.arxivingester"
+    class_name = "ArxivIngester"
 else:
-    ingester = ArxivIngester(DATABASE_NAME, "harvester")
+    package = "oai.citeseeringester"
+    class_name = "CiteseerIngester"
+try:
+    ingest_task(package, class_name)
+except ImportError as e:
+    print(e)
+except IIngester_Exception as e:
+    print(e)
+except IIngester_Disabled as e:
+    print(e)
 
-
-ingest_data2(ingester, DATABASE_NAME)

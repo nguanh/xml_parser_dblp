@@ -345,12 +345,11 @@ def ingest_data2(ingester_obj, database=DATABASE_NAME):
             # 9.set publication as harvested
             write_connector.execute_ex(ingester_obj.update_harvested(), (mapping["local_url"],))
             pub_added += 1
-            logger.debug("Terminate ingester %s", ingester_obj.get_name())
-            logger.info("publications added %s / limbo %s / skipped %s", pub_added,pub_limbo,pub_duplicate)
         except Exception as e:
             logger.error("%s: %s", mapping["local_url"], e)
             continue
-
+    logger.debug("Terminate ingester %s", ingester_obj.get_name())
+    logger.info("publications added %s / limbo %s / skipped %s", pub_added,pub_limbo,pub_duplicate)
     write_connector.close_connection()
     read_connector.close_connection()
     return pub_added
