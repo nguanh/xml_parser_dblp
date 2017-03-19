@@ -4,6 +4,7 @@ from celery import shared_task
 from celery.exceptions import Ignore
 from celery import states
 from .exception import IHarvest_Disabled,IHarvest_Exception
+from .harvest_task import harvest_task
 
 @shared_task
 def add(x, y):
@@ -20,9 +21,7 @@ def harvest_source(package, class_name, name, **parameters):
     :return:
     """
     try:
-        #harvest_task(package, class_name, name, None)
-        print("hallohallo")
-        return True
+        harvest_task(package, class_name, name, None)
     except ImportError as e:
         harvest_source.update_state(
             state=states.FAILURE,
