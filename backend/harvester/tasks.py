@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 from celery.exceptions import Ignore
 from celery import states
-from harvester.exception import IHarvest_Disabled,IHarvest_Exception
+from .exception import IHarvest_Disabled,IHarvest_Exception
 
 @shared_task
 def add(x, y):
