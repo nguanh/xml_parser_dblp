@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from celery.schedules import crontab
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -126,3 +127,26 @@ STATIC_ROOT= os.path.join(BASE_DIR,"static/")
 # user django db as celery result backend using django_celery_results
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_RESULT_BACKEND = 'django-cache'
+CELERY_IMPORTS = ('harvester.tasks',)
+CELERYBEAT_SCHEDULE ={
+    'dblp-harvester': {
+        'task': 'tasks.tasks.harvest_source',
+        'schedule': crontab(minute=21, hour=18),
+        'args': ("dblp.dblpharvester", "DblpHarvester", "DBLP_HARVESTER")
+    },
+    'oai-harvester': {
+        'task': 'tasks.tasks.harvest_source',
+        'schedule': crontab(minute=47, hour=1),
+        'args': ("oai.oaiharvester", "OaiHarvester", "OAI_HARVESTER")
+    },
+    'arxiv-harvester': {
+        'task': 'tasks.tasks.harvest_source',
+        'schedule': crontab(minute=58, hour=2),
+        'args': ("oai.arxivharvester", "ArXivHarvester", "ARXIV_HARVESTER")
+    },
+    'dblp-ingester': {
+        'task': 'tasks.tasks.ingest_source',
+        'schedule': crontab(minute=11, hour=17),
+        'args': ("dblp.dblpingester", "DblpIngester")
+    }
+}
