@@ -10,6 +10,16 @@ from .harvest_task import harvest_task
 def add(x, y):
     return x + y
 
+
+
+@shared_task
+def printtest(package, class_name, name, **parameters):
+    print("HALLLLOOO")
+
+@shared_task
+def print_par(package, class_name, name):
+    print(package,class_name,name)
+
 @shared_task
 def harvest_source(package, class_name, name, **parameters):
     """
