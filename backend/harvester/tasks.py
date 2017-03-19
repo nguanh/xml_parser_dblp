@@ -6,15 +6,26 @@ from celery import states
 from .exception import IHarvest_Disabled,IHarvest_Exception
 from .harvest_task import harvest_task
 
+from celery.utils.log import get_task_logger
+import logging
 @shared_task
 def add(x, y):
     return x + y
 
 
-
 @shared_task
 def printtest(package, class_name, name, **parameters):
+    # init logger, generate logger for every tasks
+    logger = get_task_logger("hallo")
+    logger.setLevel(logging.INFO)
+    # create the logging file handler
+    fh = logging.FileHandler("{}.log".format(name))
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    # add handler to logger object
+    logger.addHandler(fh)
     print("HALLLLOOO")
+    logger.info("Funktioniert es?")
 
 @shared_task
 def print_par(package, class_name, name):
