@@ -11,9 +11,17 @@ from .harvest_task import harvest_task
 def test():
     print ("Hello")
 
+
+@shared_task()
+def printyy(a,b):
+    print(a,b)
+
+
 @shared_task
-def print_par(package, class_name, name):
-    print(package,class_name,name)
+def add(x, y):
+    print(str(x+y))
+    return x + y
+
 '''
 @shared_task
 def harvest_source(package, class_name, name, **parameters):
