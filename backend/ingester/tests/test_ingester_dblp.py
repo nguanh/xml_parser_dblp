@@ -1,10 +1,10 @@
 from unittest import TestCase
 
-from dblp.queries import DBLP_ARTICLE, ADD_DBLP_ARTICLE
-from dblp.dblpingester import DblpIngester
-from ingester.ingester import ingest_data2
-from ingester.setup_database import setup_database
-from ingester.exception import IIngester_Exception
+from backend.dblp.queries import DBLP_ARTICLE, ADD_DBLP_ARTICLE
+from backend.dblp.dblpingester import DblpIngester
+from backend.ingester.ingester import ingest_data2
+from backend.ingester.setup_database import setup_database
+from backend.ingester.exception import IIngester_Exception
 from .ingester_tools import compare_tables, delete_database,setup_tables,TESTDB,get_table_data,insert_data
 import datetime
 

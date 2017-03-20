@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from .exception import IHarvest_Exception, IHarvest_Disabled
 import configparser
-from mysqlWrapper.mariadb import MariaDb
+from backend.mysqlWrapper.mariadb import MariaDb
 import datetime
 
 

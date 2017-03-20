@@ -1,6 +1,6 @@
 from unittest import TestCase
-from harvester.IHarvester import IHarvest
-from harvester.exception import IHarvest_Exception,IHarvest_Disabled
+from backend.harvester.IHarvester import IHarvest
+from backend.harvester.exception import IHarvest_Exception,IHarvest_Disabled
 import logging
 import datetime
 

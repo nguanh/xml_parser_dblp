@@ -1,7 +1,7 @@
 from unittest import TestCase
-from oai.oaiharvester import OaiHarvester
-from oai.exception import Oai_Parsing_Exception
-from harvester.exception import IHarvest_Exception
+from backend.oai.oaiharvester import OaiHarvester
+from backend.oai.exception import Oai_Parsing_Exception
+from backend.harvester.exception import IHarvest_Exception
 import datetime
 import logging
 

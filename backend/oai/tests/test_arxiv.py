@@ -1,6 +1,6 @@
 from unittest import TestCase
 from lxml import etree
-from oai.arxiv_handler import ArXivRecord
+from backend.oai.arxiv_handler import ArXivRecord
 import datetime
 
 def get_record(path):

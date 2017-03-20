@@ -1,4 +1,4 @@
-from mysqlWrapper.mariadb import MariaDb
+from backend.mysqlWrapper.mariadb import MariaDb
 from .constants import *
 from .queries import *
 from .helper import *

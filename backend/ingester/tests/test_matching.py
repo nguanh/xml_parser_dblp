@@ -1,11 +1,11 @@
 from unittest import TestCase
 
-from ingester.setup_database import setup_database
-from ingester.ingester import match_author, match_title,match_type,match_pub_source
-from mysqlWrapper.mariadb import MariaDb
+from backend.ingester.setup_database import setup_database
+from backend.ingester.ingester import match_author, match_title,match_type,match_pub_source
+from backend.mysqlWrapper.mariadb import MariaDb
 
 from .ingester_tools import TESTDB, delete_database, insert_data, get_pub_source,compare_tables
-from ingester.helper import *
+from backend.ingester.helper import *
 
 
 class TestMatchPubSource(TestCase):

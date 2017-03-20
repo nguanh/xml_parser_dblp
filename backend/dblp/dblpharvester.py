@@ -1,8 +1,8 @@
-from harvester.IHarvester import IHarvest
-from dblp.queries import DBLP_ARTICLE
-from harvester.exception import IHarvest_Exception
-from dblp.xml_parser import parse_xml
-from fileDownloader.fileDownloader import download_file
+from backend.harvester.IHarvester import IHarvest
+from .queries import DBLP_ARTICLE
+from backend.harvester.exception import IHarvest_Exception
+from .xml_parser import parse_xml
+from backend.fileDownloader.fileDownloader import download_file
 import subprocess
 
 

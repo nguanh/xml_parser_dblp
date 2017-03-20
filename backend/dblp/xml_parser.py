@@ -2,11 +2,10 @@ import datetime
 import os
 
 from lxml import etree
-from dblp.exception import IHarvest_Exception
-from dblp.queries import ADD_DBLP_ARTICLE
-from mysqlWrapper.mariadb import MariaDb
+from .queries import ADD_DBLP_ARTICLE
+from backend.mysqlWrapper.mariadb import MariaDb
 from .helper import parse_mdate, parse_year, dict_to_tuple, parse_title
-from harvester.exception import IHarvest_Exception
+from backend.harvester.exception import IHarvest_Exception
 
 COMPLETE_TAG_LIST = ("article", "inproceedings", "proceedings", "book", "incollection",
                      "phdthesis", "mastersthesis", "www", "person", "data")

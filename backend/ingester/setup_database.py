@@ -1,7 +1,7 @@
-from mysqlWrapper.mariadb import MariaDb
+from backend.mysqlWrapper.mariadb import MariaDb
 from .tables import *
 from .foreign_keys import *
-from conf.config import get_config
+from backend.conf.config import get_config
 
 
 def setup_database(db_name):

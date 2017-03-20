@@ -1,7 +1,7 @@
-from harvester.IHarvester import IHarvest
-from oai.queries import OAI_DATASET
-from harvester.exception import IHarvest_Exception
-from oai.oaimph_parser import harvestOAI
+from backend.harvester.IHarvester import IHarvest
+from backend.oai.queries import OAI_DATASET
+from backend.harvester.exception import IHarvest_Exception
+from backend.oai.oaimph_parser import harvestOAI
 
 
 class OaiHarvester(IHarvest):

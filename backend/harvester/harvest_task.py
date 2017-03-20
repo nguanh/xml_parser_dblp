@@ -1,5 +1,5 @@
-from harvester.exception import IHarvest_Exception,IHarvest_Disabled
-from harvester.IHarvester import IHarvest
+from .exception import IHarvest_Exception, IHarvest_Disabled
+from .IHarvester import IHarvest
 from celery.utils.log import get_task_logger
 import logging
 import sys

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from ingester.helper import get_name_block
+from backend.ingester.helper import get_name_block
 
 
 class TestParse_authors(TestCase):

@@ -1,6 +1,6 @@
 import mysql.connector
 from mysql.connector import errorcode
-from conf.config import get_config
+from backend.conf.config import get_config
 
 
 

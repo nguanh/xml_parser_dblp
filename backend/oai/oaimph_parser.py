@@ -1,11 +1,11 @@
 from sickle import Sickle
 from sickle import oaiexceptions
 from requests import exceptions
-from mysqlWrapper.mariadb import MariaDb
+from backend.mysqlWrapper.mariadb import MariaDb
 from .helper import parse_metadata_default
 from .queries import ADD_OAI_DEFAULT
 
-from harvester.exception import IHarvest_Exception
+from backend.harvester.exception import IHarvest_Exception
 from sickle.models import Record
 
 '''
