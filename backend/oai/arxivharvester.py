@@ -21,10 +21,19 @@ class ArXivHarvester(OaiHarvester):
 
     # time_begin and time_end are always valid datetime objects
     def run(self):
+        if self.start_date is not None:
+            start = self.start_date.strftime("%Y-%m-%d")
+        else:
+            start = None
+
+        if self.end_date is not None:
+            end = self.end_date.strftime("%Y-%m-%d")
+        else:
+            end= None
         return harvestOAI(self.link, self.connector, self.logger,
                           processing_function=parse_arxiv, xml_format="arXiv",
                           query=ADD_ARXIV, parsing_class=ArXivRecord,
-                          startDate=self.start_date.strftime("%Y-%m-%d"),
-                          endDate=self.end_date.strftime("%Y-%m-%d"),
+                          startDate=start,
+                          endDate=end,
                           limit=self.limit)
 
