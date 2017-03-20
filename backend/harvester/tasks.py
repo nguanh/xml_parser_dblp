@@ -12,8 +12,9 @@ def test():
     print ("Hello")
 
 
+
 @shared_task
-def harvestSource(package, class_name, name, **parameters):
+def harvestsource(package, class_name, name):
     """
 
     :param package: relative path to package
@@ -23,21 +24,22 @@ def harvestSource(package, class_name, name, **parameters):
     :return:
     """
     try:
-        harvest_task(package, class_name, name, None)
+       # harvest_task(package, class_name, name, None)
+        print("hello")
     except ImportError as e:
-        harvestSource.update_state(
+        harvestsource.update_state(
             state=states.FAILURE,
             meta=e,
         )
         raise Ignore()
     except IHarvest_Exception as e:
-        harvestSource.update_state(
+        harvestsource.update_state(
             state=states.FAILURE,
             meta=e
         )
     except IHarvest_Disabled:
         # task is disabled
-        harvestSource.update_state(
+        harvestsource.update_state(
             state=states.SUCCESS,
             meta=''
         )
