@@ -10,11 +10,11 @@ from .harvest_task import harvest_task
 @shared_task()
 def test():
     print ("Hello")
-'''
+
 @shared_task
 def print_par(package, class_name, name):
     print(package,class_name,name)
-
+'''
 @shared_task
 def harvest_source(package, class_name, name, **parameters):
     """
