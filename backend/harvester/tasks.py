@@ -22,6 +22,10 @@ def add(x, y):
     print(str(x+y))
     return x + y
 
+@shared_task()
+def test_me():
+    print ("Hello")
+
 '''
 @shared_task
 def harvest_source(package, class_name, name, **parameters):
