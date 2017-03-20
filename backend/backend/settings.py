@@ -127,4 +127,4 @@ STATIC_ROOT= os.path.join(BASE_DIR,"static/")
 # user django db as celery result backend using django_celery_results
 CELERY_RESULT_BACKEND = 'django-db'
 # CELERY_RESULT_BACKEND = 'django-cache'
-# CELERY_IMPORTS = ('harvester.tasks',)
+CELERY_IMPORTS = ('harvester.tasks',)
