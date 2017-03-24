@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "django_celery_results",
     "django_celery_beat",
+    'django_admin_row_actions',
     'harvester.apps.HarvesterConfig',
 ]
 
