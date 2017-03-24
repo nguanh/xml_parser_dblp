@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Schedule
+from .models import Schedule,Config
 # Register your models here.
 from django_admin_row_actions import AdminRowActionsMixin
 from django.urls import reverse
@@ -22,3 +22,4 @@ class ConfigAdmin(AdminRowActionsMixin, admin.ModelAdmin):
 admin.site.register(Config, ConfigAdmin)
 """
 admin.site.register(Schedule)
+admin.site.register(Config)
