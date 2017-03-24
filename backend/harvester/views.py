@@ -31,9 +31,6 @@ def tail( f, lines=20 ):
     all_read_text = ''.join(reversed(blocks))
     return '\n'.join(all_read_text.splitlines()[-total_lines_wanted:])
 
-# Create your views here.
-#/admin/Harvester/config/2/
-
 
 def log(request,config_id):
     config = get_object_or_404(Config, pk=config_id)
