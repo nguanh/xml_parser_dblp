@@ -1,5 +1,5 @@
 from django.db import models
-from django_celery_beat.models import IntervalSchedule,PeriodicTask
+from django_celery_beat.models import IntervalSchedule
 import os
 from django.utils.translation import ugettext_lazy as _
 
@@ -58,15 +58,12 @@ class Config(models.Model):
     # task is not visible on creation
     schedule = models.ForeignKey(Schedule, default=None)
     task = models.CharField(_('task name'), max_length=200)
-    #celery_task = models.ForeignKey(PeriodicTask, default=None, null=True)
 
     def __str__(self):
         return self.name
 
     # wird aufgerufen, sobald ein neuer Harvester erstellt wird, oder verändert wird
     def save(self, *args, **kwargs):
-        print(self.schedule)
-        print(self.schedule.name)
         #print("HEEEELP")
         #self.test = "heeelp"
         # self.task = PeriodicTask()
