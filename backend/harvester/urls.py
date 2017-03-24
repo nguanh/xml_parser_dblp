@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from . import views
 #der namespace
-app_name = 'Harvester'
+app_name = 'harvester'
 
 
 urlpatterns = [
