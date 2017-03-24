@@ -22,3 +22,4 @@ backend/mysqlWrapper/__pycache__/
 backend/oai/__pycache__/
 dblp.dtd
 dblp.xml
+sharpenv/
