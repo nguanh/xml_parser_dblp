@@ -29,6 +29,7 @@ class Schedule(models.Model):
     min_date = models.DateField('Min Date', blank=True, null=True)
     max_date = models.DateField('Max Date', blank=True, null=True)
     schedule = models.ForeignKey(IntervalSchedule, default=None)
+
     def __str__(self):
         return self.name
 
@@ -51,21 +52,22 @@ class Config(models.Model):
     extra_config = models.TextField(blank=True, default='{}')
     # extra parameter  for tasks
     task_parameter= models.TextField(blank=True, default='{}')
-    # task is not visible on creation
-    task = models.ForeignKey(IntervalSchedule, on_delete=models.CASCADE, default=None , editable=False)
 
+    # task is not visible on creation
+    schedule = models.ForeignKey(Schedule, default=None)
+    task = models.CharField(_('task name'), max_length=200)
 
     def __str__(self):
         return self.name
 
     # wird aufgerufen, sobald ein neuer Harvester erstellt wird, oder verändert wird
     def save(self, *args, **kwargs):
-        print("HEEEELP")
-        self.test = "heeelp"
+        #print("HEEEELP")
+        #self.test = "heeelp"
         # self.task = PeriodicTask()
-        print(os.path.isdir("logs")) # True
-        schedule, created = IntervalSchedule.objects.get_or_create(every = 10,period = IntervalSchedule.SECONDS)
-        self.task = schedule
+       # print(os.path.isdir("logs")) # True
+       # schedule, created = IntervalSchedule.objects.get_or_create(every = 10,period = IntervalSchedule.SECONDS)
+        #self.task = schedule
         super(Config, self).save(*args, **kwargs) # Call the "real" save() method.
 
 
