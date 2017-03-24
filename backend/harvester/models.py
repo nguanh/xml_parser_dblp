@@ -65,8 +65,8 @@ class Config(models.Model):
 
     # wird aufgerufen, sobald ein neuer Harvester erstellt wird, oder verändert wird
     def save(self, *args, **kwargs):
-    #  print(self.schedule)
-     #   print(self.schedule.name)
+        print(self.schedule)
+        print(self.schedule.name)
         #print("HEEEELP")
         #self.test = "heeelp"
         # self.task = PeriodicTask()
