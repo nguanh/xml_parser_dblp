@@ -84,8 +84,8 @@ class ConfigAdmin(AdminRowActionsMixin,admin.ModelAdmin):
         row_actions = [
             {
                 'label': 'Log',
-                #'url': reverse('Harvester:config_log', args=[obj.id]),
-                'url':"http://google.de",
+                'url': reverse('harvester:config_log', args=[obj.id]),
+                #'url':"http://google.de",
                 'enabled': True,
                 'tooltip': "Display Harvester Log"
             }

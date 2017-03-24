@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
 import os
 from .models import Config
 PROJECT_DIR = os.path.dirname(__file__)
-from pygtail import Pygtail
+
 def tail( f, lines=20 ):
     total_lines_wanted = lines
 
