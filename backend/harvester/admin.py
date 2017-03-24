@@ -5,6 +5,7 @@ from django import forms
 # Register your models here.
 from django_admin_row_actions import AdminRowActionsMixin
 from django.urls import reverse
+from django.utils.translation import ugettext_lazy as _
 from kombu.utils.json import loads
 
 """
