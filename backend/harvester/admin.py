@@ -69,7 +69,7 @@ class ConfigForm(forms.ModelForm):
         return self._clean_json('task_parameter')
 
 
-class ConfigAdmin(admin.ModelAdmin):
+class ConfigAdmin(AdminRowActionsMixin,admin.ModelAdmin):
     """Admin-interface for peridic tasks."""
 
     form = ConfigForm
@@ -86,8 +86,20 @@ class ConfigAdmin(admin.ModelAdmin):
             'fields': ('schedule', 'regtask','task_parameter'),
             'classes': ('extrapretty', 'wide', ),
         }),
-    )
 
+
+    def get_row_actions(self, obj):
+        row_actions = [
+            {
+                'label': 'Log',
+                #'url': reverse('Harvester:config_log', args=[obj.id]),
+                'url':"http://google.de",
+                'enabled': True,
+                'tooltip': "Display Harvester Log"
+            }
+        ]
+        row_actions += super(ConfigAdmin, self).get_row_actions(obj)
+        return row_actions
 
 admin.site.register(Schedule)
 admin.site.register(Config, ConfigAdmin)
