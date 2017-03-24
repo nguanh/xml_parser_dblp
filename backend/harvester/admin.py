@@ -33,6 +33,11 @@ class ConfigForm(forms.ModelForm):
         label=_('Task (registered)'),
         required=False,
     )
+    task = forms.CharField(
+        label=_('Task (custom)'),
+        required=False,
+        max_length=200,
+    )
 
     class Meta:
         """Form metadata."""
@@ -94,7 +99,7 @@ class ConfigAdmin(AdminRowActionsMixin,admin.ModelAdmin):
             'classes': ('extrapretty', 'wide'),
         }),
         ('Schedule', {
-            'fields': ('schedule', 'regtask','task_parameter'),
+            'fields': ('schedule', 'regtask','task', 'task_parameter'),
             'classes': ('extrapretty', 'wide', ),
         }),
     )
