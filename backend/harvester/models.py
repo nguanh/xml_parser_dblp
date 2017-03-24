@@ -1,5 +1,5 @@
 from django.db import models
-from django_celery_beat.models import PeriodicTask, IntervalSchedule
+from django_celery_beat.models import IntervalSchedule
 import os
 from django.utils.translation import ugettext_lazy as _
 

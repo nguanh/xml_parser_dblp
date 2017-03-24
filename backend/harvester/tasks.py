@@ -4,7 +4,7 @@ from celery import shared_task
 from celery.exceptions import Ignore
 from celery import states
 from .exception import IHarvest_Disabled,IHarvest_Exception
-from .harvest_task import harvest_task
+#from .harvest_task import harvest_task
 
 
 @shared_task()
@@ -14,6 +14,7 @@ def test():
 
 @shared_task
 def harvestsource(package, class_name, name):
+    pass
     """
 
     :param package: relative path to package
@@ -21,6 +22,7 @@ def harvestsource(package, class_name, name):
     :param name: name of the harvester (important for config)
     :param parameters: parameters for harvester as dict parameters
     :return:
+    """
     """
     try:
         harvest_task(package, class_name, name, None)
@@ -41,3 +43,4 @@ def harvestsource(package, class_name, name):
             state=states.SUCCESS,
             meta=''
         )
+    """
