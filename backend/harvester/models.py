@@ -58,7 +58,7 @@ class Config(models.Model):
     # task is not visible on creation
     schedule = models.ForeignKey(Schedule, default=None)
     task = models.CharField(_('task name'), max_length=200)
-    celery_task = models.ForeignKey(PeriodicTask,default=None)
+    celery_task = models.ForeignKey(PeriodicTask, default=None, null=True)
 
     def __str__(self):
         return self.name
