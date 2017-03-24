@@ -76,26 +76,18 @@ class ConfigAdmin(admin.ModelAdmin):
     model = Config
     # welche attribute sollen in der listenansicht gezeigt werden
     list_display = ('__str__', 'enabled')
-    """
+
     fieldsets = (
         (None, {
-            'fields': ('name', 'regtask', 'task', 'enabled'),
+            'fields': ('name', 'table_name', 'url', 'enabled', 'limit', 'extra_config'),
             'classes': ('extrapretty', 'wide'),
         }),
         ('Schedule', {
-            'fields': ('interval', 'crontab'),
+            'fields': ('schedule', 'regtask','task_parameter'),
             'classes': ('extrapretty', 'wide', ),
         }),
-        ('Arguments', {
-            'fields': ('args', 'kwargs'),
-            'classes': ('extrapretty', 'wide', 'collapse'),
-        }),
-        ('Execution Options', {
-            'fields': ('expires', 'queue', 'exchange', 'routing_key'),
-            'classes': ('extrapretty', 'wide', 'collapse'),
-        }),
     )
-    """
+
 
 admin.site.register(Schedule)
-admin.site.register(Config,ConfigAdmin)
+admin.site.register(Config, ConfigAdmin)
