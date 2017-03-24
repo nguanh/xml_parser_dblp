@@ -70,24 +70,11 @@ class ConfigForm(forms.ModelForm):
 
 
 class ConfigAdmin(AdminRowActionsMixin,admin.ModelAdmin):
-    """Admin-interface for peridic tasks."""
-
     form = ConfigForm
     model = Config
     # welche attribute sollen in der listenansicht gezeigt werden
-    list_display = ('__str__', 'enabled')
-
-    fieldsets = (
-        (None, {
-            'fields': ('name', 'table_name', 'url', 'enabled', 'limit', 'extra_config'),
-            'classes': ('extrapretty', 'wide'),
-        }),
-        ('Schedule', {
-            'fields': ('schedule', 'regtask','task_parameter'),
-            'classes': ('extrapretty', 'wide', ),
-        }),
-
-
+    list_display = ('__str__', 'enabled','task')
+    """Admin-interface for Harvester Configs."""
     def get_row_actions(self, obj):
         row_actions = [
             {
@@ -100,6 +87,17 @@ class ConfigAdmin(AdminRowActionsMixin,admin.ModelAdmin):
         ]
         row_actions += super(ConfigAdmin, self).get_row_actions(obj)
         return row_actions
+
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'table_name', 'url', 'enabled', 'limit', 'extra_config'),
+            'classes': ('extrapretty', 'wide'),
+        }),
+        ('Schedule', {
+            'fields': ('schedule', 'regtask','task_parameter'),
+            'classes': ('extrapretty', 'wide', ),
+        }),
+    )
 
 admin.site.register(Schedule)
 admin.site.register(Config, ConfigAdmin)
