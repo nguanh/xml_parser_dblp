@@ -25,9 +25,13 @@ class Schedule(models.Model):
 
     """
     # total date range of Harvester can both be empty
+    name= models.CharField(max_length=200)
     min_date = models.DateField('Min Date', blank=True, null=True)
     max_date = models.DateField('Max Date', blank=True, null=True)
     schedule = models.ForeignKey(IntervalSchedule, default=None)
+    def __str__(self):
+        return self.name
+
 
 class Config(models.Model):
     # Name of the harvester for identification
