@@ -46,8 +46,8 @@ def log(request,config_id):
             log_text = tail(f)
     else:
         log_text = "No log found!"
-    return render(request, 'Harvester/log.html',{
-            'app_label': "Harvester",
+    return render(request, 'harvester/log.html',{
+            'app_label': "harvester",
             'harvester_name': config.name,
             'log_text': log_text,
     })
