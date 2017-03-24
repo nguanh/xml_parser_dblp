@@ -4,14 +4,15 @@ from celery import shared_task
 from celery.exceptions import Ignore
 from celery import states
 from .exception import IIngester_Exception,IIngester_Disabled
-from .ingest_task import ingest_task
+#from .ingest_task import ingest_task
 from .constants import CONFIG_PATH
 
 
 @shared_task
 def ingestsource(package, class_name):
     try:
-        ingest_task(package, class_name, config_path=CONFIG_PATH)
+        pass
+        #ingest_task(package, class_name, config_path=CONFIG_PATH)
     except ImportError as e:
         ingestsource.update_state(
             state=states.FAILURE,
