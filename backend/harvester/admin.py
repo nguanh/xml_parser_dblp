@@ -1,8 +1,11 @@
 from django.contrib import admin
 from .models import Schedule,Config
+from django_celery_beat.admin import TaskChoiceField
+from django import forms
 # Register your models here.
 from django_admin_row_actions import AdminRowActionsMixin
 from django.urls import reverse
+from kombu.utils.json import loads
 
 """
 class ConfigAdmin(AdminRowActionsMixin, admin.ModelAdmin):
@@ -21,5 +24,77 @@ class ConfigAdmin(AdminRowActionsMixin, admin.ModelAdmin):
 
 admin.site.register(Config, ConfigAdmin)
 """
+
+class ConfigForm(forms.ModelForm):
+    """Form that lets you create and modify periodic tasks."""
+
+    regtask = TaskChoiceField(
+        label=_('Task (registered)'),
+        required=False,
+    )
+
+    class Meta:
+        """Form metadata."""
+
+        model = Config
+        exclude = ()
+
+    def clean(self):
+        # set task as the data from regtask
+        data = super(ConfigForm, self).clean()
+        regtask = data.get('regtask')
+        if regtask:
+            data['task'] = regtask
+        if not data['task']:
+            exc = forms.ValidationError(_('Need name of task'))
+            self._errors['task'] = self.error_class(exc.messages)
+            raise exc
+        return data
+
+    def _clean_json(self, field):
+        value = self.cleaned_data[field]
+        try:
+            loads(value)
+        except ValueError as exc:
+            raise forms.ValidationError(
+                _('Unable to parse JSON: %s') % exc,
+            )
+        return value
+
+    def clean_extra_config(self):
+        return self._clean_json('extra_config')
+
+    def clean_task_parameter(self):
+        return self._clean_json('task_parameter')
+
+
+class ConfigAdmin(admin.ModelAdmin):
+    """Admin-interface for peridic tasks."""
+
+    form = ConfigForm
+    model = Config
+    # welche attribute sollen in der listenansicht gezeigt werden
+    list_display = ('__str__', 'enabled')
+    """
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'regtask', 'task', 'enabled'),
+            'classes': ('extrapretty', 'wide'),
+        }),
+        ('Schedule', {
+            'fields': ('interval', 'crontab'),
+            'classes': ('extrapretty', 'wide', ),
+        }),
+        ('Arguments', {
+            'fields': ('args', 'kwargs'),
+            'classes': ('extrapretty', 'wide', 'collapse'),
+        }),
+        ('Execution Options', {
+            'fields': ('expires', 'queue', 'exchange', 'routing_key'),
+            'classes': ('extrapretty', 'wide', 'collapse'),
+        }),
+    )
+    """
+
 admin.site.register(Schedule)
-admin.site.register(Config)
+admin.site.register(Config,ConfigAdmin)
