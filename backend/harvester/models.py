@@ -1,6 +1,7 @@
 from django.db import models
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
 import os
+from django.utils.translation import ugettext_lazy as _
 # Create your models here.
 #TODO überlegen, wie das ganze als DBLP harvester benutzt werden kann
 
