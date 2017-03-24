@@ -30,7 +30,7 @@ class Schedule(models.Model):
     max_date = models.DateField('Max Date', blank=True, null=True)
     schedule = models.ForeignKey(IntervalSchedule, default=None)
     def __str__(self):
-        return "Joe"
+        return self.name
 
 
 class Config(models.Model):
