@@ -50,7 +50,7 @@ def log(request,config_id):
             'opts': "harvester"
     })
     """
-    return render(request, 'harvester/log.html',{
+    return render(request, 'harvester/admin_log.html',{
             'app_label': "harvester",
             'harvester_name': config.name,
             'log_text': log_text,
