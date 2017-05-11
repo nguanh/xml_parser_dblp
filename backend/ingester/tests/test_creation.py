@@ -1,12 +1,12 @@
 from unittest import TestCase
 
-from backend.ingester.setup_database import setup_database
-from backend.ingester.ingester import create_authors, create_title, create_publication, update_diff_tree
-from .ingester_tools import TESTDB, delete_database, insert_data, compare_tables, get_pub_dict
-from backend.ingester.helper import *
 from backend.ingester.difference_storage import *
-from backend.mysqlWrapper.mariadb import MariaDb
-import datetime
+from backend.ingester.helper import *
+from backend.ingester.ingester import create_authors, create_title, create_publication, update_diff_tree
+from backend.ingester.setup_database import setup_database
+from mysqlWrapper.mariadb import MariaDb
+from .ingester_tools import TESTDB, delete_database, insert_data, compare_tables, get_pub_dict
+
 
 
 class TestUpdateDiffTree(TestCase):

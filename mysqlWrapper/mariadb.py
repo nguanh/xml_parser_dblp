@@ -1,7 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
-from backend.conf.config import get_config
 
+from conf.config import get_config
 
 
 class MariaDb:

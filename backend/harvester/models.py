@@ -1,7 +1,8 @@
 from django.db import models
-from django_celery_beat.models import IntervalSchedule
+from django_celery_beat.models import IntervalSchedule,PeriodicTask
 import os
 from django.utils.translation import ugettext_lazy as _
+import json
 
 # Create your models here.
 #TODO überlegen, wie das ganze als DBLP harvester benutzt werden kann
@@ -27,7 +28,7 @@ class Schedule(models.Model):
 
     """
     # total date range of Harvester can both be empty
-    name= models.CharField(max_length=200)
+    name= models.CharField(max_length=200, default=None)
     min_date = models.DateField('Min Date', blank=True, null=True)
     max_date = models.DateField('Max Date', blank=True, null=True)
     schedule = models.ForeignKey(IntervalSchedule, default=None)
@@ -58,16 +59,23 @@ class Config(models.Model):
     # task is not visible on creation
     schedule = models.ForeignKey(Schedule, default=None)
     task = models.CharField(_('task name'), max_length=200)
+    celery_task = models.ForeignKey(PeriodicTask,default=None, null=True, blank=True)
 
     def __str__(self):
         return self.name
 
     # wird aufgerufen, sobald ein neuer Harvester erstellt wird, oder verändert wird
     def save(self, *args, **kwargs):
-        #print("HEEEELP")
-        #self.test = "heeelp"
+        #create django celery beat periodic task
+        self.celery_task= PeriodicTask(
+            name="{}-Task".format(self.name),
+            interval=self.schedule.schedule,
+            task=self.task,
+            args=json.dumps(self.task_parameter),
+        )
+        self.celery_task.save()
         # self.task = PeriodicTask()
-       # print(os.path.isdir("logs")) # True
+
        # schedule, created = IntervalSchedule.objects.get_or_create(every = 10,period = IntervalSchedule.SECONDS)
         #self.task = schedule
         super(Config, self).save(*args, **kwargs) # Call the "real" save() method.

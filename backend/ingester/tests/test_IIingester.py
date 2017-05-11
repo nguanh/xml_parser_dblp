@@ -1,13 +1,7 @@
 from unittest import TestCase
 
-from backend.ingester.setup_database import setup_database
 from backend.ingester.Iingester import Iingester
 from backend.ingester.exception import IIngester_Exception
-from backend.ingester.ingester import create_authors, create_title, create_publication, update_diff_tree
-from .ingester_tools import TESTDB, delete_database, insert_data, compare_tables, get_pub_dict
-from backend.ingester.helper import *
-from backend.mysqlWrapper.mariadb import MariaDb
-import datetime
 
 
 class Dummy (Iingester):

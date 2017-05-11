@@ -1,8 +1,10 @@
-from backend.ingester.Iingester import Iingester
-from backend.mysqlWrapper.mariadb import MariaDb
-from backend.conf.config import get_config
-from backend.ingester.helper import split_authors
 import re
+
+from backend.ingester.Iingester import Iingester
+from backend.ingester.helper import split_authors
+from conf.config import get_config
+from mysqlWrapper.mariadb import MariaDb
+
 
 def is_not_empty(var):
     return var is not None and len(var) > 0

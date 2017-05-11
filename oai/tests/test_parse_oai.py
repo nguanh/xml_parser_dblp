@@ -1,9 +1,9 @@
 import logging
 from unittest import TestCase
 
-from backend.harvester.exception import IHarvest_Exception
-from backend.oai.oaimph_parser import harvestOAI
-from mysqlWrapper.tests import Mariadb_test
+from harvester.exception import IHarvest_Exception
+from oai.oaimph_parser import harvestOAI
+from mysqlWrapper.tests.Mariadb_stub import Mariadb_test
 
 class TestParseOai(TestCase):
     valid_link = 'http://citeseerx.ist.psu.edu/oai2'

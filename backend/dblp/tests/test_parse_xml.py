@@ -1,10 +1,10 @@
 import datetime
+import logging
 from unittest import TestCase, mock
 
 from backend.dblp.xml_parser import parse_xml
-from backend.mysqlWrapper.tests.Mariadb_stub import Mariadb_test
 from backend.harvester.exception import IHarvest_Exception
-import logging
+from mysqlWrapper.tests import Mariadb_test
 
 
 class TestParse_xml(TestCase):

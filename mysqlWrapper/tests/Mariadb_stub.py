@@ -1,4 +1,4 @@
-from backend.mysqlWrapper.mariadb import MariaDb
+from mysqlWrapper.mariadb import MariaDb
 
 
 class Mariadb_test(MariaDb):

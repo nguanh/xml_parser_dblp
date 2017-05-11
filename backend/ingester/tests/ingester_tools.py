@@ -1,8 +1,10 @@
-from backend.mysqlWrapper.mariadb import MariaDb
-from backend.conf.config import get_config
-import datetime
-from backend.ingester.setup_database import setup_database
 import csv
+import datetime
+
+from backend.ingester.setup_database import setup_database
+from conf.config import get_config
+from mysqlWrapper.mariadb import MariaDb
+
 TESTDB = "ingester_test"
 
 def get_table_data(table, null_dates = True):
